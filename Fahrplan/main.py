@@ -1,16 +1,53 @@
-# This is a sample Python script.
+# flask sqlalchemy
 
-# Press Shift+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+from flask import Flask, render_template, request, jsonify, render_template_string
+from flask_sqlalchemy import SQLAlchemy
+import requests
+from urllib.request import urlopen
+import json
 
+# app.py
+# Initialize the Flask application
+app = Flask(__name__)
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
+# sqlite config
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rides.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
+# Bind the instance to the 'app.py' Flask application
+db = SQLAlchemy(app)
 
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+# mockdata
+#routes = requests.get('http://localhost:5001/routes')
+#sections = requests.get('http://localhost:5001/routes')
 
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
+def get_routes():
+    response = urlopen('http://localhost:5001/routes')
+    data = json.loads(response.read())
+    return data
+
+class Rides(db.Model):
+    __tablename__ = 'rides'
+    id = db.Column(db.Integer, primary_key=True, autoincrement=True)
+    route_id = db.Column(db.Integer)
+    time = db.Column(db.DateTime)
+    price = db.Column(db.Integer)
+    interval = db.Column(db.Boolean)
+    interval_number = db.Column(db.Integer)
+    sections = db.Column(db.PickleType, nullable=False) #mutable
+
+    def __init__(self, time, price, interval, interval_nr, sections):
+        self.time = time
+        self.price = price
+        self.interval = interval
+        self.interval_number = interval_nr
+        self.sections = sections
+
+@app.route('/admin/routes')
+def data():
+    temp = dict(get_routes())['routes']
+    columnNames = ['id', 'name']
+    return render_template('admin_data.html', records=temp, colnames=columnNames, title='Admin Overview - Routes')
+
+if __name__ == "__main__":
+    app.run(debug=True)

@@ -1,0 +1,75 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <title>Reservation</title>
+
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+
+</head>
+{% block content %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <p>{{msg}}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+{% endblock %}
+
+<body>
+<form action="/reservation" id="ft-form" method="POST" accept-charset="UTF-8">
+  <fieldset>
+    <legend>Personal</legend>
+    <label>
+      Name
+      <input type="text" name="name" required>
+    </label>
+    <div class="two-cols">
+      <label>
+        E-Mail-Address
+        <input type="email" name="email" required>
+      </label>
+      <label>
+        Mobile
+        <input type="tel" name="tel">
+      </label>
+    </div>
+  </fieldset>
+  <fieldset>
+    <legend>Room and Date</legend>
+    <div class="two-cols">
+      <label>
+        date
+        <input type="date" name="date" required>
+      </label>
+    </div>
+    <div class="two-cols">
+      <label>
+        from
+        <input type="time" name="from" required>
+      </label>
+      <label>
+        to
+        <input type="time" name="to" required>
+      </label>
+    </div>
+    <div class="dropdown">
+      <label>
+         Raum
+         <select name = "room" required>
+           <option value = "room1">Room 1</option>
+           <option value = "room2">Room 2</option>
+         </select>
+      </label>
+    </div>
+  </fieldset>
+  <div class="btns">
+    <input type="submit" value="Submit">
+  </div>
+</form>
+</body>
+</html>
