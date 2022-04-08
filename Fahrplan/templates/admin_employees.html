@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block content %}
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for msg in messages %}
+                <p>{{msg}}</p>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+   <table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        {% for col in colnames %}
+          <th>{{ col }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+    {% for emp in employees['data'] %}
+        <tr>
+            {% for col in colnames %}
+            <td>{{ emp[col] }}</td>
+            {% endfor %}
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

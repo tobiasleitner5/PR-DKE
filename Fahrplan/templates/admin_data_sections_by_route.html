@@ -1,9 +1,5 @@
 {% extends "base.html" %}
 
-<head>
-    <title>Overview</title>
-</head>
-
 {% block content %}
     {% with messages = get_flashed_messages() %}
         {% if messages %}
@@ -18,6 +14,7 @@
         {% for col in colnames %}
           <th>{{ col }}</th>
         {% endfor %}
+          <th>rides</th>
       </tr>
     </thead>
     <tbody>
@@ -26,27 +23,9 @@
             {% for col in colnames %}
             <td>{{ record[col] }}</td>
             {% endfor %}
+            <td>test</td>
         </tr>
     {% endfor %}
     </tbody>
   </table>
-{% endblock %}
-
-{% block scripts %}
-  <script>
-    $(document).ready(function () {
-      $('#data').DataTable({
-        ajax: '/api/data',
-        columns: [
-        {data: 'id', orderable: true, searchable: true},
-          {data: 'name'},
-          {data: 'email', orderable: false, searchable: false},
-          {data: 'telnr', orderable: false, searchable: false},
-          {data: 'from_time', orderable: false, searchable: true},
-          {data: 'to_time', orderable: false, searchable: true},
-          {data: 'room'}
-        ],
-      });
-    });
-  </script>
 {% endblock %}

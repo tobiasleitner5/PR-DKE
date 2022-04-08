@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/admin/ride/store" id="ft-form" method="POST" accept-charset="UTF-8">
+    <div class="dropdown">
+      <label>
+         Sections
+         <select name = "sections" required multiple>
+           {% for section in sections %}
+           <option value = "{{section.id}}">{{section.name}}</option>
+           {% endfor %}
+         </select>
+      </label>
+    </div>
+    <label>
+      Time
+      <input type="datetime-local" name="time" required>
+    </label>
+    <label>
+      Price
+      <input type="number" name="price" required>
+    </label>
+    <div class="btns">
+      <input type="submit" value="Submit">
+    </div>
+</form>
+{% endblock %}
