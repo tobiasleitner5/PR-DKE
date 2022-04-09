@@ -9,6 +9,7 @@ from app import db
 from app.forms import RegistrationForm
 from flask import request
 from werkzeug.urls import url_parse
+from app.forms import EditProfileForm
 
 @app.route('/')
 @app.route('/index')
@@ -62,3 +63,27 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+@app.route('/user/<username>', methods=['GET', 'POST'])
+@login_required
+def user(username):
+    user = User.query.filter_by(username=username).first_or_404()
+    form = EditProfileForm()
+    if form.validate_on_submit():
+        current_user.username = form.username.data
+        current_user.email = form.email.data
+        db.session.commit()
+        flash('Your username and email have been saved.')
+        if form.oldPassword.data and not user.check_password(form.oldPassword.data):
+            flash('Your old password does not match.')
+            return redirect(url_for('user', username=current_user.username))
+        if form.newPassword.data and user.check_password(form.oldPassword.data):
+            current_user.set_password(form.newPassword.data)
+            db.session.commit()
+            flash('Your password has been changed.')
+        return redirect(url_for('user', username=current_user.username))
+    elif request.method == 'GET':
+        form.username.data = current_user.username
+        form.email.data = current_user.email
+    return render_template('user.html', user=user, title='Profile', form=form)
+
