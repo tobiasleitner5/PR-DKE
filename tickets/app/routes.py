@@ -68,7 +68,7 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    form = EditProfileForm()
+    form = EditProfileForm(current_user.username, current_user.email)
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.email = form.email.data
