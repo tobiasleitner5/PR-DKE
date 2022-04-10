@@ -24,9 +24,9 @@
             {% for col in colnames %}
             <td>{{ record[col] }}</td>
             {% endfor %}
-            <td><b><a href="{{url_for('get_sections_by_routes', routes_id=record.id)}}">show sections</a></b>
+            <td><b><a href="{{url_for('get_sections_by_routes_blueprint.get_sections_by_routes', routes_id=record.id)}}">show sections</a></b>
 	        </td>
-            <td><b><a href="{{url_for('plan_single_ride', routes_id=record.id)}}">single ride</a></b>/<b><a href="{{url_for('plan_interval_ride', routes_id=record.id)}}">interval ride</a></b>
+            <td><b><a href="{{url_for('plan_single_ride_blueprint.plan_single_ride', routes_id=record.id)}}">single ride</a></b>/<b><a href="{{url_for('plan_interval_ride_blueprint.plan_single_ride', routes_id=record.id)}}">interval ride</a></b>
 	        </td>
         </tr>
     {% endfor %}

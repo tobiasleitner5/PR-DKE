@@ -11,7 +11,7 @@ Add employee
 
 {% block content %}
 
-<form action="/admin/add_employees" id="ft-form" method="POST" accept-charset="UTF-8">
+<form action="{{ url_for('add_employee_blueprint.add_employee') }}" id="ft-form" method="POST" accept-charset="UTF-8">
     <label>
       Name
       <input type="text" name="name" required>
