@@ -16,7 +16,6 @@ def get_sections_by_routes(routes_id):
     for section in temp:
         if section['route'] == int(routes_id):
             filtered_sections.append(section)
-    print(filtered_sections)
     column_names = ['id', 'route', 'name', 'distance', 'maxSpeed', 'fee']
     return render_template('admin_data_sections_by_route.html', records=filtered_sections, colnames=column_names, title='Admin Overview - Sections')
 
@@ -39,7 +38,6 @@ def plan_interval_ride(routes_id):
 def get_employees():
     employees = Employee.query.all()
     colnames = ['id', 'name', 'mail', 'password']
-    print({'data': [emp.to_dict() for emp in employees]})
     return render_template('admin_employees.html', colnames=colnames, employees= {'data': [emp.to_dict() for emp in employees]}, title='Employees')
 
 def add_employee():
