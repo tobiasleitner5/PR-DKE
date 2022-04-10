@@ -1,0 +1,20 @@
+{% extends "bootstrap/base.html" %}
+
+{% block title %}
+Fahrplaninformationssystem - Admin
+{% endblock %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='signin.css')}}">
+{% endblock %}
+
+{% block content %}
+
+Hey, Admin!
+
+<p><a href="{{ url_for('get_employees') }}">Employees</a></p>
+
+<p><a href="{{ url_for('get_routes') }}">Routes</a></p>
+
+{% endblock %}
