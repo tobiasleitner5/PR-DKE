@@ -30,16 +30,16 @@ class Employee(UserMixin, db.Model):
     mail = db.Column(db.String)
     password = db.Column(db.String)
 
-    def __init__(self, name, email, password):
+    def __init__(self, name, mail, password):
         self.name = name
-        self.email = email
+        self.mail = mail
         self.password = password
 
     def to_dict(self):
         return {
             'id': self.id,
             'name': self.name,
-            'mail': self.name,
+            'mail': self.mail,
             'password': self.password
         }
 

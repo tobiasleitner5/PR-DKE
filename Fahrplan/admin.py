@@ -2,7 +2,7 @@ from flask import render_template, request
 from werkzeug.utils import redirect
 
 import ReadInput
-from Models import Employee, db
+from models import Employee, db
 
 def get_routes():
     temp = dict(ReadInput.get_routes_mock())['routes']

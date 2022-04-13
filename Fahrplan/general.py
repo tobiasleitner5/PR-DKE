@@ -2,7 +2,7 @@ from flask import render_template, url_for
 from flask_login import login_user
 from werkzeug.utils import redirect
 
-from Models import Employee
+from models import Employee
 from login import LoginForm
 
 def index():

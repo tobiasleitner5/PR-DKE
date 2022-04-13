@@ -16,7 +16,7 @@ plan_interval_ride_blueprint.route('/admin/interval/ride/<routes_id>')(plan_sing
 get_employees_blueprint = Blueprint('get_employees_blueprint', __name__)
 get_employees_blueprint.route('/admin/employees')(get_employees)
 
-add_employee_blueprint = Blueprint('add_employee_blueprint', __name__)
+add_employee_blueprint = Blueprint('add_employee_blueprint', __name__, static_folder='static', static_url_path='/static')
 add_employee_blueprint.route('/admin/add_employees',  methods=['POST', 'GET'])(add_employee)
 
 get_admin_blueprint = Blueprint('get_admin_blueprint', __name__, static_folder='static', static_url_path='/static')
