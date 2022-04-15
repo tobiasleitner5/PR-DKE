@@ -47,21 +47,26 @@ bootstrap = Bootstrap(app)
 @app.route('/admin/ride/store', methods=["POST", 'GET'])
 def store_ride():
     if request.method == 'POST':
-        ride = Ride(request.form['route_id'], datetime.strptime(request.form['time'], '%Y-%m-%dT%H:%M'), int(request.form['price']), bool(request.form['interval']), None)
+        print(request.form['interval'])
+        ride = Ride(request.form['route_id'], datetime.strptime(request.form['time'], '%Y-%m-%dT%H:%M'), int(request.form['price']), request.form['interval'] == 'True', None)
 
-        db.session.add(ride)
-        db.session.flush()
-        db.session.refresh(ride)
-        for s in ast.literal_eval(request.form['sections']):
-            ride_section = Ride_section(ride.id, int(s))
-            db.session.add(ride_section)
+        try:
+            db.session.add(ride)
+            db.session.flush()
+            db.session.refresh(ride)
+            for s in ast.literal_eval(request.form['sections']):
+                ride_section = Ride_section(ride.id, int(s))
+                db.session.add(ride_section)
 
-        for e in request.form.getlist('emp'):
-            crew = Crew(ride.id, int(e))
-            db.session.add(crew)
+            for e in request.form.getlist('emp'):
+                crew = Crew(ride.id, int(e))
+                db.session.add(crew)
 
-        db.session.add(ride)
-        db.session.commit()
+            db.session.add(ride)
+            db.session.commit()
+        except:
+            print('There was a problem...')
+            return redirect(url_for(''))
 
         return 'nice'
 

@@ -11,7 +11,7 @@ def get_sections_by_routes(routes_id):
         if section['route'] == int(routes_id):
             filtered_sections.append(section)
     column_names = ['id', 'route', 'name', 'distance', 'maxSpeed', 'fee']
-    return render_template('admin_data_sections_by_route.html', records=filtered_sections, colnames=column_names, title='Admin Overview - Sections')
+    return render_template('admin/admin_data_sections_by_route.html', records=filtered_sections, colnames=column_names, title='Admin Overview - Sections')
 
 def plan_ride(routes_id):
     if request.method == 'GET':
