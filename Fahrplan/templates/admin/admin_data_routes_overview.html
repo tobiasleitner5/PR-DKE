@@ -1,14 +1,13 @@
-{% extends "base.html" %}
+{% extends 'admin/master.html' %}
+{% block head_css %}
+{{ super() }}
+<link href="{{ url_for('static', filename='sb-admin-2.css') }}" rel="stylesheet">
+{% endblock head_css %}
 
-{% block content %}
-    {% with messages = get_flashed_messages() %}
-        {% if messages %}
-            {% for msg in messages %}
-                <p>{{msg}}</p>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-   <table id="data" class="table table-striped">
+{% block body %}
+{{ super() }}
+
+<table id="data" class="table table-striped">
     <thead>
       <tr>
         {% for col in colnames %}
@@ -26,10 +25,12 @@
             {% endfor %}
             <td><b><a href="{{url_for('get_sections_by_routes_blueprint.get_sections_by_routes', routes_id=record.id)}}">show sections</a></b>
 	        </td>
-            <td><b><a href="{{url_for('plan_single_ride_blueprint.plan_single_ride', routes_id=record.id)}}">single ride</a></b>/<b><a href="{{url_for('plan_interval_ride_blueprint.plan_single_ride', routes_id=record.id)}}">interval ride</a></b>
+            <td><b><a href="{{url_for('plan_ride_blueprint.plan_ride', routes_id=record.id)}}">plan</a></b>
 	        </td>
         </tr>
     {% endfor %}
     </tbody>
   </table>
-{% endblock %}
+
+{% endblock body %}
+

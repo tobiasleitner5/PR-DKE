@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block content %}
+<form action="/admin/ride/store" id="ft-form" method="POST" accept-charset="UTF-8">
+    <input type="hidden" name="route_id" value="{{ routes_id }}">
+    <input type="hidden" name="time" value="{{ time }}">
+    <input type="hidden" name="sections" value="{{ sections }}">
+    <input type="hidden" name="interval" value="{{ interval }}">
+    <div class="dropdown">
+      <label>
+         Employees
+         <select name = "emp" required multiple>
+           {% for e in employees %}
+           <option value = "{{e.id}}">{{e.name}}</option>
+           {% endfor %}
+         </select>
+      </label>
+    </div>
+    <label>
+      Train
+      <select name = "train" required>
+           {% for t in trains %}
+           <option value = "{{t.id}}">{{t.name}}</option>
+           {% endfor %}
+      </select>
+    </label>
+    <label>
+      Price
+      <input type="number" name="price" required>
+    </label>
+    <div class="btns">
+      <input type="submit" value="Submit">
+    </div>
+</form>
+{% endblock %}

@@ -1,6 +1,5 @@
-from flask import render_template, url_for
+from flask import render_template, redirect, url_for
 from flask_login import login_user
-from werkzeug.utils import redirect
 
 from models import Employee
 from login import LoginForm
@@ -16,8 +15,8 @@ def login():
         if employee:
             #if check_password_hash(user.password, form.password.data):
             if (employee.password, form.password.data):
-                login_user(employee, remember=form.remember.data)
-                return redirect(url_for('dashboard'))
+                login_user(employee)
+                return redirect('/')
 
         return '<h1>Invalid username or password</h1>'
         #return '<h1>' + form.username.data + ' ' + form.password.data + '</h1>'

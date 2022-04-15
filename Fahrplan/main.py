@@ -1,43 +1,88 @@
 # flask sqlalchemy
-from flask import Flask
+from flask import Flask, redirect, request, url_for, render_template
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
+from flask_admin import Admin
+from flask_admin.contrib.sqla import ModelView
+
+from datetime import datetime
 
 import os
+import ast
 
 # my classes
-from models import db, Employee
-from admin_routings import get_routes_blueprint, get_sections_by_routes_blueprint, plan_single_ride_blueprint, plan_interval_ride_blueprint, get_employees_blueprint, add_employee_blueprint, get_admin_blueprint
+import ReadInput
+from ReadInput import get_trains_mock
+from models import db, Employee, Ride, Ride_section, Crew
+from admin_routings import get_sections_by_routes_blueprint, plan_ride_blueprint
 from general_routings import index_blueprint, login_blueprint
+from views import PlanView, ModelViewWithoutCreate
 
-#login_manager = LoginManager()
-#login_manager.login_view = 'login'
+app = Flask(__name__)
+login_manager = LoginManager()
+login_manager.login_view = 'login'
+login_manager.init_app(app)
 
-def setup_app():
-    app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rides.db'
-    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-    SECRET_KEY = os.urandom(32)
-    app.config['SECRET_KEY'] = SECRET_KEY
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///rides.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+SECRET_KEY = os.urandom(32)
+app.config['SECRET_KEY'] = SECRET_KEY
 
-    # login manager
-    #login_manager.init_app(app)
+# Admin - in eigene Klasse später
+admin = Admin(app, template_mode='bootstrap3')
+admin.add_view(ModelView(Employee, db.session))
+admin.add_view(ModelViewWithoutCreate(Ride, db.session))
+admin.add_view(PlanView(name='Plan', endpoint='plan'))
 
-    # Blueprints
-    app.register_blueprint(get_routes_blueprint)
-    app.register_blueprint(get_sections_by_routes_blueprint)
-    app.register_blueprint(get_admin_blueprint)
-    app.register_blueprint(plan_single_ride_blueprint)
-    app.register_blueprint(plan_interval_ride_blueprint)
-    app.register_blueprint(get_employees_blueprint)
-    app.register_blueprint(add_employee_blueprint)
-    app.register_blueprint(index_blueprint)
-    app.register_blueprint(login_blueprint)
+# Blueprints
+app.register_blueprint(get_sections_by_routes_blueprint)
+app.register_blueprint(index_blueprint)
+app.register_blueprint(login_blueprint)
+app.register_blueprint(plan_ride_blueprint)
 
-    # Bind the instance to the 'app.py' Flask application
-    db.init_app(app)
-    bootstrap = Bootstrap(app)
-    return app
+# Bind the instance to the 'app.py' Flask application
+db.init_app(app)
+bootstrap = Bootstrap(app)
+
+@app.route('/admin/ride/store', methods=["POST", 'GET'])
+def store_ride():
+    if request.method == 'POST':
+        ride = Ride(request.form['route_id'], datetime.strptime(request.form['time'], '%Y-%m-%dT%H:%M'), int(request.form['price']), bool(request.form['interval']), None)
+
+        db.session.add(ride)
+        db.session.flush()
+        db.session.refresh(ride)
+        for s in ast.literal_eval(request.form['sections']):
+            ride_section = Ride_section(ride.id, int(s))
+            db.session.add(ride_section)
+
+        for e in request.form.getlist('emp'):
+            crew = Crew(ride.id, int(e))
+            db.session.add(crew)
+
+        db.session.add(ride)
+        db.session.commit()
+
+        return 'nice'
+
+    else: #GET Kann ich noch in admin.py schreiben
+        if request.args['interval'] == 'True':
+            return redirect(url_for('plan_interval_ride_blueprint.plan_interval_ride', routes_id=request.args['routes_id']))
+        else:
+            time = request.args['time']
+            route_id = request.args['routes_id']
+            sections = request.args.getlist('sections')
+            #TODO: Employee Auswahl einschränken
+            employees = Employee.query
+            trains = dict(ReadInput.get_trains_mock())['trains']
+            filtered_trains = []
+            for t in trains:
+                #TODO: add condition for trains
+                filtered_trains.append(t)
+            return render_template('admin/plan_single_ride.html', title='Plan single ride', time=time, route_id=route_id, sections=sections, employees=employees, trains=filtered_trains, routes_id=request.args['routes_id'], interval=False)
 
 if __name__ == "__main__":
-    setup_app().run(debug=True)
+    @login_manager.user_loader
+    def load_user(user_id):
+        return Employee.query.get(int(user_id))
+    app.run(debug=True)

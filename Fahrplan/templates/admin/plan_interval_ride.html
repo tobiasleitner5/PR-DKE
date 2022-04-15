@@ -2,6 +2,7 @@
 
 {% block content %}
 <form action="/admin/ride/store" id="ft-form" method="POST" accept-charset="UTF-8">
+    <input type="hidden" name="routes_id" value="{{ routes_id }}">
     <div class="dropdown">
       <label>
          Sections

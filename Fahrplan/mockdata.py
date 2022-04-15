@@ -16,5 +16,11 @@ def getSections():
     data = json.load(json_file)
     return data
 
+@app.route('/trains', methods = ['GET'])
+def getTrains():
+    json_file = open('./testdata/trains.json')
+    data = json.load(json_file)
+    return data
+
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0', port=5001)
