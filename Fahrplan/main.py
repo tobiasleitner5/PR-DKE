@@ -12,7 +12,6 @@ import ast
 
 # my classes
 import ReadInput
-from ReadInput import get_trains_mock
 from models import db, Employee, Ride, Ride_section, Crew
 from admin_routings import get_sections_by_routes_blueprint, plan_ride_blueprint
 from general_routings import index_blueprint, login_blueprint
@@ -44,35 +43,75 @@ app.register_blueprint(plan_ride_blueprint)
 db.init_app(app)
 bootstrap = Bootstrap(app)
 
+def create_interval_rides(rep_type, rep, start):
+    ride = Ride(request.form['route_id'], datetime.strptime(request.form['time'], '%Y-%m-%dT%H:%M'),
+                int(request.form['price']), False, None)
+
+    rides = []
+    return rides
+
 @app.route('/admin/ride/store', methods=["POST", 'GET'])
 def store_ride():
     if request.method == 'POST':
-        print(request.form['interval'])
-        ride = Ride(request.form['route_id'], datetime.strptime(request.form['time'], '%Y-%m-%dT%H:%M'), int(request.form['price']), request.form['interval'] == 'True', None)
+        if request.form['interval'] == 'False':
+            ride = Ride(request.form['route_id'], datetime.strptime(request.form['time'], '%Y-%m-%dT%H:%M'), int(request.form['price']), False, None)
+            try:
+                db.session.add(ride)
+                db.session.flush()
+                db.session.refresh(ride)
+                for s in ast.literal_eval(request.form['sections']):
+                    ride_section = Ride_section(ride.id, int(s))
+                    db.session.add(ride_section)
 
-        try:
-            db.session.add(ride)
-            db.session.flush()
-            db.session.refresh(ride)
-            for s in ast.literal_eval(request.form['sections']):
-                ride_section = Ride_section(ride.id, int(s))
-                db.session.add(ride_section)
+                for e in request.form.getlist('emp'):
+                    crew = Crew(ride.id, int(e))
+                    db.session.add(crew)
 
-            for e in request.form.getlist('emp'):
-                crew = Crew(ride.id, int(e))
-                db.session.add(crew)
+                db.session.add(ride)
+                db.session.commit()
+            except:
+                print('There was a problem...')
+                return redirect(url_for('/'))
+            finally:
+                db.session.close()
+        else:
+            rides = create_interval_rides()
+            for ride in rides:
+                try:
+                    db.session.add(ride)
+                    db.session.flush()
+                    db.session.refresh(ride)
+                    for s in ast.literal_eval(request.form['sections']):
+                        ride_section = Ride_section(ride.id, int(s))
+                        db.session.add(ride_section)
 
-            db.session.add(ride)
-            db.session.commit()
-        except:
-            print('There was a problem...')
-            return redirect(url_for(''))
+                    for e in request.form.getlist('emp'):
+                        crew = Crew(ride.id, int(e))
+                        db.session.add(crew)
 
-        return 'nice'
+                    db.session.add(ride)
+                    db.session.commit()
+                except:
+                    print('There was a problem...')
+                    return redirect(url_for('/'))
+                finally:
+                    db.session.close()
+
+        return 'Ride stored in database.'
 
     else: #GET Kann ich noch in admin.py schreiben
         if request.args['interval'] == 'True':
-            return redirect(url_for('plan_interval_ride_blueprint.plan_interval_ride', routes_id=request.args['routes_id']))
+            time = request.args['time']
+            route_id = request.args['routes_id']
+            sections = request.args.getlist('sections')
+            # TODO: Employee Auswahl einschränken
+            employees = Employee.query
+            trains = dict(ReadInput.get_trains_mock())['trains']
+            filtered_trains = []
+            for t in trains:
+                # TODO: add condition for trains
+                filtered_trains.append(t)
+            return render_template('admin/plan_interval_ride.html', title='Plan interval ride', time=time, route_id=route_id, sections=sections, employees=employees, trains=filtered_trains, routes_id=request.args['routes_id'], interval=True)
         else:
             time = request.args['time']
             route_id = request.args['routes_id']
@@ -91,3 +130,4 @@ if __name__ == "__main__":
     def load_user(user_id):
         return Employee.query.get(int(user_id))
     app.run(debug=True)
+

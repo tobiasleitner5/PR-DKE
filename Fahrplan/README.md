@@ -1,3 +1,5 @@
 # Fahrplan-System
 
 ## Dependencies
+
+## Implementierungsdetails
