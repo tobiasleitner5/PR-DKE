@@ -2,4 +2,7 @@
 
 ## Dependencies
 
+## Endpoints
+
 ## Implementierungsdetails
+

@@ -1,5 +1,7 @@
 # flask sqlalchemy
-from flask import Flask, redirect, request, url_for, render_template
+import json
+
+from flask import Flask, redirect, request, url_for, render_template, jsonify
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_admin import Admin
@@ -14,7 +16,7 @@ import ast
 import ReadInput
 from models import db, Employee, Ride, Ride_section, Crew
 from admin_routings import get_sections_by_routes_blueprint, plan_ride_blueprint
-from general_routings import index_blueprint, login_blueprint
+from general_routings import index_blueprint, login_blueprint, logout_blueprint
 from views import PlanView, ModelViewWithoutCreate
 
 app = Flask(__name__)
@@ -37,6 +39,7 @@ admin.add_view(PlanView(name='Plan', endpoint='plan'))
 app.register_blueprint(get_sections_by_routes_blueprint)
 app.register_blueprint(index_blueprint)
 app.register_blueprint(login_blueprint)
+app.register_blueprint(logout_blueprint)
 app.register_blueprint(plan_ride_blueprint)
 
 # Bind the instance to the 'app.py' Flask application
@@ -50,11 +53,16 @@ def create_interval_rides(rep_type, rep, start):
     rides = []
     return rides
 
+@app.login_manager.unauthorized_handler
+def unauth_handler():
+    return redirect(url_for('login_blueprint.login'))
+
 @app.route('/admin/ride/store', methods=["POST", 'GET'])
 def store_ride():
     if request.method == 'POST':
         if request.form['interval'] == 'False':
-            ride = Ride(request.form['route_id'], datetime.strptime(request.form['time'], '%Y-%m-%dT%H:%M'), int(request.form['price']), False, None)
+            ride = Ride(request.form['route_id'], datetime.strptime(request.form['time'], '%Y-%m-%dT%H:%M'),
+                        int(request.form['price']), False, None)
             try:
                 db.session.add(ride)
                 db.session.flush()
@@ -99,7 +107,7 @@ def store_ride():
 
         return 'Ride stored in database.'
 
-    else: #GET Kann ich noch in admin.py schreiben
+    else:  # GET Kann ich noch in admin.py schreiben
         if request.args['interval'] == 'True':
             time = request.args['time']
             route_id = request.args['routes_id']
@@ -111,23 +119,28 @@ def store_ride():
             for t in trains:
                 # TODO: add condition for trains
                 filtered_trains.append(t)
-            return render_template('admin/plan_interval_ride.html', title='Plan interval ride', time=time, route_id=route_id, sections=sections, employees=employees, trains=filtered_trains, routes_id=request.args['routes_id'], interval=True)
+            return render_template('admin/plan_interval_ride.html', title='Plan interval ride', time=time,
+                                   route_id=route_id, sections=sections, employees=employees, trains=filtered_trains,
+                                   routes_id=request.args['routes_id'], interval=True)
         else:
             time = request.args['time']
             route_id = request.args['routes_id']
             sections = request.args.getlist('sections')
-            #TODO: Employee Auswahl einschränken
+            # TODO: Employee Auswahl einschränken
             employees = Employee.query
             trains = dict(ReadInput.get_trains_mock())['trains']
             filtered_trains = []
             for t in trains:
-                #TODO: add condition for trains
+                # TODO: add condition for trains
                 filtered_trains.append(t)
-            return render_template('admin/plan_single_ride.html', title='Plan single ride', time=time, route_id=route_id, sections=sections, employees=employees, trains=filtered_trains, routes_id=request.args['routes_id'], interval=False)
+            return render_template('admin/plan_single_ride.html', title='Plan single ride', time=time,
+                                   route_id=route_id, sections=sections, employees=employees, trains=filtered_trains,
+                                   routes_id=request.args['routes_id'], interval=False)
+
 
 if __name__ == "__main__":
     @login_manager.user_loader
     def load_user(user_id):
         return Employee.query.get(int(user_id))
-    app.run(debug=True)
 
+    app.run(debug=True)
