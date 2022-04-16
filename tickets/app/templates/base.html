@@ -1,24 +1,25 @@
 <!doctype html>
 <html>
     <head>
+        {{ fontawesome_html() }}
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
         {% if title %}
-        <title>{{ title }} - microblog</title>
+            <title>{{ title }}</title>
         {% else %}
-        <title>microblog</title>
+            <title>Tickets</title>
         {% endif %}
     </head>
     <body>
-        <div>
-            Microblog:
-            <a href="{{ url_for('index') }}">Home</a>
-            {% if current_user.is_anonymous %}
-            <a href="{{ url_for('login') }}">Login</a>
-            {% else %}
-            <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>
-            <a href="{{ url_for('logout') }}">Logout</a>
-            {% endif %}
-        </div>
-        <hr>
+        {% if not current_user.is_anonymous %}
+            <ul class = "navbar">
+                <li><a class="{{ 'navbar_active' if active_page=='home_page' else ''}}" style="margin-top:50%" class="navbar_active" href="{{ url_for('index') }}"><i class='fas fa-home'></i></i> Home</a></li>
+                <li><a href="#news"><i class='fas fa-paste'></i> Meine Tickets</a></li>
+                <li><a class="{{ 'navbar_active' if active_page=='profile_page' else ''}}" href="{{ url_for('user', username=current_user.username) }}"><i class='fas fa-user'></i> Profil</a></li>
+                <li><a class="{{ 'navbar_active' if active_page=='login_page' else ''}}" href="{{ url_for('logout') }}"><i class='fas fa-sign-out-alt'></i> Logout</a></li>
+            </ul>
+            <div style="margin-left:20%;padding:1px 16px;height:1000px;">
+        {% endif %}
+
         {% with messages = get_flashed_messages() %}
         {% if messages %}
         <ul>
@@ -29,5 +30,7 @@
         {% endif %}
         {% endwith %}
         {% block content %}{% endblock %}
+        </div>
+        </div>
     </body>
 </html>
