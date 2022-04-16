@@ -33,3 +33,18 @@ def delete_note():
             db.session.commit()
 
     return jsonify({})
+
+
+@views.route('/routes', methods=['GET', 'POST'])
+def routes():
+    return render_template("routes.html", user=current_user)
+
+
+@views.route('/sections', methods=['GET', 'POST'])
+def sections():
+    return render_template("sections.html", user=current_user)
+
+
+@views.route('/stations', methods=['GET', 'POST'])
+def stations():
+    return render_template("stations.html", user=current_user)
