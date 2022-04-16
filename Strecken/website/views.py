@@ -48,3 +48,8 @@ def sections():
 @views.route('/stations', methods=['GET', 'POST'])
 def stations():
     return render_template("stations.html", user=current_user)
+
+
+@views.route('/users', methods=['GET', 'POST'])
+def users():
+    return render_template("users.html", user=current_user)

@@ -21,7 +21,8 @@
 <body>
 
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <img src="static/oebb.png" alt="ÖBB Logo" width="150"/>
+    <button class="custom-button" type="button"><a id="logo" ref="/routes"><img src="static/oebb.png" width="150"/></a></button>
+
       <button
         class="navbar-toggler"
         data-target="#navbar"
@@ -36,10 +37,12 @@
           <a class="nav-item nav-link" id="routes" href="/routes"><img src="static/route.svg" height="25"/> Routes</a>
             <a class="nav-item nav-link" id="sections" href="/sections"><img src="static/section.svg" height="25"/> Sections</a>
             <a class="nav-item nav-link" id="stations" href="/stations"><img src="static/station.svg" height="25"/> Stations</a>
-            <a class="nav-item nav-link" id="users" href="/useres"><img src="static/users.svg" height="25"/> Users</a>
-            <a class="nav-item nav-link" id="logout" href="/logout"><img src="static/logout.svg" height="25"/> Logout</a>
-            <a class="nav-item nav-link" id="login" href="/login"><img src="static/login.svg" height="25"/> Login</a>
+            <a class="nav-item nav-link" id="users" href="/users"><img src="static/users.svg" height="25"/> Users</a>
+<!--            <a class="nav-item nav-link" id="login" href="/login"><img src="static/login.svg" height="25"/> Login</a>-->
+          <a class="nav-item nav-link" id="user" href="/user"><img src="static/user.svg" height="25" text-salign="end"/></a>
+          <a class="nav-item nav-link" id="logout" href="/logout"><img src="static/logout.svg" height="25"/> Logout</a>
         </div>
+
 </div>
 </nav>
 
