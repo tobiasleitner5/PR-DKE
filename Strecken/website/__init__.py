@@ -34,7 +34,7 @@ def create_app():
 
 
 def create_database(app):
-    if not path.exists('notesWebsiteTutorial/' + DB_NAME):
+    if not path.exists('Strecken/' + DB_NAME):
         db.create_all(app=app)
-        print('Created Database')
+        print('****** Created Database ******')
 

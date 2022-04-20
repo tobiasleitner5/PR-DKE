@@ -27,4 +27,16 @@
     </tbody>
 </table>
 <button class="custom-button" type="button">  <img src="static/add.svg"height="25"/></button>
+
+<ul class="list-group list-group-flush" id="stations">
+  {% for station in user.stations %}
+  <li class="list-group-item">
+    {{ station.data }}
+    <button type="button" class="close" onClick="">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </li>
+  {% endfor %}
+</ul>
+
 {% endblock %}
