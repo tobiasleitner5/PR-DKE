@@ -1,10 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, DateField, TimeField
 from wtforms.validators import DataRequired
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
 from app.models import User
+from datetime import datetime
+import api
 
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
@@ -53,3 +55,10 @@ class EditProfileForm(FlaskForm):
             user = User.query.filter_by(email=self.email.data).first()
             if user is not None:
                 raise ValidationError('Please use a different email.')
+
+class TicketForm(FlaskForm):
+    departure = SelectField('Von', choices=api.get_rides()["rides"], validators=[DataRequired()])
+    destination = SelectField('Nach', choices=[('cpp', 'C++'), ('py', 'Python'), ('text', 'Plain Text')], validators=[DataRequired()])
+    date = DateField('Wann', format='%Y-%m-%d', default=datetime.today, validators=[DataRequired('please select startdate')])
+    time = TimeField('Wann', format='%H:%M', default=datetime.today, validators=[DataRequired()])
+    submit = SubmitField('Suchen')

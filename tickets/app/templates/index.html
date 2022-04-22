@@ -2,8 +2,40 @@
 {% set active_page = 'home_page' %}
 
 {% block content %}
-    <h1>Hi, {{ current_user.username }}!</h1>
-    {% for post in posts %}
-    <div><p>{{ post.author.username }} says: <b>{{ post.body }}</b></p></div>
-    {% endfor %}
+    <h1>Fahrplan & Tickets</h1>
+    <form action="" method="post" novalidate>
+        {{ form.hidden_tag() }}
+        <table>
+            <tr>
+                <td>{{ form.departure.label }}<br>{{ form.departure }}</td>
+                <td><i class="fas fa-exchange-alt"></i></td>
+                <td>{{ form.destination.label }}<br>{{ form.destination }}</td>
+            </tr>
+            <tr>
+                <td>{{ form.date(class='datepicker') }}</td>
+                <td></td>
+                <td>{{ form.time(class='timepicker') }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td>{{ form.submit() }}</td>
+            </tr>
+        </table>
+    </form>
+
+    {% if results %}
+        <br><h3>Ticket wählen</h3><hr>
+        <table>
+            <tr>
+                <td></td>
+                <td><i class="fas fa-arrow-right"></i></td>
+                <td></td>
+                <td>
+                    <input type="button" onclick="window.location.href='{{ url_for( 'buyticket' ) }}';" value="Kaufen">
+                </td>
+            </tr>
+        </table>
+    {% endif  %}
+
 {% endblock %}

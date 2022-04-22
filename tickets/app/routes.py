@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, flash, redirect, url_for
-from app.forms import LoginForm
+from app.forms import LoginForm, TicketForm
 from flask_login import current_user, login_user
 from app.models import User
 from flask_login import logout_user
@@ -11,8 +11,8 @@ from flask import request
 from werkzeug.urls import url_parse
 from app.forms import EditProfileForm
 
-@app.route('/')
-@app.route('/index')
+@app.route('/', methods=['GET', 'POST'])
+@app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
     user = {'username': 'Miguel'}
@@ -26,7 +26,10 @@ def index():
             'body': 'The Avengers movie was so cool!'
         }
     ]
-    return render_template("index.html", title='Home Page', posts=posts)
+    form = TicketForm()
+    if form.validate_on_submit():
+        return render_template("index.html", title='Home Page', results=True, form=form)
+    return render_template("index.html", title='Home Page', results=False, form=form)
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -43,7 +46,6 @@ def login():
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
         return redirect(next_page)
-
     return render_template('login.html', title='Sign In', form=form)
 
 @app.route('/logout')
@@ -88,3 +90,13 @@ def user(username):
         form.email.data = current_user.email
     return render_template('user.html', user=user, title='Profile', form=form)
 
+
+@app.route('/tickets', methods=['GET', 'POST'])
+@login_required
+def tickets():
+    return render_template('tickets.html', title='My Tickets')
+
+@app.route('/buyticket', methods=['GET', 'POST'])
+@login_required
+def buyticket():
+    return render_template('buyticket.html', title='Buy Ticket')
