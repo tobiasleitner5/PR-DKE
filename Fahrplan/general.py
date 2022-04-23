@@ -3,10 +3,11 @@ from flask_login import login_user, login_required, logout_user
 
 from models import Employee
 from login import LoginForm
+from flask_login import current_user
 
 @login_required
 def index():
-    return render_template('index.html')
+    return render_template('index.html', current_user=current_user)
 
 def login():
     form = LoginForm()

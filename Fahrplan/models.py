@@ -20,6 +20,16 @@ class Ride(db.Model):
         self.interval_number = interval_nr
         self.route_id = route_id
 
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'route_id': self.route_id,
+            'time': self.time,
+            'price': self.price,
+            'interval': self.interval,
+            'interval_number': self.interval_number
+        }
+
 class Employee(UserMixin, db.Model):
     __tablename__ = 'employees'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
@@ -45,6 +55,10 @@ class Employee(UserMixin, db.Model):
             'password': self.password,
             'is_admin': self.is_admin
         }
+
+    @property
+    def is_admin_check(self):
+        return self.is_admin
 
 class Crew(db.Model): #table for relationship employee and ride
     __tablename__ = 'crew'

@@ -1,11 +1,8 @@
 # flask sqlalchemy
-import json
-
 from flask import Flask, redirect, request, url_for, render_template, jsonify
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
 from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
 
 from datetime import datetime
 
@@ -17,7 +14,7 @@ import ReadInput
 from models import db, Employee, Ride, Ride_section, Crew
 from admin_routings import get_sections_by_routes_blueprint, plan_ride_blueprint
 from general_routings import index_blueprint, login_blueprint, logout_blueprint
-from views import PlanView, ModelViewWithoutCreate
+from views import PlanView, ModelViewWithoutCreate, ModelViewCustom, HomeAdminView
 
 app = Flask(__name__)
 login_manager = LoginManager()
@@ -30,8 +27,8 @@ SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
 
 # Admin - in eigene Klasse später
-admin = Admin(app, template_mode='bootstrap3')
-admin.add_view(ModelView(Employee, db.session))
+admin = Admin(app, template_mode='bootstrap3', url='/', name='Menü', index_view=HomeAdminView(name='Home'))
+admin.add_view(ModelViewCustom(Employee, db.session))
 admin.add_view(ModelViewWithoutCreate(Ride, db.session))
 admin.add_view(PlanView(name='Plan', endpoint='plan'))
 
@@ -137,6 +134,9 @@ def store_ride():
                                    route_id=route_id, sections=sections, employees=employees, trains=filtered_trains,
                                    routes_id=request.args['routes_id'], interval=False)
 
+@app.route('/plan/get/rides')
+def test():
+    return {'data': [reservation.to_dict() for reservation in Ride.query]}
 
 if __name__ == "__main__":
     @login_manager.user_loader
