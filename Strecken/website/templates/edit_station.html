@@ -1,8 +1,8 @@
-{% extends "base.html" %}{% block title %}Add Station{% endblock %}
+{% extends "base.html" %}{% block title %}Edit Station{% endblock %}
 {% block content%}
 <br>
   <form method="POST">
-    <h3 align="center">Create new station</h3>
+    <h3 align="center">Edit station</h3>
     <div class="form-group">
       <label for="name">Name</label>
       <input
@@ -10,7 +10,7 @@
         class="form-control"
         id="name"
         name="name"
-        placeholder="Enter station name"
+        placeholder="station name"
         />
     </div>
     <div class="form-group">
@@ -20,7 +20,7 @@
         class="form-control"
         id="address"
         name="address"
-        placeholder="Enter address"
+        placeholder="address"
         />
     </div>
     <br />

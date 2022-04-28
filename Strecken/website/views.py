@@ -1,6 +1,8 @@
-from flask import Blueprint, render_template, request, flash, jsonify
+from flask import Blueprint, render_template, request, flash, jsonify, url_for
 from flask_login import login_required, current_user
-from .models import Note
+from werkzeug.utils import redirect
+
+from .models import Note, Stations
 from . import db
 import json
 
@@ -53,3 +55,28 @@ def stations():
 @views.route('/users', methods=['GET', 'POST'])
 def users():
     return render_template("users.html", user=current_user)
+
+@views.route('/new_station', methods=['GET', 'POST'])
+def new_station():
+    if request.method == 'POST':
+        name = request.form.get('name')
+        address = request.form.get('address')
+
+        # todo: check name and address - length etc.
+        #user = User.query.filter_by(email=email).first()
+        # if user:
+        #    flash('Email already exists.', category='error')
+        # elif len(email) < 4:
+        #    flash('Email must be longer than 3 characters!', category='error')
+        new_stations = Stations(name=name, address=address)
+        db.session.add(new_stations)
+        db.session.commit()
+        flash('Station created!', category='success')
+        return redirect(url_for('views.home'))
+
+    return render_template("new_station.html", user=current_user)
+
+
+@views.route('/edit_station', methods=['GET', 'POST'])
+def edit_station():
+    return render_template("edit_station.html", user=current_user)

@@ -62,22 +62,22 @@ def sign_up():
     return render_template("sign_up.html", user=current_user)
 
 
-@auth.route('/new_station', methods=['GET', 'POST'])
-def new_station():
-    if request.method == 'POST':
-        name = request.form.get('name')
-        address = request.form.get('address')
-
-        # todo: check name and address - length etc.
-        #user = User.query.filter_by(email=email).first()
-        # if user:
-        #    flash('Email already exists.', category='error')
-        # elif len(email) < 4:
-        #    flash('Email must be longer than 3 characters!', category='error')
-        new_station = Stations(name=name, address=address)
-        db.session.add(new_station)
-        db.session.commit()
-        flash('Station created!', category='success')
-        return redirect(url_for('views.home'))
-
-    return render_template("new_station.html", user=current_user)
+# @auth.route('/new_station', methods=['GET', 'POST'])
+# def new_station():
+#     if request.method == 'POST':
+#         name = request.form.get('name')
+#         address = request.form.get('address')
+#
+#         # todo: check name and address - length etc.
+#         #user = User.query.filter_by(email=email).first()
+#         # if user:
+#         #    flash('Email already exists.', category='error')
+#         # elif len(email) < 4:
+#         #    flash('Email must be longer than 3 characters!', category='error')
+#         new_station = Stations(name=name, address=address)
+#         db.session.add(new_station)
+#         db.session.commit()
+#         flash('Station created!', category='success')
+#         return redirect(url_for('views.home'))
+#
+#     return render_template("new_station.html", user=current_user)

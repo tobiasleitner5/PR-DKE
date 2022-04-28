@@ -9,7 +9,7 @@
             <td align="right" >
                 <button class="custom-button" type="button">  <img src="static/info.svg" style="border: none;" height="25"/></button>
                 <button class="custom-button" type="button"> <img src="static/edit.svg" height="25"/></button>
-                <button class="custom-button" type="button"> <img src="static/info.svg" height="25"/></button>
+                <button class="custom-button" type="button"> <img src="static/delete.svg" height="25"/></button>
             </td>
         </tr>
     </tbody>
@@ -21,17 +21,20 @@
             <td align="right" >
                 <button class="custom-button" type="button">  <img src="static/info.svg" style="border: none;" height="25"/></button>
                 <button class="custom-button" type="button"> <img src="static/edit.svg" height="25"/></button>
-                <button class="custom-button" type="button"> <img src="static/info.svg" height="25"/></button>
+                <button class="custom-button" type="button"> <img src="static/delete.svg" height="25"/></button>
             </td>
         </tr>
     </tbody>
 </table>
-<button class="custom-button" type="button">  <img src="static/add.svg"height="25"/></button>
+<button class="custom-button" type="button">  <img src="static/add.svg"height="25" href="/new_station"/></button>
 
 <ul class="list-group list-group-flush" id="stations">
-  {% for station in user.stations %}
+<!--    <h3>Bahnstation</h3>-->
+
+  {% for station in stations %}
   <li class="list-group-item">
-    {{ station.data }}
+    {{ station.name }}
+      <h3>Bahnstation</h3>
     <button type="button" class="close" onClick="">
       <span aria-hidden="true">&times;</span>
     </button>
