@@ -1,0 +1,9 @@
+{
+   "rides":[
+      {
+         "id":1,
+         "price": 20,
+         "name":"Westbahn"
+      }
+   ]
+}

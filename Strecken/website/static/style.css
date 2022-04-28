@@ -1,0 +1,33 @@
+body{
+font-family: 'Roboto', sans-serif;
+}
+
+*{
+margin:0;
+padding:0;
+list-style: none;
+text-decoration: none;
+}
+
+.custom-table {
+    border-collapse: collapse;
+    margin: 15px 0px;
+    font-size: 0.9em;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+
+.custom-table td{
+    width:200px;
+}
+
+
+.custom-button{
+  border: none;
+  padding: 0;
+  background: none;
+}
+
+.userStuff {
+    text-align: right;
+    float: right;
+}

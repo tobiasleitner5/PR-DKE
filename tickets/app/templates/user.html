@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% set active_page = 'profile_page' %}
+
+{% block content %}
+    <table>
+        <tr valign="top">
+            <td><img src="{{ user.avatar(128) }}"></td>
+            <td><h1>Hello, {{ user.username }}!</h1></td>
+        </tr>
+    </table>
+    <hr>
+    <h2>Edit Profile</h2>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.username.label }}<br>
+            {{ form.username(size=32) }}<br>
+            {% for error in form.username.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email(size=64) }}<br>
+            {% for error in form.email.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.oldPassword.label }}<br>
+            {{ form.oldPassword(size=32) }}<br>
+            {% for error in form.oldPassword.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.newPassword.label }}<br>
+            {{ form.newPassword(size=32) }}<br>
+            {% for error in form.newPassword.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>
+            {{ form.newPassword2.label }}<br>
+            {{ form.newPassword2(size=32) }}<br>
+            {% for error in form.newPassword2.errors %}
+            <span style="color: red;">[{{ error }}]</span>
+            {% endfor %}
+        </p>
+        <p>{{ form.submit() }}</p>
+    </form>
+{% endblock %}

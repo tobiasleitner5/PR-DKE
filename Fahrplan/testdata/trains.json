@@ -1,0 +1,14 @@
+{
+   "trains":[
+      {
+         "id":1,
+         "name":"ICE1",
+         "maxWidth": 2.5
+      },
+      {
+         "id":2,
+         "name":"ICE2",
+         "maxWidth": 3
+      }
+   ]
+}

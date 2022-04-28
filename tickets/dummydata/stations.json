@@ -1,0 +1,24 @@
+{
+   "stations":[
+      {
+         "id":1,
+         "name":"Linz HB",
+         "address":"test"
+      },
+      {
+         "id":2,
+         "name":"Wien HB",
+         "address":"test2"
+      },
+      {
+         "id":3,
+         "name":"Innsbruck HB",
+         "address":"test3"
+      },
+      {
+         "id":4,
+         "name":"St. Pölten",
+         "address":"test4"
+      }
+   ]
+}
