@@ -38,6 +38,7 @@ class EditProfileForm(FlaskForm):
     newPassword = PasswordField('New Password')
     newPassword2 = PasswordField('Repeat new Password', validators=[EqualTo('newPassword')])
     submit = SubmitField('Submit')
+    delete = SubmitField('Delete Profile')
 
     def __init__(self, original_username, original_email, *args, **kwargs):
         super(EditProfileForm, self).__init__(*args, **kwargs)

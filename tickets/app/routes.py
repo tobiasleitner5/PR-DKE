@@ -70,8 +70,13 @@ def register():
 @app.route('/user/<username>', methods=['GET', 'POST'])
 @login_required
 def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
     form = EditProfileForm(current_user.username, current_user.email)
+    user = User.query.filter_by(id=int(current_user.id)).first_or_404()
+    if form.delete.data:
+        db.session.delete(user)
+        db.session.commit()
+        flash('Successfully deleted your profile!')
+        return redirect(url_for('logout'))
     if form.validate_on_submit():
         current_user.username = form.username.data
         current_user.email = form.email.data
@@ -89,7 +94,6 @@ def user(username):
         form.username.data = current_user.username
         form.email.data = current_user.email
     return render_template('user.html', user=user, title='Profile', form=form)
-
 
 @app.route('/tickets', methods=['GET', 'POST'])
 @login_required
