@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <br>
+    <h1>Stations</h1>
+    {% for station in stations %}
+        <table class="custom-table">
+            <tbody>
+                <tr>
+                    <td>{{ station.name }} </td>
+                    <td>{{ station.address }}</td>
+                    <td align="right" >
+                        <button class="custom-button" type="button"> <img src="static/edit.svg" height="25" onclick="window.location.href='/edit_station';"/></button>
+                        <button class="custom-button" type="button"> <img src="static/delete.svg" height="25" onclick="window.location.href='/delete_station';"/></button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+{% endfor %}
+
+    <button class="custom-button" type="button">  <img src="static/add.svg"height="25" onclick="window.location.href='/create_station';"/></button>
+{% endblock %}

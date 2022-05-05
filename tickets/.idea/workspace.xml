@@ -1,17 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="7116d725-e664-4c11-9ed2-dc2a853a3270" name="Changes" comment="">
+    <list default="true" id="2e688a7f-fb86-48e0-b6ac-bf5aa884d53f" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/../Strecken/.flaskenv" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Strecken/config.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Strecken/website/forms.py" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../Strecken/website/templates/info_station.html" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tickets/.idea/inspectionProfiles/profiles_settings.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tickets/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tickets/.idea/modules.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tickets/.idea/tickets.iml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tickets/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../tickets/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Strecken/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Strecken/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Strecken/website/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Strecken/website/__init__.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../Strecken/website/auth.py" beforeDir="false" afterPath="$PROJECT_DIR$/../Strecken/website/auth.py" afterDir="false" />
@@ -31,7 +25,8 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
-  <component name="ProjectId" id="284cMcYB2iLhH7SIq3DbPhpDusK" />
+  <component name="ProjectId" id="28k625hTfKqO7T360SdCqdjiD2S" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -44,11 +39,11 @@
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
-      <changelist id="7116d725-e664-4c11-9ed2-dc2a853a3270" name="Changes" comment="" />
-      <created>1650479253017</created>
+      <changelist id="2e688a7f-fb86-48e0-b6ac-bf5aa884d53f" name="Changes" comment="" />
+      <created>1651748026825</created>
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
-      <updated>1650479253017</updated>
+      <updated>1651748026825</updated>
     </task>
     <servers />
   </component>
