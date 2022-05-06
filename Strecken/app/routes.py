@@ -1,5 +1,7 @@
 from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_user
+from sqlalchemy.orm import session
+
 from app.models import User
 from app import app
 from app.forms import LoginForm, EmptyForm, EditStationForm, NewStationForm
@@ -11,6 +13,7 @@ from app import db
 from app.forms import RegistrationForm
 from datetime import datetime
 from app.forms import EditProfileForm
+from app.models import Stations
 
 @app.route('/')
 @app.route('/index')
@@ -140,52 +143,21 @@ def unfollow(username):
 @app.route('/stations')
 @login_required
 def stations():
-    # user = {'username': 'Jonas'}
-    stations = [
-        {
-            'name': 'Haag',
-            'address': 'Bahnhofstraße'
-        },
-        {
-            'name': 'Amstetten',
-            'address': 'Bahnhofstraße'
-        }
-    ]
+    stations = db.session.query(Stations)
     return render_template('stations.html', title='Stations', user=current_user, stations=stations)
-
-# @app.route('/delete/<station>', methods=['POST'])
-# @login_required
-# def delete_station(station):
-#     form = EmptyForm()
-#     db.session.delete(station)
-#     db.session.commit()
-#     flash('Strecke deleted!')
-#     return redirect(url_for('routes.stations'))
 
 # @app.route('/edit_station', methods=['GET', 'POST'])
 # @login_required
 # def edit_station():
 #     form = EditStationForm()
-#     if form.validate_on_submit():
-#         current_user.username = form.username.data
-#         current_user.about_me = form.about_me.data
-#         db.session.commit()
-#         flash('Your changes have been saved.')
-#         return redirect(url_for('edit_profile'))
-#     elif request.method == 'GET':
-#         form.name.data = current_user.username
-#         form.address.data = current_user.about_me
-#     return render_template('edit_station.html', title='Edit Station',
-#                            form=form)
+#     return render_template('edit_station.html', title='Edit Station', form=form)
+#
+# @app.route('/create_station', methods=['GET', 'POST'])
+# @login_required
+# def create_station():
+#     form = NewStationForm()
+#     return render_template('create_station.html', title='Edit Station', form=form)
 
-@app.route('/edit_station', methods=['GET', 'POST'])
-@login_required
-def edit_station():
-    form = EditStationForm()
-    return render_template('edit_station.html', title='Edit Station', form=form)
-
-@app.route('/create_station', methods=['GET', 'POST'])
-@login_required
-def create_station():
-    form = NewStationForm()
-    return render_template('create_station.html', title='Edit Station', form=form)
+@app.route('/stations/get')
+def get_stations():
+    return {'data': [station.to_dict() for station in Stations.query]}

@@ -2,9 +2,11 @@ from datetime import datetime
 from hashlib import md5
 
 from flask_login import UserMixin
-from app import db
+from app import db, app
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import login
+from flask_admin import Admin, AdminIndexView
+from flask_admin.contrib.sqla import ModelView
 
 followers = db.Table('followers',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
@@ -79,3 +81,18 @@ class Stations(db.Model):
 
     def __repr__(self):
         return self.name
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'address': self.address,
+        }
+
+class MyAdminIndexView(AdminIndexView):
+    def is_accessible(self):
+        return False
+
+admin = Admin(app)
+admin.add_view(ModelView(User, db.session))
+admin.add_view(ModelView(Stations, db.session))
