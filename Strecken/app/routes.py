@@ -2,7 +2,7 @@ from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_user
 from sqlalchemy.orm import session
 
-from app.models import User
+from app.models import User, Sections, Routes
 from app import app
 from app.forms import LoginForm, EmptyForm, EditStationForm, NewStationForm
 from flask_login import logout_user
@@ -15,11 +15,10 @@ from datetime import datetime
 from app.forms import EditProfileForm
 from app.models import Stations
 
-@app.route('/')
+
 @app.route('/index')
 @login_required
 def index():
-    # user = {'username': 'Jonas'}
     posts = [
         {
             'author': {'username': 'John'},
@@ -48,12 +47,14 @@ def login():
         if not next_page or url_parse(next_page).netloc != '':
             next_page = url_for('index')
         return redirect(next_page)
-    return render_template('login.html', title='Sign In', form=form)
+    return render_template('login.html', title='Sign In', form=form, user=current_user)
+
 
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
+
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
@@ -69,6 +70,7 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
+
 @app.route('/user/<username>')
 @login_required
 def user(username):
@@ -80,11 +82,13 @@ def user(username):
     form = EmptyForm()
     return render_template('user.html', user=user, posts=posts, form=form)
 
+
 @app.before_request
 def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
+
 
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
@@ -101,6 +105,7 @@ def edit_profile():
         form.about_me.data = current_user.about_me
     return render_template('edit_profile.html', title='Edit Profile',
                            form=form)
+
 
 @app.route('/follow/<username>', methods=['POST'])
 @login_required
@@ -121,6 +126,7 @@ def follow(username):
     else:
         return redirect(url_for('index'))
 
+
 @app.route('/unfollow/<username>', methods=['POST'])
 @login_required
 def unfollow(username):
@@ -140,11 +146,27 @@ def unfollow(username):
     else:
         return redirect(url_for('index'))
 
+
 @app.route('/stations')
 @login_required
 def stations():
     stations = db.session.query(Stations)
     return render_template('stations.html', title='Stations', user=current_user, stations=stations)
+
+
+@app.route('/sections')
+@login_required
+def sections():
+    sections = db.session.query(Sections)
+    return render_template('sections.html', title='Sections', user=current_user, sections=sections)
+
+
+@app.route('/')
+@app.route('/routes')
+@login_required
+def routes():
+    routes = db.session.query(Routes)
+    return render_template('routes.html', title='Routes', user=current_user, routes=routes)
 
 # @app.route('/edit_station', methods=['GET', 'POST'])
 # @login_required
@@ -158,6 +180,17 @@ def stations():
 #     form = NewStationForm()
 #     return render_template('create_station.html', title='Edit Station', form=form)
 
+
 @app.route('/stations/get')
 def get_stations():
     return {'data': [station.to_dict() for station in Stations.query]}
+
+
+@app.route('/sections/get')
+def get_sections():
+    return {'data': [section.to_dict() for section in Sections.query]}
+
+
+@app.route('/routes/get')
+def get_rotues():
+    return {'data': [route.to_dict() for route in Routes.query]}

@@ -12,8 +12,7 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
 
+if __name__ == '__main__':
+    app.run(host='0.0.0.0')
 
 from app import routes, models
-
-# db = SQLAlchemy(app)
-# event.listen(db.engine, 'connect', lambda c, _: c.execute('pragma foreign_keys=on'))

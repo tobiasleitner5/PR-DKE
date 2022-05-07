@@ -1,17 +1,26 @@
 from datetime import datetime
 from hashlib import md5
 
-from flask_login import UserMixin
+from flask import url_for
+from flask_login import UserMixin, current_user
+from sqlalchemy import ForeignKey, Boolean
+from werkzeug.utils import redirect
+
 from app import db, app
 from werkzeug.security import generate_password_hash, check_password_hash
 from app import login
-from flask_admin import Admin, AdminIndexView
+from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
+
+# flask db init
+# flask db migrate -m "users table"
+# flask db upgrade
 
 followers = db.Table('followers',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
     db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
 )
+
 
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -21,6 +30,7 @@ class User(UserMixin, db.Model):
     posts = db.relationship('Post', backref='author', lazy='dynamic')
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
+    is_admin = db.Column(Boolean)
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
@@ -61,6 +71,7 @@ class User(UserMixin, db.Model):
         own = Post.query.filter_by(user_id=self.id)
         return followed.union(own).order_by(Post.timestamp.desc())
 
+
 class Post(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     body = db.Column(db.String(140))
@@ -70,9 +81,11 @@ class Post(db.Model):
     def __repr__(self):
         return '<Post {}>'.format(self.body)
 
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
+
 
 class Stations(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -89,10 +102,83 @@ class Stations(db.Model):
             'address': self.address,
         }
 
-class MyAdminIndexView(AdminIndexView):
+
+class Sections(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    distance = db.Column(db.Integer)
+    maxSpeed = db.Column(db.Integer)
+    fee = db.Column(db.Float)
+    startStation = (db.String(100), ForeignKey('stations.id'))
+    endStation = (db.String(100), ForeignKey('stations.id'))
+    is_schmalspur = db.Column(db.Boolean)
+    warning_id = db.Column(db.Integer, db.ForeignKey('warnings.id'))
+
+    def to_dict(self):
+        return {
+            'name': self.name,
+            'distance': self.distance,
+            'maxSpeed': self.maxSpeed,
+            'fee': self.fee,
+            'startStation': self.startStation,
+            'endStation': self.endStation
+        }
+
+    def __repr__(self):
+        return self.name
+
+
+class Routes(db.Model):
+    id = db.Column(db.Integer, primary_key=True) #autoincrement=True ?
+    name = db.Column(db.String(100))
+    warning_id = db.Column(db.Integer, db.ForeignKey('warnings.id'))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+        }
+
+    def __repr__(self):
+        return self.name
+
+
+class RouteSections(db.Model):
+    route = db.Column(db.String(100), ForeignKey('routes.id'), primary_key=True)
+    section = db.Column(db.String(100), ForeignKey('sections.id'), primary_key=True)
+
+    def __init__(self, route, section):
+        self.route = route
+        self.section = section
+
+
+class Warnings(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    description = db.Column(db.String(500))
+
+#**********************************************************
+
+class MyModelView(ModelView):
     def is_accessible(self):
+        #return current_user.is_admin
+        return True
+
+class MyAdminIndexView(AdminIndexView):
+    def is_visible(self):
         return False
 
-admin = Admin(app)
-admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(Stations, db.session))
+    @expose('/')
+    def index(self):
+        return redirect("/admin/routes")
+
+admin = Admin(app,
+    index_view=MyAdminIndexView(),
+              name="Entitiy Management"
+)
+
+admin.add_view(MyModelView(Routes, db.session))
+admin.add_view(MyModelView(Sections, db.session))
+admin.add_view(MyModelView(Stations, db.session))
+admin.add_view(MyModelView(User, db.session))
+admin.add_view(MyModelView(Warnings, db.session))

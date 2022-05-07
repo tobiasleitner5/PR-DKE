@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% block title %}Routes{% endblock %}
+
+{% block content %}
+    <br>
+    <h1>Routes</h1>
+    {% for route in routes %}
+        <table class="custom-table">
+            <tbody>
+                <tr>
+                    <td>{{ route.name }} </td>
+
+                </tr>
+            </tbody>
+        </table>
+{% endfor %}
+{% endblock %}

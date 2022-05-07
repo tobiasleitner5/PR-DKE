@@ -18,33 +18,8 @@
 
     <title>{% block title %}Home{% endblock %}</title>
   </head>
-<!--    <head>-->
-<!--      <title>Strecken</title>-->
-<!--    </head>-->
-<!--    <body>-->
-<!--        <div>-->
-<!--          <a href="{{ url_for('index') }}">Home</a>-->
-<!--          {% if current_user.is_anonymous %}-->
-<!--          <a href="{{ url_for('login') }}">Login</a>-->
-<!--          {% else %}-->
-<!--          <a href="{{ url_for('user', username=current_user.username) }}">Profile</a>-->
-<!--            <a href="{{ url_for('stations') }}">Stations</a>-->
-<!--          <a href="{{ url_for('logout') }}">Logout</a>-->
-<!--          {% endif %}-->
-<!--        </div>-->
-<!--        <hr>-->
-<!--        {% with messages = get_flashed_messages() %}-->
-<!--        {% if messages %}-->
-<!--        <ul>-->
-<!--            {% for message in messages %}-->
-<!--            <li>{{ message }}</li>-->
-<!--            {% endfor %}-->
-<!--        </ul>-->
-<!--        {% endif %}-->
-<!--        {% endwith %}-->
-<!--******************-->
 <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <button class="custom-button" type="button"><a id="logo" ref="/routes"><img src="static/oebb.png" width="150"/></a></button>
+    <button class="custom-button" type="button"><a id="logo" href="{{ url_for('routes') }}"><img src="static/oebb.png" width="150"/></a></button>
       <button
         class="navbar-toggler"
         data-target="#navbar"
@@ -56,12 +31,18 @@
 
       <div class="navbar" id="navbar">
           <div class="navbar-nav">
-            <a class="nav-item nav-link" id="routes" href="{{ url_for('index') }}" ><img src="static/route.svg" height="25"/> Routes</a>
-            <a class="nav-item nav-link" id="sections" href="/sections"><img src="static/section.svg" height="25"/> Sections</a>
-            <a class="nav-item nav-link" id="stations" href="{{ url_for('stations') }}"><img src="static/station.svg" height="25"/> Stations</a>
-            <a class="nav-item nav-link" id="users" href="/users"><img src="static/users.svg" height="25"/> Users</a>
-            <a class="nav-item nav-link" id="admin" href="/admin"><img src="static/user.svg" height="25"/> Admin</a>
-            <a class="nav-item nav-link" id="logout" href="/logout"><img src="static/logout.svg" height="25"/> Logout</a>
+            {% if user.is_admin %}
+              <a class="nav-item nav-link" id="routes_admin" href="{{ url_for('routes') }}" ><img src="static/route.svg" height="25"/> Routes</a>
+              <a class="nav-item nav-link" id="sections_admin" href="{{ url_for('sections') }}"><img src="static/section.svg" height="25"/> Sections</a>
+              <a class="nav-item nav-link" id="stations_admin" href="{{ url_for('stations') }}"><img src="static/station.svg" height="25"/> Stations</a>
+              <a class="nav-item nav-link" id="admin" href="/admin"><img src="static/user.svg" height="25"/> Admin</a>
+              <a class="nav-item nav-link" id="logout_admin" href="{{ url_for('logout') }}"><img src="static/logout.svg" height="25"/> Logout</a>
+            {% else %}
+              <a class="nav-item nav-link" id="routes" href="{{ url_for('routes') }}" ><img src="static/route.svg" height="25"/> Routes</a>
+              <a class="nav-item nav-link" id="sections" href="{{ url_for('sections') }}"><img src="static/section.svg" height="25"/> Sections</a>
+              <a class="nav-item nav-link" id="stations" href="{{ url_for('stations') }}"><img src="static/station.svg" height="25"/> Stations</a>
+              <a class="nav-item nav-link" id="logout" href="{{ url_for('logout') }}"><img src="static/logout.svg" height="25"/> Logout</a>
+            {% endif %}
         </div>
 
 </div>

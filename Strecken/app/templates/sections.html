@@ -1,0 +1,20 @@
+{% extends "base.html" %}{% block title %}Sections{% endblock %}
+
+{% block content %}
+    <br>
+    <h1>Sections</h1>
+    {% for section in sections %}
+        <table class="custom-table">
+            <tbody>
+                <tr>
+                    <td>{{ section.name }} </td>
+                    <td>{{ section.distance }}</td>
+                    <td>{{ section.maxSpeed }}</td>
+                    <td>{{ section.fee }}</td>
+                    <td>{{ section.startStation }}</td>
+                    <td>{{ section.endStation }}</td>
+                </tr>
+            </tbody>
+        </table>
+{% endfor %}
+{% endblock %}
