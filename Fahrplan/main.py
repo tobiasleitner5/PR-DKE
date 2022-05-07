@@ -1,3 +1,4 @@
+
 # flask sqlalchemy
 from flask import Flask, redirect, request, url_for, render_template, jsonify
 from flask_bootstrap import Bootstrap
@@ -43,7 +44,7 @@ app.register_blueprint(plan_ride_blueprint)
 db.init_app(app)
 bootstrap = Bootstrap(app)
 
-def create_interval_rides(rep_type, rep, start):
+def create_interval_rides(route_id, time, price, rep_type, rep, start):
     ride = Ride(request.form['route_id'], datetime.strptime(request.form['time'], '%Y-%m-%dT%H:%M'),
                 int(request.form['price']), False, None)
 
@@ -136,7 +137,7 @@ def store_ride():
 
 @app.route('/plan/get/rides')
 def test():
-    return {'data': [reservation.to_dict() for reservation in Ride.query]}
+    return {'data': [ride.to_dict() for ride in Ride.query]}
 
 if __name__ == "__main__":
     @login_manager.user_loader
@@ -144,3 +145,4 @@ if __name__ == "__main__":
         return Employee.query.get(int(user_id))
 
     app.run(debug=True)
+
