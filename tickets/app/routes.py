@@ -10,25 +10,30 @@ from app.forms import RegistrationForm
 from flask import request
 from werkzeug.urls import url_parse
 from app.forms import EditProfileForm
+import api
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
-    user = {'username': 'Miguel'}
-    posts = [
-        {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
     form = TicketForm()
     if form.validate_on_submit():
-        return render_template("index.html", title='Home Page', results=True, form=form)
+        start = form.departure.data
+        end = form.destination.data
+        succ = False
+        res = []
+        for r in api.get_rides()["data"]:
+            l = api.get_sections_by_route_id(r["route_id"])
+            lStations = []
+            for s in l:
+                lStations.append(s["name"])
+            if lStations.__contains__(start) and lStations.__contains__(end) and lStations.index(
+                    start) < lStations.index(end) and start != end:
+                succ = True
+                res.append(r)
+        if not succ:
+            flash("Keine Fahrtdurchführung gefunden!")
+        return render_template("index.html", title='Home Page', result=True, form=form, results=res)
     return render_template("index.html", title='Home Page', results=False, form=form)
 
 @app.route('/login', methods=['GET', 'POST'])

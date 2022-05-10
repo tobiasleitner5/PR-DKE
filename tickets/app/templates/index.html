@@ -24,17 +24,21 @@
         </table>
     </form>
 
-    {% if results %}
+    {% if result %}
         <br><h3>Ticket wählen</h3><hr>
         <table>
+            {% for r in results %}
             <tr>
-                <td></td>
+                <td>{{ r.time }}</td>
+                <td>{{ form.departure.data }}</td>
                 <td><i class="fas fa-arrow-right"></i></td>
-                <td></td>
+                <td>{{ form.destination.data }}</td>
+                <td>Price: {{ r.price }}</td>
                 <td>
                     <input type="button" onclick="window.location.href='{{ url_for( 'buyticket' ) }}';" value="Kaufen">
                 </td>
             </tr>
+            {% endfor %}
         </table>
     {% endif  %}
 

@@ -23,6 +23,24 @@ class User(UserMixin, db.Model):
         digest = md5(self.email.lower().encode('utf-8')).hexdigest()
         return 'https://www.gravatar.com/avatar/{}?d=mp&s={}'.format(digest, size)
 
+
+class Ticket(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    ride_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    user_id = db.Column(db.Integer, primary_key=True)
+    status = db.Column(db.Enum('active','cancelled','used'), nullable=False, server_default="active")
+    seat = db.Column(db.Boolean, default=False, nullable=False)
+
+    def __repr__(self):
+        return '<Ticket {}>'.format(self.id)
+
+    def set_status(self, status):
+        self.status = status
+
+    def set_seat(self, seat):
+        self.seat = seat
+
+
 @login.user_loader
 def load_user(id):
     return User.query.get(int(id))
