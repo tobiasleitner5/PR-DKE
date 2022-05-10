@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, flash, redirect, url_for
-from app.forms import LoginForm, TicketForm, EditProfileForm, BuyTicketForm,TicketOverviewForm
+from app.forms import LoginForm, TicketForm, EditProfileForm, EmptyForm, TicketOverviewForm
 from flask_login import current_user, login_user
 from app.models import User, Ticket
 from flask_login import logout_user
@@ -106,16 +106,33 @@ def tickets():
     tickets=current_user.bought_tickets()
     return render_template('tickets.html', title='My Tickets', form=form, tickets=tickets)
 
+@app.route('/cancelticket/<ticketid>', methods=['GET', 'POST'])
+@login_required
+def cancelticket(ticketid):
+    form = EmptyForm()
+    ticket = Ticket.query.filter_by(id=ticketid).first()
+    if form.cancel.data:
+        return redirect(url_for('index'))
+    if form.submit.data:
+        if ticket.status == 'active':
+            ticket.set_status('cancelled')
+            db.session.commit()
+            flash("Das Ticket wurde erfolgreich storniert.")
+        else:
+            flash("Das Ticket ist bereits storniert oder wurde bereits verbraucht.")
+        return redirect(url_for('tickets'))
+    return render_template('cancelticket.html', title='My Tickets', form=form)
+
 @app.route('/buyticket/<rideid>', methods=['GET', 'POST'])
 @login_required
 def buyticket(rideid):
-    form = BuyTicketForm()
+    form = EmptyForm()
     if form.cancel.data:
         return redirect(url_for('index'))
-    if form.buy.data:
+    if form.submit.data:
         ticket = Ticket(user_id=current_user.id, ride_id=rideid)
         db.session.add(ticket)
         db.session.commit()
         flash('Das Ticket wurde erfolgreich erworben!')
-        return redirect(url_for('index'))
+        return redirect(url_for('tickets'))
     return render_template('buyticket.html', title='Buy Ticket', form=form)

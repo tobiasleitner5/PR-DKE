@@ -64,9 +64,9 @@ class TicketForm(FlaskForm):
     time = TimeField('Wann', format='%H:%M', default=datetime.today, validators=[DataRequired()])
     submit = SubmitField('Suchen')
 
-class BuyTicketForm(FlaskForm):
+class EmptyForm(FlaskForm):
     cancel = SubmitField('Abbrechen')
-    buy = SubmitField('Kaufen')
+    submit = SubmitField('Submit')
 
 class TicketOverviewForm(FlaskForm):
     book_seat = SubmitField('Sitzplatz buchen')
