@@ -4,10 +4,12 @@
 {% block content %}
     <div id="">
         <h2>Möchten Sie das Ticket kaufen?</h2>
-        <input type="button" onclick="window.location.href='{{ url_for( 'index' ) }}';" value="Abbrechen">
-        <input type="submit" name="submit_button" onclick="window.location.href='{{ url_for( 'index' ) }}';" value="Kaufen">
-    {% if succ == True %}
-        <h3>Das Ticket wurde erfolgreich erworben!</h3>
-    {% endif %}
+        <form action="" method="post" novalidate>
+            {{ form.hidden_tag() }}
+            <tr>
+                <td>{{ form.cancel() }}</td>
+                <td>{{ form.buy() }}</td>
+            </tr>
+        </form>
     </div>
 {% endblock %}

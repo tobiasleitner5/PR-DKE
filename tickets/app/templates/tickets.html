@@ -4,14 +4,11 @@
 {% block content %}
 <h1>Meine Tickets</h1>
 <table>
+    {% for ticket in tickets %}
     <tr>
-        <td></td>
+        <td>{{ ticket }}</td>
         <td><i class="fas fa-arrow-right"></i></td>
-        <td></td>
-        <td>
-            <input type="button" onclick="window.location.href='{{ url_for( 'buyticket' ) }}';" value="Kaufen">
-        </td>
     </tr>
+    {% endfor %}
 </table>
-
 {% endblock %}

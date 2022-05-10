@@ -1,15 +1,14 @@
 from app import app
 from flask import render_template, flash, redirect, url_for
-from app.forms import LoginForm, TicketForm
+from app.forms import LoginForm, TicketForm, EditProfileForm, BuyTicketForm,TicketOverviewForm
 from flask_login import current_user, login_user
-from app.models import User
+from app.models import User, Ticket
 from flask_login import logout_user
 from flask_login import login_required
 from app import db
 from app.forms import RegistrationForm
 from flask import request
 from werkzeug.urls import url_parse
-from app.forms import EditProfileForm
 import api
 
 @app.route('/', methods=['GET', 'POST'])
@@ -103,9 +102,20 @@ def user(username):
 @app.route('/tickets', methods=['GET', 'POST'])
 @login_required
 def tickets():
-    return render_template('tickets.html', title='My Tickets')
+    form = TicketOverviewForm()
+    tickets=current_user.bought_tickets()
+    return render_template('tickets.html', title='My Tickets', form=form, tickets=tickets)
 
-@app.route('/buyticket', methods=['GET', 'POST'])
+@app.route('/buyticket/<rideid>', methods=['GET', 'POST'])
 @login_required
-def buyticket():
-    return render_template('buyticket.html', title='Buy Ticket')
+def buyticket(rideid):
+    form = BuyTicketForm()
+    if form.cancel.data:
+        return redirect(url_for('index'))
+    if form.buy.data:
+        ticket = Ticket(user_id=current_user.id, ride_id=rideid)
+        db.session.add(ticket)
+        db.session.commit()
+        flash('Das Ticket wurde erfolgreich erworben!')
+        return redirect(url_for('index'))
+    return render_template('buyticket.html', title='Buy Ticket', form=form)
