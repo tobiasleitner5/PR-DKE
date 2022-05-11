@@ -1,6 +1,6 @@
 from app import app
 from flask import render_template, flash, redirect, url_for
-from app.forms import LoginForm, TicketForm, EditProfileForm, EmptyForm, TicketOverviewForm
+from app.forms import LoginForm, TicketForm, EditProfileForm, EmptyForm
 from flask_login import current_user, login_user
 from app.models import User, Ticket
 from flask_login import logout_user
@@ -10,6 +10,7 @@ from app.forms import RegistrationForm
 from flask import request
 from werkzeug.urls import url_parse
 import api
+from datetime import datetime
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -102,9 +103,35 @@ def user(username):
 @app.route('/tickets', methods=['GET', 'POST'])
 @login_required
 def tickets():
-    form = TicketOverviewForm()
     tickets=current_user.bought_tickets()
-    return render_template('tickets.html', title='My Tickets', form=form, tickets=tickets)
+    today = datetime.now()
+    for t in tickets:
+        rideid = t.ride_id
+        ride_time = datetime.strptime(api.get_ride_by_id(rideid)["time"],"%a, %d %b %Y %H:%M:%S GMT")
+        if t.status == 'active' and t.status != 'used' and ride_time < today:
+            t.set_status('used')
+            db.session.commit()
+    ticketid = request.args.get('ticketid')
+    book_seat(ticketid)
+    return render_template('tickets.html', title='My Tickets', tickets=tickets)
+
+def book_seat(ticketid):
+    ticket = Ticket.query.filter_by(id=ticketid).first()
+    if ticket is not None and ticket.status == 'active':
+        rideid = ticket.ride_id
+        booked_seats = len(Ticket.query.filter_by(ride_id=rideid, seat=True).all())
+        trainid = api.get_ride_by_id(rideid)["train_id"]
+        available_seats = api.get_train_by_id(trainid)["seats"]
+        if ticket.seat:
+            flash("Sitzplatz bereits gebucht!")
+        elif available_seats <= booked_seats:
+            flash("Alle Sitzplätze sind bereits vergeben!")
+        elif not ticket.seat:
+            ticket.set_seat(True)
+            db.session.commit()
+            flash("Sitzplatz erfolgreich reserviert!")
+    elif ticket is not None:
+        flash("Das Ticket ist nicht mehr verfügbar, da storniert oder verbraucht!")
 
 @app.route('/cancelticket/<ticketid>', methods=['GET', 'POST'])
 @login_required
@@ -112,9 +139,10 @@ def cancelticket(ticketid):
     form = EmptyForm()
     ticket = Ticket.query.filter_by(id=ticketid).first()
     if form.cancel.data:
-        return redirect(url_for('index'))
+        return redirect(url_for('tickets'))
     if form.submit.data:
         if ticket.status == 'active':
+            ticket.set_seat(False)
             ticket.set_status('cancelled')
             db.session.commit()
             flash("Das Ticket wurde erfolgreich storniert.")

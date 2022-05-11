@@ -7,7 +7,7 @@
       "price": 2,
       "route_id": 1,
       "time": "Thu, 14 Apr 2022 11:14:00 GMT",
-      "train_id": null
+      "train_id": 2
     },
     {
       "id": 2,
@@ -16,7 +16,7 @@
       "price": 3,
       "route_id": 2,
       "time": "Fri, 13 May 2022 19:26:00 GMT",
-      "train_id": null
+      "train_id": 2
     },
     {
       "id": 3,
@@ -25,7 +25,7 @@
       "price": 5,
       "route_id": 1,
       "time": "Fri, 27 May 2022 21:34:00 GMT",
-      "train_id": null
+      "train_id": 2
     },
     {
       "id": 4,
@@ -34,7 +34,7 @@
       "price": 4,
       "route_id": 1,
       "time": "Fri, 27 May 2022 21:35:00 GMT",
-      "train_id": null
+      "train_id": 2
     },
     {
       "id": 5,
@@ -43,7 +43,7 @@
       "price": -3,
       "route_id": 1,
       "time": "Fri, 08 Jul 2022 21:36:00 GMT",
-      "train_id": null
+      "train_id": 2
     },
     {
       "id": 6,
@@ -52,7 +52,7 @@
       "price": 14,
       "route_id": 1,
       "time": "Sat, 14 May 2022 13:17:00 GMT",
-      "train_id": null
+      "train_id": 2
     },
     {
       "id": 7,
@@ -61,7 +61,7 @@
       "price": 8,
       "route_id": 2,
       "time": "Thu, 26 May 2022 14:19:00 GMT",
-      "train_id": null
+      "train_id": 2
     },
     {
       "id": 8,
@@ -70,7 +70,7 @@
       "price": 8,
       "route_id": 1,
       "time": "Sat, 07 May 2022 14:52:00 GMT",
-      "train_id": 1
+      "train_id": 2
     },
     {
       "id": 9,

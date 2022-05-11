@@ -3,12 +3,14 @@
       {
          "id":1,
          "name":"ICE1",
-         "maxWidth": 2.5
+         "maxWidth": 2.5,
+         "seats": 2
       },
       {
          "id":2,
          "name":"ICE2",
-         "maxWidth": 3
+         "maxWidth": 3,
+         "seats": 2
       }
    ]
 }

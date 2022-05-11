@@ -63,3 +63,15 @@ def get_sections_by_route_id(id):
             l.append(s["startStation"])
             l.append(s["endStation"])
     return list(k for k,_ in itertools.groupby(l))
+
+def get_ride_by_id(id):
+    data = get_rides()
+    for r in data["data"]:
+        if id == r["id"]:
+            return r
+
+def get_train_by_id(id):
+    data = get_trains()
+    for t in data["trains"]:
+        if id == t["id"]:
+            return t

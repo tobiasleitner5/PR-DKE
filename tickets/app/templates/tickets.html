@@ -8,12 +8,10 @@
     <tr>
         <td>{{ ticket.ride_id }}</td>
         <td>{{ ticket.status }}</td>
+        <td>{{ ticket.seat }}</td>
         <td><i class="fas fa-arrow-right"></i></td>
-        <form action="" method="post" novalidate>
-            {{ form.hidden_tag() }}
-            <td>{{ form.book_seat() }}</td>
-        </form>
         <td>
+            <input type="button" onclick="window.location.href='{{ url_for( 'tickets', ticketid=ticket.id ) }}';" value="Sitzplatz reservieren">
             <input type="button" onclick="window.location.href='{{ url_for( 'cancelticket', ticketid=ticket.id ) }}';" value="Stornieren">
         </td>
     </tr>

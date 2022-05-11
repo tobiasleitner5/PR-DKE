@@ -67,9 +67,3 @@ class TicketForm(FlaskForm):
 class EmptyForm(FlaskForm):
     cancel = SubmitField('Abbrechen')
     submit = SubmitField('Submit')
-
-class TicketOverviewForm(FlaskForm):
-    book_seat = SubmitField('Sitzplatz buchen')
-    cancel_ticket = SubmitField('Stornieren')
-
-
