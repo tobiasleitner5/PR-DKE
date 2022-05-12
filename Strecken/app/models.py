@@ -4,6 +4,7 @@ from hashlib import md5
 from flask import url_for
 from flask_login import UserMixin, current_user
 from sqlalchemy import ForeignKey, Boolean
+from sqlalchemy.orm import relationship, backref
 from werkzeug.utils import redirect
 
 from app import db, app
@@ -129,7 +130,7 @@ class Sections(db.Model):
 
 
 class Routes(db.Model):
-    id = db.Column(db.Integer, primary_key=True) #autoincrement=True ?
+    id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     warning_id = db.Column(db.Integer, db.ForeignKey('warnings.id'))
 
@@ -144,8 +145,12 @@ class Routes(db.Model):
 
 
 class RouteSections(db.Model):
-    route = db.Column(db.String(100), ForeignKey('routes.id'), primary_key=True)
-    section = db.Column(db.String(100), ForeignKey('sections.id'), primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
+    route_id = db.Column(db.Integer, db.ForeignKey('routes.id'))
+    section_id = db.Column(db.Integer, db.ForeignKey('sections.id'))
+
+    route = relationship(Routes, backref=backref("sections", cascade="all, delete-orphan"))
+    section = relationship(Sections, backref=backref("route", cascade="all, delete-orphan"))
 
     def __init__(self, route, section):
         self.route = route
@@ -182,3 +187,4 @@ admin.add_view(MyModelView(Sections, db.session))
 admin.add_view(MyModelView(Stations, db.session))
 admin.add_view(MyModelView(User, db.session))
 admin.add_view(MyModelView(Warnings, db.session))
+admin.add_view(MyModelView(RouteSections, db.session))
