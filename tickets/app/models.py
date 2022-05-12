@@ -28,6 +28,13 @@ class User(UserMixin, db.Model):
     def bought_tickets(self):
         tickets = Ticket.query.filter_by(user_id=self.id)
         return tickets
+    
+    def to_json(self):
+        return {
+            'id': self.id,
+            'username': self.username,
+            'email': self.email
+        }
 
 
 class Ticket(db.Model):

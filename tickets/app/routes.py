@@ -164,3 +164,7 @@ def buyticket(rideid):
         flash('Das Ticket wurde erfolgreich erworben!')
         return redirect(url_for('tickets'))
     return render_template('buyticket.html', title='Buy Ticket', form=form)
+
+@app.route('/get/users')
+def users():
+    return {'data': [user.to_json() for user in User.query]}
