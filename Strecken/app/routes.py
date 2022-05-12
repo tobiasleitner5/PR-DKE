@@ -166,7 +166,8 @@ def sections():
 @login_required
 def routes():
     routes = db.session.query(Routes)
-    return render_template('routes.html', title='Routes', user=current_user, routes=routes)
+    route_sec = db.session.query()
+    return render_template('routes.html', title='Routes', user=current_user, routes=routes, route_sec=route_sec)
 
 # @app.route('/edit_station', methods=['GET', 'POST'])
 # @login_required

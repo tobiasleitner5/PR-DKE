@@ -1,8 +1,8 @@
-"""fist migration
+"""first migration
 
-Revision ID: d1771f9c64d5
+Revision ID: 6e83fee1d7d0
 Revises: 
-Create Date: 2022-05-06 17:11:06.081980
+Create Date: 2022-05-10 17:00:16.219146
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = 'd1771f9c64d5'
+revision = '6e83fee1d7d0'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -34,8 +34,10 @@ def upgrade():
     sa.Column('is_admin', sa.Boolean(), nullable=True),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_user_email'), 'user', ['email'], unique=True)
-    op.create_index(op.f('ix_user_username'), 'user', ['username'], unique=True)
+    with op.batch_alter_table('user', schema=None) as batch_op:
+        batch_op.create_index(batch_op.f('ix_user_email'), ['email'], unique=True)
+        batch_op.create_index(batch_op.f('ix_user_username'), ['username'], unique=True)
+
     op.create_table('warnings',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=100), nullable=True),
@@ -56,7 +58,9 @@ def upgrade():
     sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
-    op.create_index(op.f('ix_post_timestamp'), 'post', ['timestamp'], unique=False)
+    with op.batch_alter_table('post', schema=None) as batch_op:
+        batch_op.create_index(batch_op.f('ix_post_timestamp'), ['timestamp'], unique=False)
+
     op.create_table('routes',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name', sa.String(length=100), nullable=True),
@@ -76,11 +80,12 @@ def upgrade():
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('route_sections',
-    sa.Column('route', sa.String(length=100), nullable=False),
-    sa.Column('section', sa.String(length=100), nullable=False),
-    sa.ForeignKeyConstraint(['route'], ['routes.id'], ),
-    sa.ForeignKeyConstraint(['section'], ['sections.id'], ),
-    sa.PrimaryKeyConstraint('route', 'section')
+    sa.Column('id', sa.Integer(), nullable=False),
+    sa.Column('route_id', sa.Integer(), nullable=True),
+    sa.Column('section_id', sa.Integer(), nullable=True),
+    sa.ForeignKeyConstraint(['route_id'], ['routes.id'], ),
+    sa.ForeignKeyConstraint(['section_id'], ['sections.id'], ),
+    sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 
@@ -90,12 +95,16 @@ def downgrade():
     op.drop_table('route_sections')
     op.drop_table('sections')
     op.drop_table('routes')
-    op.drop_index(op.f('ix_post_timestamp'), table_name='post')
+    with op.batch_alter_table('post', schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f('ix_post_timestamp'))
+
     op.drop_table('post')
     op.drop_table('followers')
     op.drop_table('warnings')
-    op.drop_index(op.f('ix_user_username'), table_name='user')
-    op.drop_index(op.f('ix_user_email'), table_name='user')
+    with op.batch_alter_table('user', schema=None) as batch_op:
+        batch_op.drop_index(batch_op.f('ix_user_username'))
+        batch_op.drop_index(batch_op.f('ix_user_email'))
+
     op.drop_table('user')
     op.drop_table('stations')
     # ### end Alembic commands ###
