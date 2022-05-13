@@ -10,7 +10,7 @@ from app.forms import RegistrationForm
 from flask import request
 from werkzeug.urls import url_parse
 import api
-from datetime import datetime
+from datetime import datetime, date
 
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
@@ -20,6 +20,9 @@ def index():
     if form.validate_on_submit():
         start = form.departure.data
         end = form.destination.data
+        date = form.date.data
+        time = form.time.data
+        date_time = datetime.combine(date, time)
         succ = False
         res = []
         for r in api.get_rides()["data"]:
@@ -30,7 +33,9 @@ def index():
             if lStations.__contains__(start) and lStations.__contains__(end) and lStations.index(
                     start) < lStations.index(end) and start != end:
                 succ = True
-                res.append(r)
+                ride_time = datetime.strptime(r["time"], "%a, %d %b %Y %H:%M:%S GMT")
+                if ride_time >= date_time:
+                    res.append(r)
         if not succ:
             flash("Keine Fahrtdurchführung gefunden!")
         return render_template("index.html", title='Home Page', result=True, form=form, results=res)
@@ -155,9 +160,14 @@ def cancelticket(ticketid):
 @login_required
 def buyticket(rideid):
     form = EmptyForm()
-    if form.cancel.data:
+    today = datetime.now()
+    ride_time = datetime.strptime(api.get_ride_by_id(int(rideid))["time"], "%a, %d %b %Y %H:%M:%S GMT")
+    if ride_time < today:
+        flash("Ticketkauf fehlgeschlagen! Die Reise liegt in der Vergangenheit.")
         return redirect(url_for('index'))
-    if form.submit.data:
+    elif form.cancel.data:
+        return redirect(url_for('index'))
+    elif form.submit.data:
         ticket = Ticket(user_id=current_user.id, ride_id=rideid)
         db.session.add(ticket)
         db.session.commit()
