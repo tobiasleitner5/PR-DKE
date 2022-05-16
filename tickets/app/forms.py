@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, DateField, TimeField
-from wtforms.validators import DataRequired
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField, DateField, TimeField, IntegerField, RadioField
+from wtforms.validators import DataRequired, NumberRange
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField, SubmitField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
@@ -64,6 +64,14 @@ class TicketForm(FlaskForm):
     time = TimeField('Wann', format='%H:%M', default=datetime.today, validators=[DataRequired()])
     submit = SubmitField('Suchen')
 
+class PromotionForm(FlaskForm):
+    start_date = DateField('Von', format='%Y-%m-%d', default=datetime.today, validators=[DataRequired('please select startdate')])
+    end_date = DateField('Bis', format='%Y-%m-%d', default=datetime.today, validators=[DataRequired('please select enddate')])
+    reduction = IntegerField('Promotion [%]', validators=[DataRequired(), NumberRange(min=1, max=100)])
+    sections = SelectField('Choose section if applicable:', choices=api.get_sections_name(), validators=[DataRequired()])
+    validity = RadioField('Label', choices=['Promotion for all sections', 'Promotion for a single section'], default = 'value', validators=[DataRequired()])
+    submit = SubmitField('Aktion festlegen')
+            
 class EmptyForm(FlaskForm):
     cancel = SubmitField('Abbrechen')
     submit = SubmitField('Submit')

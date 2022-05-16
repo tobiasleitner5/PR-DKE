@@ -39,7 +39,12 @@ def get_trains():
         data = requests.get(url="http://localhost:5001/trains")
         return data.json
 
-
+def get_sections_name():
+    sections = get_sections()
+    l = []
+    for s in sections["sections"]:
+        l.append(s["name"])
+    return list(dict.fromkeys(l))
 
 def getStartStations():
     sections = get_sections()

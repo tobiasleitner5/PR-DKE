@@ -1,10 +1,9 @@
 from app import app
-from flask import render_template, flash, redirect, url_for
-from app.forms import LoginForm, TicketForm, EditProfileForm, EmptyForm
-from flask_login import current_user, login_user
+from flask import render_template, flash, redirect, url_for, session
+from app.forms import LoginForm, TicketForm, EditProfileForm, PromotionForm, EmptyForm
+from flask_login import current_user, login_user, logout_user, login_required
 from app.models import User, Ticket
-from flask_login import logout_user
-from flask_login import login_required
+from app.admin_decorator import requires_access
 from app import db
 from app.forms import RegistrationForm
 from flask import request
@@ -16,6 +15,8 @@ from datetime import datetime, date
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
 def index():
+    if current_user.is_admin():
+        return redirect(url_for('promotion'))
     form = TicketForm()
     if form.validate_on_submit():
         start = form.departure.data
@@ -106,6 +107,7 @@ def user(username):
     return render_template('user.html', user=user, title='Profile', form=form)
 
 @app.route('/tickets', methods=['GET', 'POST'])
+@requires_access('user')
 @login_required
 def tickets():
     tickets=current_user.bought_tickets()
@@ -139,6 +141,7 @@ def book_seat(ticketid):
         flash("Das Ticket ist nicht mehr verfügbar, da storniert oder verbraucht!")
 
 @app.route('/cancelticket/<ticketid>', methods=['GET', 'POST'])
+@requires_access('user')
 @login_required
 def cancelticket(ticketid):
     form = EmptyForm()
@@ -157,6 +160,7 @@ def cancelticket(ticketid):
     return render_template('cancelticket.html', title='My Tickets', form=form)
 
 @app.route('/buyticket/<rideid>', methods=['GET', 'POST'])
+@requires_access('user')
 @login_required
 def buyticket(rideid):
     form = EmptyForm()
@@ -174,6 +178,13 @@ def buyticket(rideid):
         flash('Das Ticket wurde erfolgreich erworben!')
         return redirect(url_for('tickets'))
     return render_template('buyticket.html', title='Buy Ticket', form=form)
+
+@app.route('/promotion', methods=['GET', 'POST'])
+@requires_access('admin')
+@login_required
+def promotion():
+    form = PromotionForm()
+    return render_template('promotion.html', title='Set Promotion', form=form)
 
 @app.route('/get/users')
 def users():

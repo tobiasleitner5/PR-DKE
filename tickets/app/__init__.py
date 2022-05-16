@@ -15,4 +15,19 @@ login = LoginManager(app)
 login.login_view = 'login'
 fa = FontAwesome(app)
 
+login.login_message = "You are not allowed to access the page. Please log in!"
+
 from app import routes, models, errors
+
+
+#############################################################
+# >>> command sequence to add an admin by using the python console
+# >>> from app import db
+# >>> from app.models import User
+# >>> u = User(username='admin', email='admin@example.com')
+# >>> u.set_password('admin')
+# >>> u.set_access('admin')
+# >>> db.session.add(u)
+# >>> db.session.commit()
+
+
