@@ -13,9 +13,10 @@
         {% if not current_user.is_anonymous %}
             <ul class = "navbar">
                 {% if current_user.is_admin() %}
-                    <li><a class="{{ 'navbar_active' if active_page=='promotion' else ''}}" style="margin-top:50%" class="navbar_active" href="{{ url_for('promotion') }}"><i class='fas fa-bullhorn'></i></i> Promotion</a></li>
+                    <li><a class="{{ 'navbar_active' if active_page=='promotion' else ''}}" style="margin-top:50%" class="navbar_active" href="{{ url_for('promotion') }}"><i class='fas fa-bullhorn'></i></i> Aktion</a></li>
+                    <li><a class="{{ 'navbar_active' if active_page=='overview' else ''}}" class="overview" href="{{ url_for('overview') }}"><i class='fas fa-paste'></i></i> Übersicht</a></li>
                 {% else %}
-                    <li><a class="{{ 'navbar_active' if active_page=='home_page' else ''}}" style="margin-top:50%" class="navbar_active" href="{{ url_for('index') }}"><i class='fas fa-home'></i></i> Home</a></li>
+                    <li><a class="{{ 'navbar_active' if active_page=='home_page' else ''}}" style="margin-top:50%" class="navbar_active" href="{{ url_for('index') }}"><i class='fas fa-home'></i></i> Ticketsuche</a></li>
                     <li><a class="{{ 'navbar_active' if active_page=='tickets_page' else ''}}" href="{{ url_for('tickets') }}"><i class='fas fa-paste'></i> Meine Tickets</a></li>
                 {% endif %}
                 <li><a class="{{ 'navbar_active' if active_page=='profile_page' else ''}}" href="{{ url_for('user', username=current_user.username) }}"><i class='fas fa-user'></i> Profil</a></li>

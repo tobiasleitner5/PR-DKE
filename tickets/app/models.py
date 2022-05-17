@@ -1,7 +1,8 @@
-from app import db
+from app import db, login
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import UserMixin
-from app import login
+import api
+from flask import flash
 from hashlib import md5
 
 class User(UserMixin, db.Model):
@@ -62,6 +63,25 @@ class Ticket(db.Model):
     def set_seat(self, seat):
         self.seat = seat
 
+class Promotion(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    start_date = db.Column(db.Date)
+    end_date = db.Column(db.Date)
+    sale = db.Column(db.Integer)
+    all_routes = db.Column(db.Boolean, default=False)
+    route_id = db.Column(db.Integer)
+
+    def __repr__(self):
+        return '<Promotion {} {} {} {} {} {}>'.format(self.id,self.sale,self.start_date,self.end_date,self.route_id,self.all_routes)
+
+    def set_all_routes(self, all_routes):
+        self.all_routes = all_routes
+        
+    def set_route_id(self, route_id):
+        self.route_id = route_id
+
+    def get_route_name(self):
+        return api.get_route_name_by_id(self.route_id)
 
 @login.user_loader
 def load_user(id):

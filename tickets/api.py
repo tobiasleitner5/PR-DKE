@@ -1,4 +1,4 @@
-from flask import Flask, json
+from flask import Flask, json, flash
 import requests, itertools
 
 dummydata = True
@@ -39,12 +39,24 @@ def get_trains():
         data = requests.get(url="http://localhost:5001/trains")
         return data.json
 
-def get_sections_name():
-    sections = get_sections()
+def get_route_name():
+    routes = get_routes()
     l = []
-    for s in sections["sections"]:
-        l.append(s["name"])
+    for r in routes["routes"]:
+        l.append(r["name"])
     return list(dict.fromkeys(l))
+
+def get_route_id_by_name(name):
+    routes = get_routes()
+    for r in routes["routes"]:
+        if r["name"] == name:
+            return r["id"]
+
+def get_route_name_by_id(route_id):
+    routes = get_routes()
+    for r in routes["routes"]:
+        if int(r["id"]) == int(route_id):
+            return r["name"]
 
 def getStartStations():
     sections = get_sections()

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% set active_page = 'overview' %}
+
+{% block content %}
+<h2>Übersicht Aktionen</h2>
+<table>
+    {% for promo in promotions %}
+    <tr>
+        <td>{{ promo.start_date }} bis</td>
+        <td>{{ promo.start_date }}</td>
+        <td>{{ promo.sale }}</td>
+        {% if promo.all_routes %}
+        <td>Alle Routen</td>
+        {% else %}
+        <td>{{ promo.get_route_name() }}</td>
+        {% endif %}
+        <td>
+            <input type="button" onclick="window.location.href='{{ url_for( 'editpromo', promotionid=promo.id ) }}';" value="Bearbeiten">
+            <input type="button" onclick="window.location.href='{{ url_for( 'cancelpromo', promotionid=promo.id ) }}';" value="Löschen">
+        </td>
+    </tr>
+
+    {% endfor %}
+</table>
+{% endblock %}

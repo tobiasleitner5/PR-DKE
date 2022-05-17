@@ -67,11 +67,23 @@ class TicketForm(FlaskForm):
 class PromotionForm(FlaskForm):
     start_date = DateField('Von', format='%Y-%m-%d', default=datetime.today, validators=[DataRequired('please select startdate')])
     end_date = DateField('Bis', format='%Y-%m-%d', default=datetime.today, validators=[DataRequired('please select enddate')])
-    reduction = IntegerField('Promotion [%]', validators=[DataRequired(), NumberRange(min=1, max=100)])
-    sections = SelectField('Choose section if applicable:', choices=api.get_sections_name(), validators=[DataRequired()])
-    validity = RadioField('Label', choices=['Promotion for all sections', 'Promotion for a single section'], default = 'value', validators=[DataRequired()])
+    sale = IntegerField('Promotion [%]', validators=[DataRequired('Prozentsatz zwischen 1 und 100'), NumberRange(min=1, max=100)])
+    route = SelectField('Choose section if applicable:', choices=api.get_route_name(), validators=[DataRequired()])
+    validity = RadioField('Label', choices=['Preisnachlass für alle Fahrtstrecken', 'Preisnachlass für ausgewählte Fahrtstrecke'], default = 'Preisnachlass für alle Fahrtstrecken', validators=[DataRequired()])
     submit = SubmitField('Aktion festlegen')
-            
+
+    def validate_start_date(self, start_date):
+        today = datetime.now()
+        if start_date.data < today.date():
+            raise ValidationError('Der gewählte Tag liegt in der Vergangenheit.')
+
+    def validate_end_date(self, end_date):
+        today = datetime.now()
+        if end_date.data < today.date():
+            raise ValidationError('Der gewählte Tag liegt in der Vergangenheit.')
+        elif self.start_date.data > end_date.data:
+            raise ValidationError('Das Enddatum ist vor dem Startdatum.')
+
 class EmptyForm(FlaskForm):
     cancel = SubmitField('Abbrechen')
     submit = SubmitField('Submit')

@@ -1,14 +1,13 @@
 {% extends "base.html" %}
-{% set active_page = 'tickets_page' %}
 
 {% block content %}
     <div id="">
-        <h2>Möchten Sie das Ticket stornieren?</h2>
+        <h2>{{ question }}</h2>
         <form action="" method="post" novalidate>
             {{ form.hidden_tag() }}
             <tr>
                 <td>{{ form.cancel() }}</td>
-                <td>{{ form.submit(value="Stornieren") }}</td>
+                <td>{{ form.submit(value="Bestätigen") }}</td>
             </tr>
         </form>
     </div>
