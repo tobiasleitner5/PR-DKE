@@ -172,14 +172,14 @@ def routes():
 
 @app.route('/stations/get')
 def get_stations():
-    return {'data': [station.to_dict() for station in Stations.query]}
+    return {'stations': [station.to_dict() for station in Stations.query]}
 
 
 @app.route('/sections/get')
 def get_sections():
-    return {'data': [section.to_dict() for section in Sections.query]}
+    return {'sections': [section.to_dict() for section in Sections.query]}
 
 
 @app.route('/routes/get')
 def get_rotues():
-    return {'data': [route.to_dict() for route in Routes.query]}
+    return {'routes': [route.to_dict() for route in Routes.query]}

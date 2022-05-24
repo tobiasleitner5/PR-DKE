@@ -78,12 +78,16 @@ class Sections(db.Model):
 
     def to_dict(self):
         return {
+            'id': self.id,
             'name': self.name,
             'distance': self.distance,
             'maxSpeed': self.maxSpeed,
             'fee': self.fee,
-            'startStation': self.startStation,
-            'endStation': self.endStation
+            'startStation': self.start_station_id,
+            'endStation': self.end_station_id,
+            'is_schmalspur': self.is_schmalspur,
+            'route_id': self.route_id,
+            'warning_id': self.warning_id
         }
 
     def __repr__(self):
