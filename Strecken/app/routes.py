@@ -166,20 +166,8 @@ def sections():
 @login_required
 def routes():
     routes = db.session.query(Routes)
-    route_sec = db.session.query()
+    route_sec = db.session.query(Routes.sections)
     return render_template('routes.html', title='Routes', user=current_user, routes=routes, route_sec=route_sec)
-
-# @app.route('/edit_station', methods=['GET', 'POST'])
-# @login_required
-# def edit_station():
-#     form = EditStationForm()
-#     return render_template('edit_station.html', title='Edit Station', form=form)
-#
-# @app.route('/create_station', methods=['GET', 'POST'])
-# @login_required
-# def create_station():
-#     form = NewStationForm()
-#     return render_template('create_station.html', title='Edit Station', form=form)
 
 
 @app.route('/stations/get')

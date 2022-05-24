@@ -5,6 +5,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 
 # source venv/bin/activate
+#export FLASK_ENV=development
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -14,6 +15,7 @@ login = LoginManager(app)
 login.login_view = 'login'
 
 if __name__ == '__main__':
+    app.debug = True
     app.run(host='0.0.0.0')
 
 from app import routes, models

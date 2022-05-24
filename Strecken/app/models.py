@@ -14,8 +14,9 @@ from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 
 # flask db init
-# flask db migrate -m "users table"
+# flask db migrate -m "first migrate"
 # flask db upgrade
+# pbkdf2:sha256:260000$AVcGgBYvr3vX5zUz$38f7b51af557748d3ebe4e947acd1d5967567257199fa390317348019cc63f6b
 
 followers = db.Table('followers',
     db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
@@ -28,9 +29,6 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    posts = db.relationship('Post', backref='author', lazy='dynamic')
-    about_me = db.Column(db.String(140))
-    last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     is_admin = db.Column(Boolean)
 
     def __repr__(self):
@@ -42,46 +40,6 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    def avatar(self, size):
-        digest = md5(self.email.lower().encode('utf-8')).hexdigest()
-        return 'https://www.gravatar.com/avatar/{}?d=identicon&s={}'.format(
-            digest, size)
-
-    followed = db.relationship(
-        'User', secondary=followers,
-        primaryjoin=(followers.c.follower_id == id),
-        secondaryjoin=(followers.c.followed_id == id),
-        backref=db.backref('followers', lazy='dynamic'), lazy='dynamic')
-
-    def follow(self, user):
-        if not self.is_following(user):
-            self.followed.append(user)
-
-    def unfollow(self, user):
-        if self.is_following(user):
-            self.followed.remove(user)
-
-    def is_following(self, user):
-        return self.followed.filter(
-            followers.c.followed_id == user.id).count() > 0
-
-    def followed_posts(self):
-        followed = Post.query.join(
-            followers, (followers.c.followed_id == Post.user_id)).filter(
-                followers.c.follower_id == self.id)
-        own = Post.query.filter_by(user_id=self.id)
-        return followed.union(own).order_by(Post.timestamp.desc())
-
-
-class Post(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    body = db.Column(db.String(140))
-    timestamp = db.Column(db.DateTime, index=True, default=datetime.utcnow)
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-    def __repr__(self):
-        return '<Post {}>'.format(self.body)
-
 
 @login.user_loader
 def load_user(id):
@@ -92,6 +50,8 @@ class Stations(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     address = db.Column(db.String(200))
+    section1 = relationship("Sections", backref="start_station", foreign_keys='Sections.start_station_id')
+    section2 = relationship("Sections", backref="end_station", foreign_keys='Sections.end_station_id')
 
     def __repr__(self):
         return self.name
@@ -110,10 +70,11 @@ class Sections(db.Model):
     distance = db.Column(db.Integer)
     maxSpeed = db.Column(db.Integer)
     fee = db.Column(db.Float)
-    startStation = (db.String(100), ForeignKey('stations.id'))
-    endStation = (db.String(100), ForeignKey('stations.id'))
     is_schmalspur = db.Column(db.Boolean)
-    warning_id = db.Column(db.Integer, db.ForeignKey('warnings.id'))
+    warning_id = db.Column(db.Integer, ForeignKey('warnings.id'))
+    route_id = db.Column(db.Integer, ForeignKey('routes.id'))
+    start_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
+    end_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
 
     def to_dict(self):
         return {
@@ -132,7 +93,9 @@ class Sections(db.Model):
 class Routes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
-    warning_id = db.Column(db.Integer, db.ForeignKey('warnings.id'))
+    #warning_id = db.Column(db.Integer, db.ForeignKey('warnings.id'))
+    sections = relationship("Sections", backref="routes")
+    warnings = relationship("Warnings", backref="routes")
 
     def to_dict(self):
         return {
@@ -144,23 +107,12 @@ class Routes(db.Model):
         return self.name
 
 
-class RouteSections(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    route_id = db.Column(db.Integer, db.ForeignKey('routes.id'))
-    section_id = db.Column(db.Integer, db.ForeignKey('sections.id'))
-
-    route = relationship(Routes, backref=backref("sections", cascade="all, delete-orphan"))
-    section = relationship(Sections, backref=backref("route", cascade="all, delete-orphan"))
-
-    def __init__(self, route, section):
-        self.route = route
-        self.section = section
-
-
 class Warnings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     description = db.Column(db.String(500))
+    sections = relationship("Sections", backref="warnings")
+    route_id = db.Column(db.Integer, db.ForeignKey('routes.id'))
 
 #**********************************************************
 
@@ -187,4 +139,4 @@ admin.add_view(MyModelView(Sections, db.session))
 admin.add_view(MyModelView(Stations, db.session))
 admin.add_view(MyModelView(User, db.session))
 admin.add_view(MyModelView(Warnings, db.session))
-admin.add_view(MyModelView(RouteSections, db.session))
+# admin.add_view(MyModelView(RouteSections, db.session))

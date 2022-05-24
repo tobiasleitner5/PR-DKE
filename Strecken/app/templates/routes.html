@@ -8,19 +8,20 @@
             <tbody>
                 <tr>
                     <td>{{ route.name }} </td>
-                    {% for sections in route.sections[i] %}
-                    <td>{{ route.sections[i].name }} </td>
+                    {% for warning in route.warnings %}
+                    <td>{{ warning.name }} </td>
                     {% endfor %}
                 </tr>
             </tbody>
         </table>
-        <table class="custom-table">
+        <table class="custom-table" >
             <tbody>
+            {% for sections in route.sections %}
                 <tr>
-                    {% for section in route.sections %}
-                    <td>{{ section.name }} </td>
-                    {% endfor %}
+                    <td>{{ sections }}</td>
+                    <td><a class="nav-item nav-link" id="sections_admin" href="{{ url_for('sections') }}"><img src="static/info.svg" height="15" /></a></td>
                 </tr>
+            {% endfor %}
             </tbody>
         </table>
 {% endfor %}
