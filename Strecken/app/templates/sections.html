@@ -3,19 +3,51 @@
 {% block content %}
     <br>
     <h1>Sections</h1>
+    <table class="custom-table">
+             <thead>
+              <tr>
+                <td style="font-weight:bold">Name</td>
+                <td style="font-weight:bold">Distance</td>
+                <td style="font-weight:bold">Max Speed</td>
+                <td style="font-weight:bold">Fee</td>
+                <td style="font-weight:bold">Trackwidth</td>
+                <td style="font-weight:bold">Start Station</td>
+                <td style="font-weight:bold">End Station</td>
+             </tr>
+             </thead>
+    </table>
     {% for section in sections %}
         <table class="custom-table">
             <tbody>
                 <tr>
                     <td>{{ section.name }} </td>
-                    <td>{{ section.distance }}</td>
-                    <td>{{ section.maxSpeed }}</td>
-                    <td>{{ section.fee }}</td>
-                    <td>{{ section.startStation }}</td>
-                    <td>{{ section.endStation }}</td>
-                    <td>{{ section.endStation }}</td>
-                    <td>{{ section.warnings }}</td>
+                    <td>{{ section.distance }}km</td>
+                    <td>{{ section.maxSpeed }}km/h</td>
+                    <td>{{ section.fee }}€</td>
+                    {% if section.is_schmalspur %}
+                    <td>Schmalspur</td>
+                    {% else %}
+                    <td>Normalspur</td>
+                    {% endif %}
+                    {% for station in stations %}
+                    {% if station.id == section.start_station_id %}
+                    <td>{{ station.name }}</td>
+                    {% endif %}
+                    {% endfor %}
+                    {% for station in stations %}
+                    {% if station.id == section.end_station_id %}
+                    <td>{{ station.name }}</td>
+                    {% endif %}
+                    {% endfor %}
                 </tr>
+            <tr>
+                {% for warning in section.warnings %}
+                    <td>Warnungen: {{ warning.name }} </td>
+                    {% endfor %}
+                    {% if not section.warnings %}
+                    <td>Warnungen: -</td>
+                    {% endif %}
+            </tr>
             </tbody>
         </table>
 {% endfor %}

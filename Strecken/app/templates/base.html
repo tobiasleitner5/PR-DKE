@@ -34,13 +34,18 @@
 
       <div class="navbar" id="navbar">
           <div class="navbar-nav">
-
+              {% if user.is_admin %}
               <a class="nav-item nav-link" id="routes_admin" href="{{ url_for('routes') }}" ><img src="static/route.svg" height="25"/> Routes</a>
               <a class="nav-item nav-link" id="sections_admin" href="{{ url_for('sections') }}"><img src="static/section.svg" height="25"/> Sections</a>
               <a class="nav-item nav-link" id="stations_admin" href="{{ url_for('stations') }}"><img src="static/station.svg" height="25"/> Stations</a>
               <a class="nav-item nav-link" id="admin" href="/admin"><img src="static/user.svg" height="25"/> Admin</a>
               <a class="nav-item nav-link" id="logout_admin" href="{{ url_for('logout') }}"><img src="static/logout.svg" height="25"/> Logout</a>
-
+              {% else %}
+              <a class="nav-item nav-link" id="routes" href="{{ url_for('routes') }}" ><img src="static/route.svg" height="25"/> Routes</a>
+              <a class="nav-item nav-link" id="sections" href="{{ url_for('sections') }}"><img src="static/section.svg" height="25"/> Sections</a>
+              <a class="nav-item nav-link" id="stations" href="{{ url_for('stations') }}"><img src="static/station.svg" height="25"/> Stations</a>
+              <a class="nav-item nav-link" id="logout" href="{{ url_for('logout') }}"><img src="static/logout.svg" height="25"/> Logout</a>
+            {% endif %}
         </div>
 
 </div>

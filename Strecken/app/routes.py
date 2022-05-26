@@ -158,7 +158,8 @@ def stations():
 @login_required
 def sections():
     sections = db.session.query(Sections)
-    return render_template('sections.html', title='Sections', user=current_user, sections=sections)
+    stations = db.session.query(Stations)
+    return render_template('sections.html', title='Sections', user=current_user, sections=sections, stations=stations)
 
 
 @app.route('/')

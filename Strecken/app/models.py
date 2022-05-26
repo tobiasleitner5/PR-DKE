@@ -71,7 +71,7 @@ class Sections(db.Model):
     maxSpeed = db.Column(db.Integer)
     fee = db.Column(db.Float)
     is_schmalspur = db.Column(db.Boolean)
-    warning_id = db.Column(db.Integer, ForeignKey('warnings.id'))
+    warnings = relationship("Warnings", backref="sections")
     route_id = db.Column(db.Integer, ForeignKey('routes.id'))
     start_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
     end_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
@@ -115,7 +115,7 @@ class Warnings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     description = db.Column(db.String(500))
-    sections = relationship("Sections", backref="warnings")
+    section_id = db.Column(db.Integer, db.ForeignKey('sections.id'))
     route_id = db.Column(db.Integer, db.ForeignKey('routes.id'))
 
 #**********************************************************
