@@ -15,7 +15,6 @@
         <td>{{ promo.get_route_name() }}</td>
         {% endif %}
         <td>
-            <input type="button" onclick="window.location.href='{{ url_for( 'editpromo', promotionid=promo.id ) }}';" value="Bearbeiten">
             <input type="button" onclick="window.location.href='{{ url_for( 'cancelpromo', promotionid=promo.id ) }}';" value="Löschen">
         </td>
     </tr>

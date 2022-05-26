@@ -33,7 +33,11 @@
                 <td>{{ form.departure.data }}</td>
                 <td><i class="fas fa-arrow-right"></i></td>
                 <td>{{ form.destination.data }}</td>
-                <td>Price: {{ r.price }}</td>
+                {% if pricedict.get(r.id) != 0 %}
+                    <td>Price: <s style="color:red">{{ (r.price) }}</s> {{ (r.price)*(100-pricedict.get(r.id))/100 }}</td>
+                {% else %}
+                    <td>Price: {{ (r.price) }}</td>
+                {% endif %}
                 <td>
                     <input type="button" onclick="window.location.href='{{ url_for( 'buyticket', rideid=r.id ) }}';" value="Kaufen">
                 </td>

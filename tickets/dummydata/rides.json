@@ -40,7 +40,7 @@
       "id": 5,
       "interval": false,
       "interval_number": null,
-      "price": -3,
+      "price": 3,
       "route_id": 1,
       "time": "Fri, 08 Jul 2022 21:36:00 GMT",
       "train_id": 2

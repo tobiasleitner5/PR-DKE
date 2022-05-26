@@ -62,6 +62,7 @@ class Ticket(db.Model):
 
     def set_seat(self, seat):
         self.seat = seat
+        
 
 class Promotion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -76,7 +77,7 @@ class Promotion(db.Model):
 
     def set_all_routes(self, all_routes):
         self.all_routes = all_routes
-        
+
     def set_route_id(self, route_id):
         self.route_id = route_id
 

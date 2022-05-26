@@ -25,6 +25,7 @@ def index():
         date_time = datetime.combine(date, time)
         succ = False
         res = []
+        promotions = Promotion.query.all()
         for r in api.get_rides()["data"]:
             l = api.get_sections_by_route_id(r["route_id"])
             lStations = []
@@ -38,8 +39,27 @@ def index():
                     res.append(r)
         if not succ:
             flash("Keine Fahrtdurchführung gefunden!")
-        return render_template("index.html", title='Home Page', result=True, form=form, results=res)
+        return render_template("index.html", title='Home Page', result=True, form=form, results=res, promotions=promotions, pricedict=get_best_promo())
     return render_template("index.html", title='Home Page', results=False, form=form)
+
+def get_best_promo():
+    best_promo_dict = {}
+    for r in api.get_rides()["data"]:
+        best_promo = get_best_promo_by_route(r["route_id"], r["time"])
+        best_promo_dict[r["id"]] = best_promo
+    return best_promo_dict
+
+def get_best_promo_by_route(route_id, ride_time_str):
+    promotions = Promotion.query.all()
+    best_promo = 0
+    for p in promotions:
+        ride_time = datetime.strptime(ride_time_str, "%a, %d %b %Y %H:%M:%S GMT").date()
+        if p.start_date <= ride_time <= p.end_date:
+            if p.all_routes and p.sale > best_promo:
+                best_promo = p.sale
+            elif p.route_id == route_id and p.sale > best_promo:
+                best_promo = p.sale
+    return best_promo
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -171,7 +191,7 @@ def cancelpromo(promotionid):
         db.session.commit()
         flash('Die Aktion wurde erfolgreich gelöscht!')
         return redirect(url_for('overview'))
-    return render_template('cancelview.html', title='My Promotion', form=form, question="Möchten Sie die Ermäßigung löschen?")
+    return render_template('cancelview.html', title='My Promotion', form=form, question="Möchten Sie die Aktion löschen?")
 
 @app.route('/buyticket/<rideid>', methods=['GET', 'POST'])
 @requires_access('user')
@@ -219,14 +239,6 @@ def promotion():
 def overview():
     promotions = Promotion.query.all()
     return render_template('overview.html', title='Overview Promotion', promotions=promotions)
-
-@app.route('/editpromo/<promotionid>', methods=['GET', 'POST'])
-@requires_access('admin')
-@login_required
-def editpromo(promotionid):
-    form = PromotionForm()
-    promotion = Promotion.query.filter_by(id=promotionid).first()
-    return render_template('promotion.html', title='Overview Promotion', form=form)
 
 @app.route('/get/users')
 def users():
