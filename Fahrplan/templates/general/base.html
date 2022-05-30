@@ -1,0 +1,54 @@
+{% extends "bootstrap/base.html" %}
+  <head>
+    {%- block head %}
+    <title>{% block title %}{{title|default}}{% endblock title %}</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/dataTables.bootstrap5.css">
+    {%- block metas %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {%- endblock metas %}
+
+    {%- block styles %}
+    <!-- Bootstrap -->
+    <link href="{{bootstrap_find_resource('css/bootstrap.css', cdn='bootstrap')}}" rel="stylesheet">
+    {%- endblock styles %}
+    {%- endblock head %}
+  </head>
+<body>
+    {% block body -%}
+    {% block navbar %}
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                        aria-expanded="false" aria-controls="navbar">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="/">Fahrplan System</a>
+            </div>
+            <div id="navbar" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="{{ url_for('plan_blueprint.plan') }}" target="_self">Mein Dienstplan</a></li>
+                    {% if current_user.is_admin %}
+                    <li><a href="/admin">Admin</a></li>
+                    {% endif %}
+                    <li><a href="{{ url_for('logout_blueprint.logout') }}">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    {%- endblock navbar %}
+    {% block content -%}
+    {%- endblock content %}
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/dataTables.bootstrap5.js"></script>
+
+    {% block scripts %}
+    <script src="{{bootstrap_find_resource('jquery.js', cdn='jquery')}}"></script>
+    <script src="{{bootstrap_find_resource('js/bootstrap.js', cdn='bootstrap')}}"></script>
+    {%- endblock scripts %}
+    {%- endblock body %}
+</body>

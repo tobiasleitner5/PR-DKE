@@ -1,0 +1,29 @@
+{% extends 'admin/master.html' %}
+
+
+{% block body %}
+{{ super() }}
+
+<table id="data" class="table table-striped">
+    <thead>
+      <tr>
+        {% for col in colnames %}
+          <th>{{ col }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+    {% for record in records %}
+        <tr>
+            <td>{{ record.id }}</td>
+            <td>{{ record.name }}</td>
+            <td>{{ record.abschnitte }}</td>
+            <td><b><a href="{{url_for('plan_single_ride_blueprint.plan_single_ride', plannedroute_id=record.id)}}">Einzel-Fahrtdurchführung für {{record.name}} planen</a></b></td>
+            <td><b><a href="{{url_for('plan_interval_ride_blueprint.plan_interval_ride', plannedroute_id=record.id)}}">Intervall-Fahrtdurchführung für {{record.name}} planen</a></b></td>
+        </tr>
+    {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock body %}
+

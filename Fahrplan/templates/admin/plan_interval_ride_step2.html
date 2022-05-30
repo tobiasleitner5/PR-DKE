@@ -1,0 +1,35 @@
+{% block content %}
+<form action="/admin/ride/store" id="ft-form" method="POST" accept-charset="UTF-8">
+    <input type="hidden" name="plannedroute_id" value="{{ plannedroute_id }}">
+    <input type="hidden" name="start" value="{{ start }}">
+    <input type="hidden" name="end" value="{{ end }}">
+    <input type="hidden" name="rep_type" value="{{ rep_type }}">
+    <input type="hidden" name="interval" value="{{ interval }}">
+    <input type="hidden" name="fee" value="{{ fee }}">
+    <div class="dropdown">
+      <label>
+         Employees
+         <select name = "emp" required multiple>
+           {% for e in employees %}
+           <option value = "{{e.id}}">{{e.name}}</option>
+           {% endfor %}
+         </select>
+      </label>
+    </div>
+    <label>
+      Train
+      <select name = "train" required>
+           {% for t in trains %}
+           <option value = "{{t.id}}">{{t.name}}</option>
+           {% endfor %}
+      </select>
+    </label>
+    <label>
+      Price
+      <input type="number" min="0" name="price" step=".01" required>
+    </label>
+    <div class="btns">
+      <input type="submit" value="Submit">
+    </div>
+</form>
+{% endblock %}

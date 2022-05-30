@@ -1,0 +1,11 @@
+{% block content %}
+<form action="/admin/plan/singleride/{{ plannedroute_id }}" id="ft-form" method="POST" accept-charset="UTF-8">
+    <label>
+      Datum und Uhrzeit <br>
+      <input type="datetime-local" name="time" required>
+    </label>
+    <div class="btns">
+      <input type="submit" value="Submit">
+    </div>
+</form>
+{% endblock %}

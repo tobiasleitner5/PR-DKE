@@ -1,0 +1,24 @@
+{% block content %}
+<form action="/admin/route/store" id="ft-form" method="POST" accept-charset="UTF-8">
+    <input type="hidden" name="routes_id" value="{{ routes_id }}">
+    <div>
+        <label>
+            Fahrtstrecken-Name
+            <input type="text" name="name" required>
+        </label>
+    </div>
+    <div class="dropdown">
+        <label>
+            Abschnitte
+            <select name="sections" required multiple>
+                {% for section in sections %}
+                <option value="{{section.id}}">{{section.name}}</option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+    <div class="btns">
+        <input type="submit" value="Submit">
+    </div>
+</form>
+{% endblock %}

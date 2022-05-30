@@ -1,0 +1,47 @@
+{% extends "general/base.html" %}
+
+{% block styles %}
+{{super()}}
+<link rel="stylesheet" href="{{url_for('.static', filename='css/index_employee.css')}}">
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="starter-template">
+        <h1>{{title}}</h1>
+
+        <table id="data" class="table table-striped">
+            <thead>
+            <tr>
+                <th>Route</th>
+                <th>Datum und Uhrzeit</th>
+                <th>Abschnitte</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for r in rides %}
+            <tr>
+                <td align="left">{{ r.plannedroute }}</td>
+                <td align="left">{{ r.time }}</td>
+                <td align="left">{{ r.plannedroute.abschnitte }}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+  <script>
+    $(document).ready(function () {
+      $('#data').DataTable({
+        columns: [
+          {searchable: true, orderable: true},
+          {orderable: true, searchable: true},
+          {orderable: true, searchable: true}
+          ],
+      });
+    });
+  </script>
+{% endblock %}

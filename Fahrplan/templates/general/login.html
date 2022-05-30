@@ -1,0 +1,53 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{%- block head %}
+<title>{% block title %}{{title|default}}{% endblock title %}</title>
+
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    {% for message in messages %}
+      {{ message }}
+    {% endfor %}
+  {% endif %}
+{% endwith %}
+
+{%- block metas %}
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{%- endblock metas %}
+
+{%- block styles %}
+<!-- Bootstrap -->
+<link href="{{bootstrap_find_resource('css/bootstrap.css', cdn='bootstrap')}}" rel="stylesheet">
+<link rel="stylesheet" href="static/css/body.css">
+
+{%- endblock styles %}
+{%- endblock head %}
+
+{% block navbar %}
+<nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar"
+                    aria-expanded="false" aria-controls="navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">Fahrplan System</a>
+        </div>
+    </div>
+</nav>
+{%- endblock navbar %}
+
+{% block content %}
+<div class="container">
+  <form class="form-signin" method="POST" action="/login">
+    {{ form.hidden_tag() }}
+    {{ wtf.form_field(form.username) }}
+    {{ wtf.form_field(form.password) }}
+    <button class="btn btn-dark" type="submit">Anmelden</button>
+  </form>
+</div>
+{% endblock %}

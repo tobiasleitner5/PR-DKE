@@ -1,0 +1,23 @@
+{% block content %}
+<form action="/admin/plan/intervalride/{{ plannedroute_id }}" id="ft-form" method="POST" accept-charset="UTF-8">
+    <label>
+        Start-Datum und Uhrzeit <br>
+        <input type="datetime-local" name="start" required><br>
+    </label>
+    <label>
+        End-Datum <br>
+        <input type="date" name="end" required>
+    </label>
+    <div class="dropdown">
+        <label>
+            <select name="rep_type" required>
+                <option value="w">wöchtenlich</option>
+                <option value="d">täglich</option>
+            </select>
+        </label>
+    </div>
+    <div class="btns">
+        <input type="submit" value="Submit">
+    </div>
+</form>
+{% endblock %}
