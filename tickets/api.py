@@ -1,7 +1,7 @@
 from flask import Flask, json, flash
 import requests, itertools
 
-dummydata = False
+dummydata = True
 
 def get_rides():
     if dummydata:
