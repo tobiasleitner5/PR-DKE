@@ -1,6 +1,7 @@
+import json
+
 from flask import render_template, flash, redirect, url_for, jsonify
 from flask_login import current_user, login_user
-from sqlalchemy.orm import session
 
 from app.models import User, Sections, Routes, Warnings
 from app import app
@@ -196,3 +197,10 @@ def get_warnings_sections():
 def get_warnings_routes():
     warnings = db.session.query(Warnings)
     return render_template('routes_warnings.html', title='Warnings', user=current_user, warnings=warnings)
+
+
+@app.route('/trains', methods=['GET'])
+def getTrains():
+    json_file = open('./trains.json')
+    data = json.load(json_file)
+    return data
