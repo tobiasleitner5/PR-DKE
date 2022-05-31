@@ -1,46 +1,46 @@
 {
   "sections": [
     {
-      "route": 1,
+      "route_id": 1,
       "id": 1,
       "name": "Wels-Linz",
       "distance": 70,
       "maxSpeed": 130,
       "fee": 90,
-      "isSchmalspur": false,
+      "is_schmalspur": false,
       "startStation": 1,
       "endStation": 2
     },
     {
-      "route": 1,
+      "route_id": 1,
       "id": 2,
       "name": "Linz-Wien",
       "distance": 150,
       "maxSpeed": 200,
       "fee": 100,
-      "isSchmalspur": true,
+      "is_schmalspur": true,
       "startStation": 2,
       "endStation": 3
     },
     {
-      "route": 2,
+      "route_id": 2,
       "id": 3,
       "name": "Pürgg-Tauplitz",
       "distance": 70,
       "maxSpeed": 130,
       "fee": 500,
-      "isSchmalspur": false,
+      "is_schmalspur": false,
       "startStation": 4,
       "endStation": 5
     },
     {
-      "route": 2,
+      "route_id": 2,
       "id": 4,
       "name": "Bad Mitterndorf - Bad Aussee",
       "distance": 150,
       "maxSpeed": 200,
       "fee": 500,
-      "isSchmalspur": true,
+      "is_schmalspur": true,
       "startStation": 6,
       "endStation": 7
     }

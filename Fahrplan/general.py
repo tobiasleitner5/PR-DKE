@@ -1,7 +1,7 @@
 from flask import render_template, redirect, session, flash
 from flask_login import login_user, login_required, logout_user, current_user
 
-from models import Employee, Ride
+from models import Employee, Ride, PlannedRoute
 
 from flask_wtf import FlaskForm
 from wtforms import StringField, PasswordField, BooleanField
@@ -49,3 +49,6 @@ def logout():
 
 def get_rides():
     return {'data': [ride.to_dict() for ride in Ride.query]}
+
+def get_planned_routes():
+    return {'data': [p.to_dict() for p in PlannedRoute.query]}

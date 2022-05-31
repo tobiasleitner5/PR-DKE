@@ -36,7 +36,7 @@ Für die Implementierung wurde das Flask Framework verwendet. Des Weiteren ist e
 Die Applikation wurde mittels Flask-Blueprints modular aufgeteilt. Die Admin-Funktionalitäten wurden in 
 [admin.py](admin.py) und die general/employee-Funktionalitäten wurden in [general.py](general.py) implementiert.
 In [reset.py](reset.py) wurden die Reset-Funktionalitäten implementiert. [read_input.py](read_input.py) wird für
-das Einlesen der Daten aus dem Strecken- und Flotteninformationssystem (bzw. aus [mockdata.py](mockdata.py) verwendet. 
+das Einlesen der Daten aus dem Strecken- und Flotteninformationssystem (bzw. aus [mockdata.py](testdata/mockdata.py) verwendet. 
 Die Mockdaten befinden sich in [testdata](testdata). 
 
 ### Admin

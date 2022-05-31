@@ -1,5 +1,5 @@
 from flask import Blueprint
-from general import index, login, logout, plan, get_rides
+from general import index, login, logout, plan, get_rides, get_planned_routes
 from admin import plan_single_ride, plan_route, plan_interval_ride, store_ride, store_route
 
 plan_route_blueprint = Blueprint('plan_route_blueprint', __name__)
@@ -25,6 +25,9 @@ plan_blueprint.route('/planforemployee')(plan)
 
 get_rides_blueprint = Blueprint('get_routes_blueprint', __name__, static_folder='static', static_url_path='/static')
 get_rides_blueprint.route('/plan/get/rides')(get_rides)
+
+get_plannedroutes_blueprint = Blueprint('get_plannedroutes_blueprint', __name__, static_folder='static', static_url_path='/static')
+get_plannedroutes_blueprint.route('/plan/get/planned_routes')(get_planned_routes)#######
 
 store_ride_blueprint = Blueprint('store_ride_blueprint', __name__, static_folder='static', static_url_path='/static')
 store_ride_blueprint.route('/admin/ride/store', methods=['GET', 'POST'])(store_ride)

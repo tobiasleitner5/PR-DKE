@@ -4,7 +4,7 @@ from flask_login import current_user
 from flask import render_template, request, redirect, url_for
 from datetime import datetime, timedelta
 
-from models import Route, PlannedRoute, Train, Ride, Employee, Section, db
+from models import Route, PlannedRoute, Train, Ride, Employee, Section, db, Station
 
 
 class AllAdminBaseView(BaseView):
@@ -94,8 +94,18 @@ def plan_route(route_id):
     if request.method == 'GET':
         route = Route.query.filter_by(id=route_id).first()
         sections = route.sections
+        stations = []
+        end_stations = []
+        for section in sections:
+            stations.append(section.start_station)
+            end_stations.append(section.end_station)
+
+        for e in end_stations:
+            if e not in stations:
+                stations.append(e)
+
         return render_template('admin/plan_route.html', title='Plane Fahrtstrecke für Route {}'.format(route.name),
-                               sections=sections, routes_id=route_id)
+                               sections=sections, routes_id=route_id, stations=stations)
 
 def create_interval_rides(plannedroute_id, start, end, rep_type, price, train, fee):
     seats = Train.query.filter_by(id=train).first().seats
@@ -183,8 +193,13 @@ def store_route():
     if request.method == 'POST':
         sections = [int(s) for s in request.form.getlist('sections')]
         sections = Section.query.filter(Section.id.in_(sections)).all()
-        name = request.form['name']
-        pr = PlannedRoute(name, sections)
+        start_id = request.form['start']
+        end_id = request.form['end']
+        start = Station.query.filter_by(id=start_id).first()
+        end = Station.query.filter_by(id=end_id).first()
+        name = '{}-{}'.format(start.name, end.name)
+
+        pr = PlannedRoute(name, sections, start_id, end_id)
         db.session.add(pr)
         db.session.commit()
 

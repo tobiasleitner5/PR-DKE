@@ -1,10 +1,24 @@
 {% block content %}
 <form action="/admin/route/store" id="ft-form" method="POST" accept-charset="UTF-8">
     <input type="hidden" name="routes_id" value="{{ routes_id }}">
-    <div>
+    <div class="dropdown">
         <label>
-            Fahrtstrecken-Name
-            <input type="text" name="name" required>
+            Startbahnhof
+            <select name="start" required>
+                {% for station in stations %}
+                <option value="{{station.id}}">{{station.name}}</option>
+                {% endfor %}
+            </select>
+        </label>
+    </div>
+    <div class="dropdown">
+        <label>
+            Endbahnhof
+            <select name="end" required>
+                {% for station in stations %}
+                <option value="{{station.id}}">{{station.name}}</option>
+                {% endfor %}
+            </select>
         </label>
     </div>
     <div class="dropdown">

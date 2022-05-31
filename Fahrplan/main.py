@@ -8,7 +8,8 @@ import argparse
 
 from models import db, Employee, Ride
 from blueprint_routings import index_blueprint, login_blueprint, logout_blueprint, plan_blueprint, get_rides_blueprint, \
-    plan_single_ride_blueprint, plan_route_blueprint, plan_interval_ride_blueprint, store_ride_blueprint, store_route_blueprint
+    plan_single_ride_blueprint, plan_route_blueprint, plan_interval_ride_blueprint, store_ride_blueprint, store_route_blueprint, \
+    get_plannedroutes_blueprint
 from admin import PlanRideView, RideView, EmployeeView, HomeAdminView, PlanRouteView
 from reset import reset
 
@@ -45,14 +46,16 @@ app.register_blueprint(plan_route_blueprint)
 app.register_blueprint(plan_interval_ride_blueprint)
 app.register_blueprint(store_ride_blueprint)
 app.register_blueprint(store_route_blueprint)
+app.register_blueprint(get_plannedroutes_blueprint)
 
 # Bind the instance to the 'app.py' Flask application
 db.init_app(app)
 bootstrap = Bootstrap(app)
 
+
 if args.reset == 'True':
-    # Reset DB and Read data
-    os.remove('rides.db')
+    if os.path.exists('rides.db'):
+        os.remove('rides.db')
     with app.app_context():
         db.create_all()
         reset()

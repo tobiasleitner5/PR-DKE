@@ -15,7 +15,6 @@ plannedroutes_sections = db.Table('plannedroutes_sections',
                                   db.Column('sections_id', db.Integer, db.ForeignKey('sections.id'))
                                   )
 
-
 class Train(db.Model):
     __tablename__ = 'trains'
     id = db.Column(db.Integer, primary_key=True)
@@ -120,13 +119,12 @@ class Ride(db.Model):
         self.train_id = train_id
 
     def to_dict(self):
-        #list = PlannedRoute.query.filter_by(id=self.plannedroute_id).first().abschnitte
-        #for l in list:
-            #print(l.id)
+        start_station_id = self.plannedroute.start_station_id
+        end_station_id = self.plannedroute.end_station_id
         return {
             'id': self.id,
-            'start': 1,
-            'end': 2,
+            'start_station_id': start_station_id,
+            'end_station_id': end_station_id,
             'time': self.time,
             'price': self.price,
             'train_id': self.train_id,
@@ -144,6 +142,8 @@ class Station(db.Model):
     address = db.Column(db.String(200))
     section1 = relationship("Section", backref="start_station", foreign_keys='Section.start_station_id')
     section2 = relationship("Section", backref="end_station", foreign_keys='Section.end_station_id')
+    plannedroute1 = relationship("PlannedRoute", backref="start_station", foreign_keys='PlannedRoute.start_station_id')
+    plannedroute2 = relationship("PlannedRoute", backref="end_station", foreign_keys='PlannedRoute.end_station_id')
 
     def __init__(self, id, name, address):
         self.id = id
@@ -221,10 +221,14 @@ class PlannedRoute(db.Model):
     __tablename__ = 'plannedroutes'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100))
+    start_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
+    end_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
     abschnitte = db.relationship('Section', secondary=plannedroutes_sections, backref='planned_routes')
 
-    def __init__(self, name, sections):
+    def __init__(self, name, sections, start_station_id, end_station_id):
         self.name = name
+        self.start_station_id = start_station_id
+        self.end_station_id = end_station_id
         self.abschnitte.extend(sections)
 
     def get_sections_info(self):
