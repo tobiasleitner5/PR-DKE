@@ -128,7 +128,8 @@ class Ride(db.Model):
             'time': self.time,
             'price': self.price,
             'train_id': self.train_id,
-            'interval': self.interval
+            'interval': self.interval,
+            'plannedroute_id': self.plannedroute_id
         }
 
     def __repr__(self):
@@ -223,19 +224,19 @@ class PlannedRoute(db.Model):
     name = db.Column(db.String(100))
     start_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
     end_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
-    abschnitte = db.relationship('Section', secondary=plannedroutes_sections, backref='planned_routes')
+    sections = db.relationship('Section', secondary=plannedroutes_sections, backref='planned_routes')
 
     def __init__(self, name, sections, start_station_id, end_station_id):
         self.name = name
         self.start_station_id = start_station_id
         self.end_station_id = end_station_id
-        self.abschnitte.extend(sections)
+        self.sections.extend(sections)
 
     def get_sections_info(self):
         isNormalspur = True
         time = 0.0
         fee = 0
-        for s in self.abschnitte:
+        for s in self.sections:
             time = time + float(s.distance) / float(s.maxSpeed)
             fee = fee + s.fee
             if str(s.is_schmalspur) == 'True':
@@ -250,3 +251,13 @@ class PlannedRoute(db.Model):
 
     def __repr__(self):
         return self.name
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'start_station_id': self.start_station_id,
+            'startStation': self.start_station_id,
+            'endStation': self.end_station_id,
+            'sections': [int(s.id) for s in self.sections]
+        }
