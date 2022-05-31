@@ -190,12 +190,14 @@ def get_stations():
 
 @app.route('/sections/get')
 def get_sections():
-    return {'sections': [section.to_dict() for section in Sections.query]}
+    sections = db.session.query(Sections)
+    return render_template('get_sections.html', title='Routes', user=current_user, sections=sections)
 
 
 @app.route('/routes/get')
 def get_rotues():
-    return {'routes': [route.to_dict() for route in Routes.query]}
+    routes = db.session.query(Routes)
+    return render_template('get_routes.html', title='Routes', user=current_user, routes=routes)
 
 
 @app.route('/warnings/get/sections')
