@@ -18,11 +18,14 @@
             <tbody>
                 <tr>
                     <td style="font-weight:bold">{{ route.name }} </td>
-                    {% for warning in route.warnings %}
-                    <td>{{ warning.name }} </td>
-                    {% endfor %}
-                    {% if not route.warnings %}
+                    {% if not route.warnings_link %}
                     <td>-</td>
+                    {% else %}
+                    <td>
+                    {% for warning in route.warnings_link %}
+                    {{ warning.name }}
+                    {% endfor %}
+                    </td>
                     {% endif %}
                 </tr>
             </tbody>
@@ -32,11 +35,13 @@
             {% for sections in route.sections %}
                 <tr>
                     <td>{{ sections }}</td>
-
                 </tr>
             {% endfor %}
             </tbody>
         </table>
 {% endfor %}
+{% if user.is_admin %}
+<a class="add-button" id="new_sections" href="{{ url_for('sections') }}"><img src="static/add.svg" height="20ç" /></a>
+{% endif %}
 {% endblock %}
 <!--<td><a class="nav-item nav-link" id="sections_admin" href="{{ url_for('sections') }}"><img src="static/info.svg" height="15" /></a></td>-->

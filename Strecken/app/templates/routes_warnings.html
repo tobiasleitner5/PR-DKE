@@ -1,0 +1,13 @@
+"warnings": [
+{% for warning in warnings %}
+    {
+      "id": {{ warning.id }},
+      "name": {{ warning.name }},
+      "routes":
+        {% for route in warning.routes %}
+            { {{ route.id }} }
+        {% endfor %}
+    }
+{% endfor %}
+]
+

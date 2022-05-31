@@ -11,8 +11,8 @@
                 <td style="font-weight:bold">Max Speed</td>
                 <td style="font-weight:bold">Fee</td>
                 <td style="font-weight:bold">Trackwidth</td>
-                <td style="font-weight:bold">Start Station</td>
-                <td style="font-weight:bold">End Station</td>
+                <td style="font-weight:bold">Start-Station</td>
+                <td style="font-weight:bold">End-Station</td>
              </tr>
              </thead>
     </table>
@@ -41,12 +41,16 @@
                     {% endfor %}
                 </tr>
             <tr>
-                {% for warning in section.warnings %}
-                    <td>Warnungen: {{ warning.name }} </td>
-                    {% endfor %}
-                    {% if not section.warnings %}
+                {% if not section.warnings_link %}
                     <td>Warnungen: -</td>
-                    {% endif %}
+                {% else %}
+                <td>Warnungen:  </td>
+                <td>
+                    {% for warning in section.warnings_link %}
+                        {{ warning.name }}
+                    {% endfor %}
+                </td>
+                {% endif %}
             </tr>
             </tbody>
         </table>

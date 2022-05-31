@@ -1,7 +1,7 @@
 from datetime import datetime
 from hashlib import md5
 
-from flask import url_for
+from flask import url_for, jsonify
 from flask_login import UserMixin, current_user
 from sqlalchemy import ForeignKey, Boolean
 from sqlalchemy.orm import relationship, backref
@@ -12,6 +12,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from app import login
 from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
+from flask_admin.menu import MenuLink
 
 # flask db init
 # flask db migrate -m "first migrate"
@@ -64,6 +65,17 @@ class Stations(db.Model):
         }
 
 
+sections_warnings = db.Table('sections_warnings',
+    db.Column('section_id', db.Integer, db.ForeignKey('sections.id')),
+    db.Column('warning_id', db.Integer, db.ForeignKey('warnings.id'))
+)
+
+routes_warnings = db.Table('routes_warnings',
+    db.Column('route_id', db.Integer, db.ForeignKey('routes.id')),
+    db.Column('warning_id', db.Integer, db.ForeignKey('warnings.id'))
+)
+
+
 class Sections(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
@@ -71,10 +83,10 @@ class Sections(db.Model):
     maxSpeed = db.Column(db.Integer)
     fee = db.Column(db.Float)
     is_schmalspur = db.Column(db.Boolean)
-    warnings = relationship("Warnings", backref="sections")
     route_id = db.Column(db.Integer, ForeignKey('routes.id'))
     start_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
     end_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
+    warnings_link = db.relationship('Warnings', secondary=sections_warnings, backref='sections')
 
     def to_dict(self):
         return {
@@ -87,7 +99,6 @@ class Sections(db.Model):
             'endStation': self.end_station_id,
             'is_schmalspur': self.is_schmalspur,
             'route_id': self.route_id,
-            'warning_id': self.warning_id
         }
 
     def __repr__(self):
@@ -97,14 +108,13 @@ class Sections(db.Model):
 class Routes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
-    #warning_id = db.Column(db.Integer, db.ForeignKey('warnings.id'))
-    sections = relationship("Sections", backref="routes")
-    warnings = relationship("Warnings", backref="routes")
+    sections = db.relationship('Sections', backref='routes')
+    warnings_link = db.relationship('Warnings', secondary=routes_warnings, backref='routes')
 
     def to_dict(self):
         return {
             'id': self.id,
-            'name': self.name,
+            'name': self.name
         }
 
     def __repr__(self):
@@ -115,8 +125,17 @@ class Warnings(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     description = db.Column(db.String(500))
-    section_id = db.Column(db.Integer, db.ForeignKey('sections.id'))
-    route_id = db.Column(db.Integer, db.ForeignKey('routes.id'))
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'description': self.description,
+            'section_id': self.section_id,
+            'route_id': self.route_id,
+            'sections': self.sections
+        }
+
 
 #**********************************************************
 
@@ -124,6 +143,10 @@ class MyModelView(ModelView):
     def is_accessible(self):
         #return current_user.is_admin
         return True
+
+    #form_excluded_columns = ('sections', 'routes', 'section1', 'section2')
+    form_excluded_columns = ('routes', 'section1', 'section2')
+
 
 class MyAdminIndexView(AdminIndexView):
     def is_visible(self):
@@ -133,11 +156,19 @@ class MyAdminIndexView(AdminIndexView):
     def index(self):
         return redirect("/admin/routes")
 
+
 admin = Admin(app,
     index_view=MyAdminIndexView(),
               name="Entitiy Management"
 )
 
+
+class MainIndexLink(MenuLink):
+    def get_url(self):
+        return url_for("routes")
+
+
+admin.add_link(MainIndexLink(name="Back to Routes"))
 admin.add_view(MyModelView(Routes, db.session))
 admin.add_view(MyModelView(Sections, db.session))
 admin.add_view(MyModelView(Stations, db.session))

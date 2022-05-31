@@ -1,8 +1,8 @@
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, jsonify
 from flask_login import current_user, login_user
 from sqlalchemy.orm import session
 
-from app.models import User, Sections, Routes
+from app.models import User, Sections, Routes, Warnings
 from app import app
 from app.forms import LoginForm, EmptyForm, EditStationForm, NewStationForm
 from flask_login import logout_user
@@ -184,3 +184,15 @@ def get_sections():
 @app.route('/routes/get')
 def get_rotues():
     return {'routes': [route.to_dict() for route in Routes.query]}
+
+
+@app.route('/warnings/get/sections')
+def get_warnings_sections():
+    warnings = db.session.query(Warnings)
+    return render_template('sections_warnings.html', title='Warnings', user=current_user, warnings=warnings)
+
+
+@app.route('/warnings/get/routes')
+def get_warnings_routes():
+    warnings = db.session.query(Warnings)
+    return render_template('routes_warnings.html', title='Warnings', user=current_user, warnings=warnings)

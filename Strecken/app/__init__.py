@@ -1,11 +1,12 @@
 from flask import Flask
-from config import Config
 from flask_sqlalchemy import SQLAlchemy
+from config import Config
 from flask_migrate import Migrate
 from flask_login import LoginManager
 
 # source venv/bin/activate
-#export FLASK_ENV=development
+# export FLASK_ENV=development
+# git diff --name-only --cached
 
 app = Flask(__name__)
 app.config.from_object(Config)
