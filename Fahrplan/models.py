@@ -120,14 +120,17 @@ class Ride(db.Model):
         self.train_id = train_id
 
     def to_dict(self):
+        #list = PlannedRoute.query.filter_by(id=self.plannedroute_id).first().abschnitte
+        #for l in list:
+            #print(l.id)
         return {
             'id': self.id,
-            'route_id': self.route_id,
+            'start': 1,
+            'end': 2,
             'time': self.time,
             'price': self.price,
             'train_id': self.train_id,
-            'interval': self.interval,
-            'interval_number': self.interval_number
+            'interval': self.interval
         }
 
     def __repr__(self):
@@ -209,7 +212,7 @@ class Section(db.Model):
         sections = []
         for s in json_dct:
             sections.append(
-                Section(s['id'], s['name'], s['distance'], s['maxSpeed'], s['fee'], s['isSchmalspur'], s['route'],
+                Section(s['id'], s['name'], s['distance'], s['maxSpeed'], s['fee'], s['is_schmalspur'], s['route_id'],
                         s['startStation'], s['endStation']))
         return sections
 

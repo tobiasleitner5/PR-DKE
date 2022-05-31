@@ -8,6 +8,7 @@ from flask_login import LoginManager
 # export FLASK_ENV=development
 # git diff --name-only --cached
 
+
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)

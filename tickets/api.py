@@ -1,7 +1,7 @@
 from flask import Flask, json, flash
 import requests, itertools
 
-dummydata = True
+dummydata = False
 
 def get_rides():
     if dummydata:
@@ -9,7 +9,7 @@ def get_rides():
         data = json.load(js)
         return data
     else:
-        data = requests.get(url="http://localhost:5001/routes/rides")
+        data = requests.get(url="http://localhost:5002/plan/get/rides")
         return data.json
 
 def get_routes():
@@ -18,7 +18,7 @@ def get_routes():
         data = json.load(js)
         return data
     else:
-        data = requests.get(url="http://localhost:5001/routes")
+        data = requests.get(url="http://localhost:5003/routes/get")
         return data.json
     
 def get_sections():
@@ -27,7 +27,7 @@ def get_sections():
         data = json.load(js)
         return data
     else:
-        data = requests.get(url="http://localhost:5001/sections")
+        data = requests.get(url="http://localhost:5003/sections/get")
         return data.json
 
 def get_trains():
@@ -36,7 +36,7 @@ def get_trains():
         data = json.load(js)
         return data
     else:
-        data = requests.get(url="http://localhost:5001/trains")
+        data = requests.get(url="http://localhost:5003/trains")
         return data.json
 
 def get_route_name():
@@ -61,8 +61,8 @@ def get_route_name_by_id(route_id):
 def getStartStations():
     sections = get_sections()
     l = []
-    for s in sections["sections"]:
-        l.append(s["startStation"]["name"])
+    #for s in sections["sections"]:
+     #   l.append(s["startStation"]["id"])
     return list(dict.fromkeys(l))
 
 def getEndStations():
