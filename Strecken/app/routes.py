@@ -3,9 +3,9 @@ import json
 from flask import render_template, flash, redirect, url_for, jsonify
 from flask_login import current_user, login_user
 
-from app.models import User, Sections, Routes, Warnings
+from app.models import User, Sections, Routes, Warnings, routes_sections
 from app import app
-from app.forms import LoginForm, EmptyForm, EditStationForm, NewStationForm
+from app.forms import LoginForm, EmptyForm, EditStationForm, NewStationForm, AddSection
 from flask_login import logout_user
 from flask_login import login_required
 from flask import request
@@ -20,17 +20,7 @@ from app.models import Stations
 @app.route('/index')
 @login_required
 def index():
-    posts = [
-        {
-            'author': {'username': 'John'},
-            'body': 'Beautiful day in Portland!'
-        },
-        {
-            'author': {'username': 'Susan'},
-            'body': 'The Avengers movie was so cool!'
-        }
-    ]
-    return render_template('index.html', title='Home', user=current_user, posts=posts)
+    return render_template('index.html', title='Home', user=current_user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -70,6 +60,27 @@ def register():
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
+
+
+@app.route('/add_section/<name>', methods=['GET', 'POST'])
+def addSection(name):
+    route = Routes.query.filter_by(name=name).first_or_404()
+    lastStation = 0
+    for s in route.sections:
+        lastStation=s.end_station_id
+    sections = db.session.query(Sections).filter(Sections.start_station_id == lastStation).all()
+    all_sections = db.session.query(Sections)
+    sections_list = [(i.id, i.name) for i in sections]
+    form = AddSection()
+    form.section.choices = sections_list
+    if form.validate_on_submit():
+        new_section = route.sections[0]
+        for s1 in all_sections:
+            if(s1.id == form.section.data): new_section = s1
+        route.sections.append(new_section)
+        db.session.commit()
+        return redirect(url_for('routes'))
+    return render_template('add_sections.html', title='Add Sections', user=current_user, form=form, route=route)
 
 
 @app.route('/user/<username>')
@@ -204,3 +215,4 @@ def getTrains():
     json_file = open('./trains.json')
     data = json.load(json_file)
     return data
+

@@ -61,7 +61,7 @@ class Stations(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'address': self.address,
+            'address': self.address
         }
 
 
@@ -75,6 +75,11 @@ routes_warnings = db.Table('routes_warnings',
     db.Column('warning_id', db.Integer, db.ForeignKey('warnings.id'))
 )
 
+routes_sections = db.Table('routes_sections',
+    db.Column('route_id', db.Integer, db.ForeignKey('routes.id')),
+    db.Column('section_id', db.Integer, db.ForeignKey('sections.id'))
+)
+
 
 class Sections(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -83,12 +88,12 @@ class Sections(db.Model):
     maxSpeed = db.Column(db.Integer)
     fee = db.Column(db.Float)
     is_schmalspur = db.Column(db.Boolean)
-    route_id = db.Column(db.Integer, ForeignKey('routes.id'))
     start_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
     end_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
     warnings_link = db.relationship('Warnings', secondary=sections_warnings, backref='sections')
 
     def to_dict(self):
+
         return {
             'id': self.id,
             'name': self.name,
@@ -98,7 +103,7 @@ class Sections(db.Model):
             'startStation': self.start_station_id,
             'endStation': self.end_station_id,
             'is_schmalspur': self.is_schmalspur,
-            'route_id': self.route_id,
+            'routes': str(self.routes)
         }
 
     def __repr__(self):
@@ -108,13 +113,14 @@ class Sections(db.Model):
 class Routes(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
-    sections = db.relationship('Sections', backref='routes')
     warnings_link = db.relationship('Warnings', secondary=routes_warnings, backref='routes')
+    sections = db.relationship('Sections', secondary=routes_sections, backref='routes')
 
     def to_dict(self):
         return {
             'id': self.id,
-            'name': self.name
+            'name': self.name,
+            'sections': str(self.sections)
         }
 
     def __repr__(self):
@@ -174,4 +180,3 @@ admin.add_view(MyModelView(Sections, db.session))
 admin.add_view(MyModelView(Stations, db.session))
 admin.add_view(MyModelView(User, db.session))
 admin.add_view(MyModelView(Warnings, db.session))
-# admin.add_view(MyModelView(RouteSections, db.session))

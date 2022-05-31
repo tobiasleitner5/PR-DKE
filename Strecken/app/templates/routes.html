@@ -38,10 +38,10 @@
                 </tr>
             {% endfor %}
             </tbody>
+
         </table>
+        {% if user.is_admin %}
+            <a class="add-button" id="new_sections" href="{{ url_for('addSection', name=route.name) }}"><img src="static/add.svg" height="20" /></a>
+        {% endif %}
 {% endfor %}
-{% if user.is_admin %}
-<a class="add-button" id="new_sections" href="{{ url_for('sections') }}"><img src="static/add.svg" height="20ç" /></a>
-{% endif %}
 {% endblock %}
-<!--<td><a class="nav-item nav-link" id="sections_admin" href="{{ url_for('sections') }}"><img src="static/info.svg" height="15" /></a></td>-->

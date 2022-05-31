@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, BooleanField, SubmitField
+from wtforms import StringField, PasswordField, BooleanField, SubmitField, SelectField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo
-from app.models import User
+from wtforms.widgets import Select
+
+from app.models import User, Sections
 from wtforms import StringField, TextAreaField, SubmitField
 from wtforms.validators import DataRequired, Length
 
@@ -45,4 +47,8 @@ class EditStationForm(FlaskForm):
 class NewStationForm(FlaskForm):
     name = StringField('Name', validators=[DataRequired()])
     address = TextAreaField('Address', validators=[DataRequired()])
+    submit = SubmitField('Submit')
+
+class AddSection(FlaskForm):
+    section = SelectField('Section', coerce=int)
     submit = SubmitField('Submit')
