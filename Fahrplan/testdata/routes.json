@@ -2,11 +2,13 @@
    "routes":[
       {
          "id":1,
-         "name":"Westbahn"
+         "name":"Westbahn",
+         "sections": [1,2]
       },
       {
          "id":2,
-         "name":"Salzkammergutbahn 1"
+         "name":"Salzkammergutbahn 1",
+         "sections": [1,2,3,4]
       }
    ]
 }

@@ -4,6 +4,11 @@ import read_input
 def reset():
     db.session.add(Employee('Admin', 'admin@oebb.at', 123456789, True))
 
+    sections = dict(read_input.get_sections_data())['sections']
+    sections = Section.from_json(sections)
+    for section in sections:
+        db.session.add(section)
+
     routes = dict(read_input.get_routes_data())['routes']
     routes = Route.from_json(routes)
     for route in routes:
@@ -14,10 +19,6 @@ def reset():
     for station in stations:
         db.session.add(station)
 
-    sections = dict(read_input.get_sections_data())['sections']
-    sections = Section.from_json(sections)
-    for section in sections:
-        db.session.add(section)
 
     trains = dict(read_input.get_trains_data())['trains']
     trains = Train.from_json(trains)

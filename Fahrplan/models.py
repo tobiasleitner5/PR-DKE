@@ -15,6 +15,12 @@ plannedroutes_sections = db.Table('plannedroutes_sections',
                                   db.Column('sections_id', db.Integer, db.ForeignKey('sections.id'))
                                   )
 
+routes_sections = db.Table('routes_sections',
+    db.Column('route_id', db.Integer, db.ForeignKey('routes.id')),
+    db.Column('section_id', db.Integer, db.ForeignKey('sections.id'))
+)
+
+
 class Train(db.Model):
     __tablename__ = 'trains'
     id = db.Column(db.Integer, primary_key=True)
@@ -77,16 +83,18 @@ class Route(db.Model):
     __tablename__ = 'routes'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
-    sections = relationship("Section", backref="routes")
+    sections = db.relationship('Section', secondary=routes_sections, backref='routes')
 
-    def __init__(self, id, name):
+    def __init__(self, id, name, sections):
         self.id = id
         self.name = name
+        self.sections.extend(sections)
 
     def to_dict(self):
         return {
             'id': self.id,
             'name': self.name,
+            'sections': [int(s.id) for s in self.sections]
         }
 
     def __repr__(self):
@@ -96,7 +104,8 @@ class Route(db.Model):
     def from_json(json_dct):
         routes = []
         for r in json_dct:
-            routes.append(Route(r['id'], r['name']))
+            sections = Section.query.filter(Section.id.in_(r['sections'])).all()
+            routes.append(Route(r['id'], r['name'], sections))
         return routes
 
 
@@ -177,18 +186,16 @@ class Section(db.Model):
     maxSpeed = db.Column(db.Integer)
     fee = db.Column(db.Float)
     is_schmalspur = db.Column(db.Boolean)
-    route_id = db.Column(db.Integer, ForeignKey('routes.id'))
     start_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
     end_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
 
-    def __init__(self, id, name, distance, maxSpeed, fee, is_schmalspur, route_id, start_station_id, end_station_id):
+    def __init__(self, id, name, distance, maxSpeed, fee, is_schmalspur, start_station_id, end_station_id):
         self.id = id
         self.name = name
         self.distance = distance
         self.maxSpeed = maxSpeed
         self.fee = fee
         self.is_schmalspur = is_schmalspur
-        self.route_id = route_id
         self.start_station_id = start_station_id
         self.end_station_id = end_station_id
 
@@ -201,8 +208,7 @@ class Section(db.Model):
             'fee': self.fee,
             'startStation': self.start_station_id,
             'endStation': self.end_station_id,
-            'is_schmalspur': self.is_schmalspur,
-            'route_id': self.route_id
+            'is_schmalspur': self.is_schmalspur
         }
 
     def __repr__(self):
@@ -213,7 +219,7 @@ class Section(db.Model):
         sections = []
         for s in json_dct:
             sections.append(
-                Section(s['id'], s['name'], s['distance'], s['maxSpeed'], s['fee'], s['is_schmalspur'], s['route_id'],
+                Section(s['id'], s['name'], s['distance'], s['maxSpeed'], s['fee'], s['is_schmalspur'],
                         s['startStation'], s['endStation']))
         return sections
 
