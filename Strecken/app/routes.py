@@ -70,13 +70,14 @@ def addSection(name):
     lastStation = 0
     for s in route.sections:
         lastStation=s.end_station_id
-    sections = db.session.query(Sections).filter(Sections.start_station_id == lastStation).all()
     all_sections = db.session.query(Sections)
-    sections_list = [(i.id, i.name) for i in sections]
+    sections_list = [(i.id, i.name) for i in all_sections]
+    if(not not lastStation):
+        sections = db.session.query(Sections).filter(Sections.start_station_id == lastStation).all()
+        sections_list = [(i.id, i.name) for i in sections]
     form = AddSection()
     form.section.choices = sections_list
     if form.validate_on_submit():
-        new_section = route.sections[0]
         for s1 in all_sections:
             if(s1.id == form.section.data): new_section = s1
         route.sections.append(new_section)
