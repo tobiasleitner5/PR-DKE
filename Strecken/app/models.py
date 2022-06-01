@@ -1,10 +1,7 @@
-from datetime import datetime
-from hashlib import md5
-
-from flask import url_for, jsonify
-from flask_login import UserMixin, current_user
+from flask import url_for
+from flask_login import UserMixin
 from sqlalchemy import ForeignKey, Boolean
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 from werkzeug.utils import redirect
 
 from app import db, app
@@ -103,7 +100,7 @@ class Sections(db.Model):
             'startStation': self.start_station_id,
             'endStation': self.end_station_id,
             'is_schmalspur': self.is_schmalspur,
-            'routes': str(self.routes)
+            'routes': [int(r.id) for r in self.routes]
         }
 
     def __repr__(self):
@@ -120,7 +117,7 @@ class Routes(db.Model):
         return {
             'id': self.id,
             'name': self.name,
-            'sections': str(self.sections)
+            'sections': [int(s.id) for s in self.sections]
         }
 
     def __repr__(self):
@@ -137,9 +134,8 @@ class Warnings(db.Model):
             'id': self.id,
             'name': self.name,
             'description': self.description,
-            'section_id': self.section_id,
-            'route_id': self.route_id,
-            'sections': self.sections
+            'routes': [int(r.id) for r in self.routes],
+            'sections': [int(s.id) for s in self.sections]
         }
 
 
@@ -150,8 +146,8 @@ class MyModelView(ModelView):
         #return current_user.is_admin
         return True
 
-    #form_excluded_columns = ('sections', 'routes', 'section1', 'section2')
-    form_excluded_columns = ('routes', 'section1', 'section2')
+    #form_excluded_columns = ('sections', 'routes', 'section1', 'section2', 'password_hash')
+    form_excluded_columns = ('routes', 'section1', 'section2', 'password_hash')
 
 
 class MyAdminIndexView(AdminIndexView):

@@ -3,11 +3,13 @@
     {
       "id": {{ route.id }},
       "name": {{ route.name }},
-      "sections":
+      "sections": "
         {% for section in route.sections %}
              {{ section.id }}
         {% endfor %}
+        "
     }
 {% endfor %}
 ]
+
 

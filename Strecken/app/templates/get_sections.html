@@ -10,9 +10,9 @@
       "endStation": {{ section.end_station_id }},
       "isSchmalspur": {{ section.is_schmalspur }},
       "routes":
-        {% for route in section.routes %}
+        "{% for route in section.routes %}
              {{ route.id }}
-        {% endfor %}
+        {% endfor %}"
     }
 {% endfor %}
 ]

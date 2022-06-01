@@ -1,11 +1,11 @@
 import json
 
-from flask import render_template, flash, redirect, url_for, jsonify
+from flask import render_template, flash, redirect, url_for
 from flask_login import current_user, login_user
 
-from app.models import User, Sections, Routes, Warnings, routes_sections
+from app.models import User, Sections, Routes, Warnings
 from app import app
-from app.forms import LoginForm, EmptyForm, EditStationForm, NewStationForm, AddSection
+from app.forms import LoginForm, EmptyForm, AddSection
 from flask_login import logout_user
 from flask_login import login_required
 from flask import request
@@ -13,14 +13,16 @@ from werkzeug.urls import url_parse
 from app import db
 from app.forms import RegistrationForm
 from datetime import datetime
-from app.forms import EditProfileForm
 from app.models import Stations
 
 
 @app.route('/index')
 @login_required
 def index():
-    return render_template('index.html', title='Home', user=current_user)
+    routes = db.session.query(Routes)
+    route_sec = db.session.query(Routes.sections)
+    return render_template('routes.html', title='Routes', user=current_user, routes=routes, route_sec=route_sec)
+    #return render_template('index.html', title='Home', user=current_user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -59,7 +61,7 @@ def register():
         db.session.commit()
         flash('Congratulations, you are now a registered user!')
         return redirect(url_for('login'))
-    return render_template('register.html', title='Register', form=form)
+    return render_template('register.html', title='Register', form=form, user=current_user)
 
 
 @app.route('/add_section/<name>', methods=['GET', 'POST'])
@@ -100,23 +102,6 @@ def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
-
-
-@app.route('/edit_profile', methods=['GET', 'POST'])
-@login_required
-def edit_profile():
-    form = EditProfileForm()
-    if form.validate_on_submit():
-        current_user.username = form.username.data
-        current_user.about_me = form.about_me.data
-        db.session.commit()
-        flash('Your changes have been saved.')
-        return redirect(url_for('edit_profile'))
-    elif request.method == 'GET':
-        form.username.data = current_user.username
-        form.about_me.data = current_user.about_me
-    return render_template('edit_profile.html', title='Edit Profile',
-                           form=form)
 
 
 @app.route('/follow/<username>', methods=['POST'])
@@ -190,26 +175,24 @@ def get_stations():
 
 @app.route('/sections/get')
 def get_sections():
-    sections = db.session.query(Sections)
-    return render_template('get_sections.html', title='Routes', user=current_user, sections=sections)
+    return {'sections': [section.to_dict() for section in Sections.query]}
+    #sections = db.session.query(Sections)
+    #return render_template('get_sections.html', title='Routes', user=current_user, sections=sections)
 
 
 @app.route('/routes/get')
 def get_rotues():
-    routes = db.session.query(Routes)
-    return render_template('get_routes.html', title='Routes', user=current_user, routes=routes)
+    return {'routes': [route.to_dict() for route in Routes.query]}
+    #routes = db.session.query(Routes)
+    #return render_template('get_routes.html', title='Routes', user=current_user, routes=routes)
 
 
-@app.route('/warnings/get/sections')
+@app.route('/warnings/get')
 def get_warnings_sections():
-    warnings = db.session.query(Warnings)
-    return render_template('sections_warnings.html', title='Warnings', user=current_user, warnings=warnings)
+    return {'warnings': [warning.to_dict() for warning in Warnings.query]}
+    #warnings = db.session.query(Warnings)
+    #return render_template('sections_warnings.html', title='Warnings', user=current_user, warnings=warnings)
 
-
-@app.route('/warnings/get/routes')
-def get_warnings_routes():
-    warnings = db.session.query(Warnings)
-    return render_template('routes_warnings.html', title='Warnings', user=current_user, warnings=warnings)
 
 
 @app.route('/trains', methods=['GET'])
