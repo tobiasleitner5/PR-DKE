@@ -16,14 +16,15 @@
 
 ### Start
 #### Erster Start und Resets
-1. `python3 mockdata.py`
-2. `python3 main.py --reset True`
+`python3 main.py --reset True`
 
-Beim ersten Start wird die Datenbank erstellt. 
+Beim ersten Start wird die Datenbank erstellt. Möchte man die aktuellen Daten aus dem Flotten- und Streckeninformationssystem
+in die Datenbank laden, dann kann `--reset True` dafür verwendet werden. Es werden dabei aber auch alle erstellten Fahrtstrecken
+und Fahrtdurchführungen gelöscht. Das Flotteninformationssystem wurde in unserer Gruppe nicht implementiert. 
+Es werden deshalb Mock-Daten vom Streckeninformationssystem zur Verfügung gestellt.
+Möchte man die Fahrplan-Applikation ohne Streckeninformationssystem mit `--reset True` starten, um mit eigenen Mockdaten 
+Tests durchzuführen, kann dazu [mockdata.py](mockdata.py) auf Port 5003 gestartet werden.
 
-Für Testzwecke kann die Fahrplan-Applikation auch allein (ohne Strecken- und Flotteninformationssystem) auf Basis von 
-Mockdaten gestartet werden. Da das Flotteninformationssystem in unserer Gruppe nicht implementiert wurde, muss 
-folgender Schritt beim ersten Start/Reset-Start immer durchgeführt werden: `python3 mockdata.py`.
 
 #### Weitere Starts
 Wird die Applikation neu gestartet, kann man entweder mit jenen Daten arbeiten, die in der Datenbank
@@ -59,6 +60,11 @@ mittels diesem [HTML File](./templates/admin/admin_routes_overview.html) angezei
 Wird der Link in der jeweiligen Zeile angeklickt, kann für diese Route eine Fahrtstrecke erzeugt werden.
 Für die Fahrtstrecke wird dann ein Name und die Abschnitte gewählt. Die Daten werden dann anschließend an den 
 Endpoint `/admin/route/store` geschickt und in der Datenbank persistiert.
+
+Wichtiges Detail in der Implementierung der Erstellung der Fahrtstrecken ist die Sicherstellung, dass nur zusammenhängende
+Abschnitte gewählt werden können. Dafür wird in der Methode `is_valid(start_station_id, end_station_id, sections)` untersucht,
+ob die Bahnhöfe zusammenhängend sind. Des Weiteren wird geprüft, ob der ausgewählte Start und Endbahnhof in den Bahnhöfen der 
+Abschnitte vorkommen.
 
 #### Fahrtdurchführung planen
 Die geplanten Fahrtstrecken werden in einer [Tabelle](./templates/admin/admin_plannedroutes_overview.html) angezeigt. Es gibt wieder zwei Links in der Tabelle. Einmal 

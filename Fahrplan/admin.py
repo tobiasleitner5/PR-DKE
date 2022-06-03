@@ -1,7 +1,7 @@
 from flask_admin import BaseView, expose, AdminIndexView
 from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
-from flask import render_template, request, redirect, url_for
+from flask import render_template, request, redirect, url_for, flash
 from datetime import datetime, timedelta
 
 from models import Route, PlannedRoute, Train, Ride, Employee, Section, db, Station
@@ -158,6 +158,7 @@ def store_ride():
             db.session.commit()
             db.session.close()
 
+        flash("Fahrtdurchführung {} wurde hinzugefügt.".format(ride.id))
         return redirect('/admin')
 
     else:
@@ -167,8 +168,7 @@ def store_ride():
         section_info = pr.get_sections_info()
         isNormalspur = section_info['isNormalspur']
         total_fee = section_info['fee']
-        duration = section_info[
-            'time']  # TODO filter train falls in Verwendung --> einfach alle Rides abfragen und Uhrzeit checken
+        duration = section_info['time']  # TODO filter train falls in Verwendung --> einfach alle Rides abfragen und Uhrzeit checken
         if not isNormalspur:
             trains = Train.query.filter_by(is_normalspur=False)
         else:
@@ -193,8 +193,11 @@ def store_route():
     if request.method == 'POST':
         sections = [int(s) for s in request.form.getlist('sections')]
         sections = Section.query.filter(Section.id.in_(sections)).all()
-        start_id = request.form['start']
-        end_id = request.form['end']
+        start_id = int(request.form['start'])
+        end_id = int(request.form['end'])
+        if not is_valid(start_id, end_id, sections):
+            flash('Invalide Auswahl...')
+            return redirect('/planrouteview')
         start = Station.query.filter_by(id=start_id).first()
         end = Station.query.filter_by(id=end_id).first()
         name = '{}-{}'.format(start.name, end.name)
@@ -202,5 +205,27 @@ def store_route():
         pr = PlannedRoute(name, sections, start_id, end_id)
         db.session.add(pr)
         db.session.commit()
-
+    flash("Fahrtstrecke {} wurde hinzugefügt.".format(name))
     return redirect('/admin')
+
+def is_valid(start_station_id, end_station_id, sections):
+    all_stations=[]
+    start_end_map={}
+    for s in sections:
+        all_stations.extend([s.start_station_id, s.end_station_id])
+        start_end_map[s.start_station_id]=s.end_station_id
+
+    if (start_station_id in all_stations) and (end_station_id in all_stations):
+        pass
+    else:
+        return False
+
+    try:
+        first=start_station_id
+        for x in range(start_end_map.__len__()):
+            second=start_end_map[first]
+            first=second
+    except KeyError as e:
+        return False
+
+    return True
