@@ -12,6 +12,15 @@ def get_rides():
         data = requests.get(url="http://localhost:5002/plan/get/rides")
         return data.json
 
+def get_planned_routes():
+    if dummydata:
+        js = open("./dummydata/planned_routes.json")
+        data = json.load(js)
+        return data
+    else:
+        data = requests.get(url="http://localhost:5002/plan/get/planned_routes")
+        return data.json
+
 def get_routes():
     if dummydata:
         js = open("./dummydata/routes.json")
@@ -39,6 +48,36 @@ def get_trains():
         data = requests.get(url="http://localhost:5003/trains")
         return data.json
 
+def get_stations():
+    if dummydata:
+        js = open("./dummydata/stations.json")
+        data = json.load(js)
+        return data
+    else:
+        data = requests.get(url="http://localhost:5003/stations/get")
+        return data.json
+
+def get_routes():
+    if dummydata:
+        js = open("./dummydata/routes.json")
+        data = json.load(js)
+        return data
+    else:
+        data = requests.get(url="http://localhost:5003/routes/get")
+        return data.json
+
+def get_warnings():
+    if dummydata:
+        js = open("./dummydata/warnings.json")
+        data = json.load(js)
+        return data
+    else:
+        data = requests.get(url="http://localhost:5003/warnings/get")
+        return data.json
+
+
+###################################################################################
+
 def get_route_name():
     routes = get_routes()
     l = []
@@ -58,19 +97,24 @@ def get_route_name_by_id(route_id):
         if int(r["id"]) == int(route_id):
             return r["name"]
 
-def getStartStations():
-    sections = get_sections()
-    l = []
-    #for s in sections["sections"]:
-     #   l.append(s["startStation"]["id"])
-    return list(dict.fromkeys(l))
+def getStations():
+    stations = get_stations()
+    list_stations = []
+    for s in stations["stations"]:
+        list_stations.append(s["name"])
+    return list_stations
 
-def getEndStations():
-    sections = get_sections()
-    l = []
-    for s in sections["sections"]:
-        l.append(s["endStation"]["name"])
-    return list(dict.fromkeys(l))
+def getStationsById(id):
+    stations = get_stations()
+    for s in stations["stations"]:
+        if s["id"]==id:
+            return s
+
+def getStationsByName(name):
+    stations = get_stations()
+    for s in stations["stations"]:
+        if s["name"]==name:
+            return s
 
 def get_sections_by_route_id(id):
     data = get_sections()
@@ -86,6 +130,33 @@ def get_ride_by_id(id):
     for r in data["data"]:
         if id == r["id"]:
             return r
+
+def get_section_by_id(id):
+    data = get_sections()
+    for s in data["sections"]:
+        if id == s["id"]:
+            return s
+
+def get_planned_route_by_id(id):
+    data = get_planned_routes()
+    for pr in data["data"]:
+        if int(id) == pr["id"]:
+            return pr
+        
+# def get_section_by_start_station(id, sections):
+#     data = get_sections()
+#     for s in data["sections"]:
+#         if int(id) == s["startStation"] and sections.__contains__(s["id"]):
+#             return s
+
+def get_route_of_ride(id):
+    planned_route = get_planned_route_by_id(int(id))
+    sections_planned_route = list(planned_route["sections"])
+    routes = []
+    for s in sections_planned_route:
+        section = get_section_by_id(s)
+        routes.append(section["route"])
+    return set(routes)
 
 def get_train_by_id(id):
     data = get_trains()

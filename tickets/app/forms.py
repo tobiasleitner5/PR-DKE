@@ -58,8 +58,8 @@ class EditProfileForm(FlaskForm):
                 raise ValidationError('Please use a different email.')
 
 class TicketForm(FlaskForm):
-    departure = SelectField('Von', choices=api.getStartStations(), validators=[DataRequired()])
-    destination = SelectField('Nach', choices=api.getEndStations(), validators=[DataRequired()])
+    departure = SelectField('Von', choices=api.getStations(), validators=[DataRequired()])
+    destination = SelectField('Nach', choices=api.getStations(), validators=[DataRequired()])
     date = DateField('Wann', format='%Y-%m-%d', default=datetime.today, validators=[DataRequired('please select startdate')])
     time = TimeField('Wann', format='%H:%M', default=datetime.today, validators=[DataRequired()])
     submit = SubmitField('Suchen')

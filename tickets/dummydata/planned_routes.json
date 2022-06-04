@@ -1,0 +1,46 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "startStation": 1,
+      "endStation": 3,
+      "name": "Wels-Wien",
+      "sections": [
+        1,
+        2
+      ]
+    },
+    {
+      "id": 2,
+      "startStation": 1,
+      "endStation": 2,
+      "name": "Wels-Linz",
+      "sections": [
+        1,
+        4
+      ]
+    },
+    {
+      "id": 3,
+      "startStation": 1,
+      "endStation": 7,
+      "name": "Wels-Bad Aussee",
+      "sections": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "id": 4,
+      "startStation": 4,
+      "endStation": 7,
+      "name": "Pürgg-Bad Aussee",
+      "sections": [
+        3,
+        4
+      ]
+    }
+  ]
+}

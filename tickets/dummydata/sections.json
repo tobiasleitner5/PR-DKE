@@ -7,16 +7,8 @@
       "distance": 70,
       "maxSpeed": 130,
       "fee": 90,
-      "startStation": {
-        "id": 1,
-        "name": "Wels",
-        "address": "Wels 20"
-      },
-      "endStation": {
-        "id": 2,
-        "name": "Linz",
-        "address": "Linz 20"
-      }
+      "startStation": 1,
+      "endStation": 2
     },
     {
       "route": 1,
@@ -25,35 +17,18 @@
       "distance": 150,
       "maxSpeed": 200,
       "fee": 100,
-      "startStation": {
-        "id": 2,
-        "name": "Linz",
-        "address": "Linz 20"
-      },
-      "endStation": {
-        "id": 3,
-        "name": "Wien",
-        "address": "Wien 20"
-      }
-
+      "startStation": 2,
+      "endStation": 3
     },
     {
-     "route": 2,
+      "route": 2,
       "id":3,
       "name":"Pürgg-Tauplitz",
       "distance":70,
       "maxSpeed":130,
       "fee":90,
-      "startStation":{
-         "id":4,
-         "name":"Pürgg",
-         "address":"Pürgg 20"
-      },
-      "endStation": {
-        "id": 5,
-        "name": "Tauplitz",
-        "address": "Tauplitz 20"
-      }
+      "startStation":4,
+      "endStation": 5
   },
    {
     "route": 2,
@@ -62,17 +37,8 @@
     "distance":150,
     "maxSpeed":200,
     "fee":100,
-    "startStation":{
-       "id":6,
-       "name":"Bad Mitterndorf",
-       "address":"Bad Mitterndorf 20"
-    },
-    "endStation":{
-       "id":7,
-       "name":"Bad Aussee",
-       "address":"Bad Aussee 20"
-    }
-
+    "startStation":6,
+    "endStation":7
   }
   ]
 }

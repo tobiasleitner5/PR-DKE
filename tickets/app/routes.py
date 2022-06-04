@@ -18,8 +18,10 @@ def index():
         return redirect(url_for('promotion'))
     form = TicketForm()
     if form.validate_on_submit():
-        start = form.departure.data
-        end = form.destination.data
+        start = int(api.getStationsByName(form.departure.data)["id"])
+        end = int(api.getStationsByName(form.destination.data)["id"])
+        print(start)
+        print(end)
         date = form.date.data
         time = form.time.data
         date_time = datetime.combine(date, time)
@@ -27,29 +29,64 @@ def index():
         res = []
         promotions = Promotion.query.all()
         for r in api.get_rides()["data"]:
-            l = api.get_sections_by_route_id(r["route_id"])
+            planned_route = api.get_planned_route_by_id(r["plannedroutes_id"])
             lStations = []
-            for s in l:
-                lStations.append(s["name"])
+            lStations.append(int(planned_route["startStation"]))
+            lStations.append(int(planned_route["endStation"]))
             if lStations.__contains__(start) and lStations.__contains__(end) and lStations.index(
-                    start) < lStations.index(end) and start != end:
-                succ = True
-                ride_time = datetime.strptime(r["time"], "%a, %d %b %Y %H:%M:%S GMT")
-                if ride_time >= date_time:
-                    res.append(r)
+                         start) < lStations.index(end) and start != end:
+                    succ = True
+                    ride_time = datetime.strptime(r["time"], "%a, %d %b %Y %H:%M:%S GMT")
+                    if ride_time >= date_time:
+                        res.append(r)
+        #     l = api.get_sections_by_route_id(r["route_id"])
+        #     lStations = []
+        #     for s in l:
+        #         station = api.getStationsById(int(s))
+        #         lStations.append(station)
+        #     if lStations.__contains__(start) and lStations.__contains__(end) and lStations.index(
+        #             start) < lStations.index(end) and start != end:
+        #         succ = True
+        #         ride_time = datetime.strptime(r["time"], "%a, %d %b %Y %H:%M:%S GMT")
+        #         if ride_time >= date_time:
+        #             res.append(r)
         if not succ:
             flash("Keine Fahrtdurchführung gefunden!")
-        return render_template("index.html", title='Home Page', result=True, form=form, results=res, promotions=promotions, pricedict=get_best_promo())
+        return render_template("index.html", title='Home Page', result=True, form=form, results=res, promotions=promotions, pricedict=get_best_promo(), warnings=get_dict_warnings())
     return render_template("index.html", title='Home Page', results=False, form=form)
+
+# def get_stations_for_ride(plannedroutes_id):
+#     planned_route = api.get_planned_route_by_id(plannedroutes_id)
+#     list_stations = []
+#     list_stations.append(planned_route["startStation"])
+#     list_stations.append(api.get_section_by_start_station(planned_route["startStation"], planned_route["sections"])["endStation"])
+#     
+#     for s in planned_route["sections"]:
+#         if int(s) == api.get_section_by_start_station():
+
+def get_dict_warnings():
+    warnings_dict = {}
+    warnings = api.get_warnings()
+    for r in api.get_rides()["data"]:
+        warnings_dict[r["id"]] = []
+        list_routes = list(api.get_route_of_ride(r["plannedroutes_id"]))
+        list_sections = api.get_planned_route_by_id(r["plannedroutes_id"])["sections"]
+        for w in warnings["warnings"]:
+            if any(item in w["routes"] for item in list_routes):
+                warnings_dict[r["id"]].append(w["name"])
+            elif any(item in w["sections"] for item in list_sections):
+                warnings_dict[r["id"]].append(w["name"])
+    return warnings_dict
 
 def get_best_promo():
     best_promo_dict = {}
     for r in api.get_rides()["data"]:
-        best_promo = get_best_promo_by_route(r["route_id"], r["time"])
+        list_routes = api.get_route_of_ride(r["plannedroutes_id"])
+        best_promo = get_best_promo_by_route(list_routes, r["time"])
         best_promo_dict[r["id"]] = best_promo
     return best_promo_dict
 
-def get_best_promo_by_route(route_id, ride_time_str):
+def get_best_promo_by_route(list_routes, ride_time_str):
     promotions = Promotion.query.all()
     best_promo = 0
     for p in promotions:
@@ -57,7 +94,7 @@ def get_best_promo_by_route(route_id, ride_time_str):
         if p.start_date <= ride_time <= p.end_date:
             if p.all_routes and p.sale > best_promo:
                 best_promo = p.sale
-            elif p.route_id == route_id and p.sale > best_promo:
+            elif list_routes.__contains__(p.route_id) and p.sale > best_promo:
                 best_promo = p.sale
     return best_promo
 

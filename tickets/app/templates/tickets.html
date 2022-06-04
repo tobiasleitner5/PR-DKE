@@ -3,9 +3,9 @@
 
 {% block content %}
 <h1>Meine Tickets</h1>
-<table>
+<table class="default">
     {% for ticket in tickets %}
-    <tr>
+    <tr class="default">
         <td>{{ ticket.ride_id }}</td>
         <td>{{ ticket.status }}</td>
         <td>{{ ticket.seat }}</td>

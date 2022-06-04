@@ -8,7 +8,7 @@
         <table>
             <tr>
                 <td>{{ form.departure.label }}<br>{{ form.departure }}</td>
-                <td><i class="fas fa-exchange-alt"></i></td>
+                <td style="text-align:center"><i class="fas fa-exchange-alt"></i></td>
                 <td>{{ form.destination.label }}<br>{{ form.destination }}</td>
             </tr>
             <tr>
@@ -26,15 +26,22 @@
 
     {% if result %}
         <br><h3>Ticket wählen</h3><hr>
-        <table>
+        <table class="default">
             {% for r in results %}
-            <tr>
+            <tr class="default">
                 <td>{{ r.time }}</td>
                 <td>{{ form.departure.data }}</td>
                 <td><i class="fas fa-arrow-right"></i></td>
                 <td>{{ form.destination.data }}</td>
+                {% if not warnings.get(r.id) == [] %}
+                    <td>Warnings:
+                    {% for w in warnings.get(r.id) %}
+                        <br>{{ (w) }}
+                    {% endfor %}
+                    </td>
+                {% endif %}
                 {% if pricedict.get(r.id) != 0 %}
-                    <td>Price: <s style="color:red">{{ (r.price) }}</s> {{ (r.price)*(100-pricedict.get(r.id))/100 }}</td>
+                    <td>Price: <br><s style="color:red">{{ (r.price) }}</s> <i style="color:green">-{{ (pricedict.get(r.id)) }}%</i><br> {{ (r.price)*(100-pricedict.get(r.id))/100 }}</td>
                 {% else %}
                     <td>Price: {{ (r.price) }}</td>
                 {% endif %}

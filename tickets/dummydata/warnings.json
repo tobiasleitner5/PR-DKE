@@ -1,0 +1,25 @@
+{
+  "warnings": [
+    {
+      "description": null,
+      "id": 1,
+      "name": "Verspaetung",
+      "routes": [
+      ],
+      "sections": [
+        4,
+        6
+      ]
+    },
+    {
+      "description": null,
+      "id": 2,
+      "name": "Ausfall",
+      "routes": [
+      ],
+      "sections": [
+        4
+      ]
+    }
+  ]
+}
