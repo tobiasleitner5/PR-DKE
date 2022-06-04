@@ -8,13 +8,13 @@
         <table>
             <tr>
                 <td>{{ form.departure.label }}<br>{{ form.departure }}</td>
-                <td style="text-align:center"><i class="fas fa-exchange-alt"></i></td>
+                <td><i class="fas fa-exchange-alt"></i></td>
                 <td>{{ form.destination.label }}<br>{{ form.destination }}</td>
             </tr>
             <tr>
-                <td>{{ form.date(class='datepicker') }}</td>
+                <td style="text-align:left">{{ form.date(class='datepicker') }}</td>
                 <td></td>
-                <td>{{ form.time(class='timepicker') }}</td>
+                <td style="text-align:left">{{ form.time(class='timepicker') }}</td>
             </tr>
             <tr>
                 <td></td>

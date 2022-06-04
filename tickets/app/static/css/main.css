@@ -34,10 +34,9 @@ li a:hover:not(.navbar_active) {
 }
 
 .start-page {
-  width: 360px;
   margin-top: 10%;
-  margin-left: 41%;
-  width: 200px;
+  margin-left: 37%;
+  width: 400px;
 }
 
 .alert {
@@ -117,8 +116,8 @@ table.default tr.header{
   border-bottom: 3px solid #000000;
 }
 
-td, th {
-  text-align: left;
+td {
+  text-align: center;
   padding: 8px;
 }
 

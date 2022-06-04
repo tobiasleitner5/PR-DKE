@@ -3,13 +3,28 @@
 
 {% block content %}
 <h1>Meine Tickets</h1>
-<table class="default">
+<table>
+    <tr>
+        <th>Zeit</th>
+        <th></th>
+        <th></th>
+        <th></th>
+        <th>Sitzplatz</th>
+        <th>Status</th>
+        <th></th>
+    </tr>
     {% for ticket in tickets %}
     <tr class="default">
         <td>{{ ticket.ride_id }}</td>
-        <td>{{ ticket.status }}</td>
-        <td>{{ ticket.seat }}</td>
+        <td></td>
         <td><i class="fas fa-arrow-right"></i></td>
+        <td></td>
+        {% if ticket.seat %}
+            <td>Reserviert</td>
+        {% else %}
+            <td>Nicht reserviert</td>
+        {% endif %}
+        <td>{{ ticket.status }}</td>
         <td>
             <input type="button" onclick="window.location.href='{{ url_for( 'tickets', ticketid=ticket.id ) }}';" value="Sitzplatz reservieren">
             <input type="button" onclick="window.location.href='{{ url_for( 'cancelticket', ticketid=ticket.id ) }}';" value="Stornieren">
