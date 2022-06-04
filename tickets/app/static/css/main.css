@@ -121,6 +121,11 @@ td {
   padding: 8px;
 }
 
+th {
+  text-align: center;
+  padding: 9px;
+}
+
 tr.default:nth-child(odd) {
   background-color: #e9e9e9;
 }

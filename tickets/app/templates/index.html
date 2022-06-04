@@ -46,7 +46,7 @@
                     <td>Price: {{ (r.price) }}</td>
                 {% endif %}
                 <td>
-                    <input type="button" onclick="window.location.href='{{ url_for( 'buyticket', rideid=r.id ) }}';" value="Kaufen">
+                    <input type="button" onclick="window.location.href='{{ url_for( 'buyticket', rideid=r.id, departure=form.departure.data, destination=form.destination.data ) }}';" value="Kaufen">
                 </td>
             </tr>
             {% endfor %}

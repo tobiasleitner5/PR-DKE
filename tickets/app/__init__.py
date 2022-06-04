@@ -21,7 +21,7 @@ from app import routes, models, errors
 
 
 #############################################################
-# >>> command sequence to add an admin by using the python console
+# command sequence to add an admin by using the python console
 # >>> from app import db
 # >>> from app.models import User
 # >>> u = User(username='admin', email='admin@example.com')

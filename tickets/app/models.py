@@ -46,14 +46,18 @@ class User(UserMixin, db.Model):
             'access': self.access
         }
 
-
 class Ticket(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
     ride_id = db.Column(db.Integer)
     status = db.Column(db.Enum('active','cancelled','used'), nullable=False, server_default="active")
     seat = db.Column(db.Boolean, default=False, nullable=False)
-
+    departure = db.Column(db.String)
+    destination = db.Column(db.String)
+    
+    def get_time(self):
+        return api.get_ride_by_id(self.ride_id)["time"]
+    
     def __repr__(self):
         return '<Ticket {}>'.format(self.id)
 

@@ -230,10 +230,10 @@ def cancelpromo(promotionid):
         return redirect(url_for('overview'))
     return render_template('cancelview.html', title='My Promotion', form=form, question="Möchten Sie die Aktion löschen?")
 
-@app.route('/buyticket/<rideid>', methods=['GET', 'POST'])
+@app.route('/buyticket/<rideid>/<departure>/<destination>', methods=['GET', 'POST'])
 @requires_access('user')
 @login_required
-def buyticket(rideid):
+def buyticket(rideid,departure,destination):
     form = EmptyForm()
     today = datetime.now()
     ride_time = datetime.strptime(api.get_ride_by_id(int(rideid))["time"], "%a, %d %b %Y %H:%M:%S GMT")
@@ -243,7 +243,7 @@ def buyticket(rideid):
     elif form.cancel.data:
         return redirect(url_for('index'))
     elif form.submit.data:
-        ticket = Ticket(user_id=current_user.id, ride_id=rideid)
+        ticket = Ticket(user_id=current_user.id, ride_id=rideid, departure=departure, destination=destination)
         db.session.add(ticket)
         db.session.commit()
         flash('Das Ticket wurde erfolgreich erworben!')

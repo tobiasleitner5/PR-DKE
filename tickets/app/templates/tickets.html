@@ -3,6 +3,7 @@
 
 {% block content %}
 <h1>Meine Tickets</h1>
+<hr><br>
 <table>
     <tr>
         <th>Zeit</th>
@@ -15,10 +16,10 @@
     </tr>
     {% for ticket in tickets %}
     <tr class="default">
-        <td>{{ ticket.ride_id }}</td>
-        <td></td>
+        <td>{{ ticket.get_time() }}</td>
+        <td>{{ ticket.departure }}</td>
         <td><i class="fas fa-arrow-right"></i></td>
-        <td></td>
+        <td>{{ ticket.destination }}</td>
         {% if ticket.seat %}
             <td>Reserviert</td>
         {% else %}
