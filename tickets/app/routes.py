@@ -20,8 +20,6 @@ def index():
     if form.validate_on_submit():
         start = int(api.getStationsByName(form.departure.data)["id"])
         end = int(api.getStationsByName(form.destination.data)["id"])
-        print(start)
-        print(end)
         date = form.date.data
         time = form.time.data
         date_time = datetime.combine(date, time)
@@ -29,7 +27,7 @@ def index():
         res = []
         promotions = Promotion.query.all()
         for r in api.get_rides()["data"]:
-            planned_route = api.get_planned_route_by_id(r["plannedroutes_id"])
+            planned_route = api.get_planned_route_by_id(r["plannedroute_id"])
             lStations = []
             lStations.append(int(planned_route["startStation"]))
             lStations.append(int(planned_route["endStation"]))
@@ -39,38 +37,18 @@ def index():
                     ride_time = datetime.strptime(r["time"], "%a, %d %b %Y %H:%M:%S GMT")
                     if ride_time >= date_time:
                         res.append(r)
-        #     l = api.get_sections_by_route_id(r["route_id"])
-        #     lStations = []
-        #     for s in l:
-        #         station = api.getStationsById(int(s))
-        #         lStations.append(station)
-        #     if lStations.__contains__(start) and lStations.__contains__(end) and lStations.index(
-        #             start) < lStations.index(end) and start != end:
-        #         succ = True
-        #         ride_time = datetime.strptime(r["time"], "%a, %d %b %Y %H:%M:%S GMT")
-        #         if ride_time >= date_time:
-        #             res.append(r)
         if not succ:
             flash("Keine Fahrtdurchführung gefunden!")
         return render_template("index.html", title='Home Page', result=True, form=form, results=res, promotions=promotions, pricedict=get_best_promo(), warnings=get_dict_warnings())
     return render_template("index.html", title='Home Page', results=False, form=form)
-
-# def get_stations_for_ride(plannedroutes_id):
-#     planned_route = api.get_planned_route_by_id(plannedroutes_id)
-#     list_stations = []
-#     list_stations.append(planned_route["startStation"])
-#     list_stations.append(api.get_section_by_start_station(planned_route["startStation"], planned_route["sections"])["endStation"])
-#     
-#     for s in planned_route["sections"]:
-#         if int(s) == api.get_section_by_start_station():
 
 def get_dict_warnings():
     warnings_dict = {}
     warnings = api.get_warnings()
     for r in api.get_rides()["data"]:
         warnings_dict[r["id"]] = []
-        list_routes = list(api.get_route_of_ride(r["plannedroutes_id"]))
-        list_sections = api.get_planned_route_by_id(r["plannedroutes_id"])["sections"]
+        list_routes = list(api.get_route_of_ride(r["plannedroute_id"]))
+        list_sections = api.get_planned_route_by_id(r["plannedroute_id"])["sections"]
         for w in warnings["warnings"]:
             if any(item in w["routes"] for item in list_routes):
                 warnings_dict[r["id"]].append(w["name"])
@@ -81,7 +59,7 @@ def get_dict_warnings():
 def get_best_promo():
     best_promo_dict = {}
     for r in api.get_rides()["data"]:
-        list_routes = api.get_route_of_ride(r["plannedroutes_id"])
+        list_routes = api.get_route_of_ride(r["plannedroute_id"])
         best_promo = get_best_promo_by_route(list_routes, r["time"])
         best_promo_dict[r["id"]] = best_promo
     return best_promo_dict

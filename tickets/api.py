@@ -153,7 +153,8 @@ def get_route_of_ride(id):
     routes = []
     for s in sections_planned_route:
         section = get_section_by_id(s)
-        routes.append(section["route"])
+        for section_routes in section["routes"]:
+            routes.append(section_routes)
     return set(routes)
 
 def get_train_by_id(id):
