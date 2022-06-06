@@ -28,14 +28,14 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 SECRET_KEY = os.urandom(32)
 app.config['SECRET_KEY'] = SECRET_KEY
 
-# Admin
+# Admin view registration
 admin = Admin(app, template_mode='bootstrap3', url='/', name='Menü', index_view=HomeAdminView(name='Home'))
 admin.add_view(EmployeeView(Employee, db.session, 'Mitarbeiter'))
 admin.add_view(RideView(Ride, db.session, 'Fahrtdurchführungen'))
 admin.add_view(PlanRouteView(name='Fahrtstrecke planen'))
 admin.add_view(PlanRideView(name='Fahrtdurchführungen planen'))
 
-# Blueprints
+# Blueprints registration
 app.register_blueprint(index_blueprint)
 app.register_blueprint(login_blueprint)
 app.register_blueprint(logout_blueprint)
@@ -53,23 +53,24 @@ db.init_app(app)
 bootstrap = Bootstrap(app)
 
 
+# reset handling
 if args.reset == 'True':
-    if os.path.exists('rides.db'):
+    if os.path.exists('rides.db'):  # delete db if already exist
         os.remove('rides.db')
     with app.app_context():
-        db.create_all()
-        reset()
+        db.create_all() # create db
+        reset() # load data in db
 
 
 @app.login_manager.unauthorized_handler
 def unauth_handler():
-    return redirect(url_for('login_blueprint.login'))
+    return redirect(url_for('login_blueprint.login'))  # if not authorized --> return login page
 
 
 if __name__ == "__main__":
     @login_manager.user_loader
     def load_user(user_id):
-        return Employee.query.get(int(user_id))
+        return Employee.query.get(int(user_id))  # user is loaded as session user
 
 
     app.run(debug=True, port=5002)

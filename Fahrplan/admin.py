@@ -8,6 +8,8 @@ from collections import namedtuple
 from models import Route, PlannedRoute, Train, Ride, Employee, Section, db, Station
 
 
+###### VIEWS ######
+
 class AllAdminBaseView(BaseView):
     def is_accessible(self):
         if current_user.is_authenticated:
@@ -75,27 +77,31 @@ class EmployeeView(AllAdminModelView):
         return form_class
 
 
+###### ADMIN FUNCITONALITIES ######
+
 def plan_single_ride(plannedroute_id):
     if request.method == 'GET':
-        return render_template('admin/plan_single_ride_step1.html', plannedroute_id=plannedroute_id)
+        return render_template('admin/plan_single_ride_step1.html', plannedroute_id=plannedroute_id)  # first step
     else:
         time = request.form['time']
         return redirect(
-            url_for('store_ride_blueprint.store_ride', time=time, interval='False', plannedroute_id=plannedroute_id))
+            url_for('store_ride_blueprint.store_ride', time=time, interval='False',
+                    plannedroute_id=plannedroute_id))  # get request to store ride mapping
 
 
 def plan_interval_ride(plannedroute_id):
     if request.method == 'GET':
-        return render_template('admin/plan_interval_ride_step1.html', plannedroute_id=plannedroute_id)
+        return render_template('admin/plan_interval_ride_step1.html', plannedroute_id=plannedroute_id)  # first step
     else:
         start = request.form['start']
         end = request.form['end']
         rep_type = request.form['rep_type']
         return redirect(
             url_for('store_ride_blueprint.store_ride', start=start, end=end, rep_type=rep_type, interval='True',
-                    plannedroute_id=plannedroute_id))
+                    plannedroute_id=plannedroute_id))  # get request to store_ride mapping
 
 
+# returns a form to create Fahrtstrecken
 def plan_route(route_id):
     if request.method == 'GET':
         route = Route.query.filter_by(id=route_id).first()
@@ -106,7 +112,7 @@ def plan_route(route_id):
             stations.append(section.start_station)
             end_stations.append(section.end_station)
 
-        for e in end_stations:
+        for e in end_stations:  # insert all stations to stations list. But no duplicates
             if e not in stations:
                 stations.append(e)
 
@@ -114,6 +120,7 @@ def plan_route(route_id):
                                sections=sections, routes_id=route_id, stations=stations)
 
 
+# this method returns all the rides that should be created when defining interval based rides.
 def create_interval_rides(plannedroute_id, start, end, rep_type, price, train, fee):
     seats = Train.query.filter_by(id=train).first().seats
     fee_per_seat = float(fee) / seats + price
@@ -122,7 +129,7 @@ def create_interval_rides(plannedroute_id, start, end, rep_type, price, train, f
     if rep_type == 'd':
         delta = timedelta(days=1)
 
-    while (start < end):
+    while (start < end):  # as long as there are dates left, add a new ride
         ride = Ride(plannedroute_id,
                     start,
                     fee_per_seat,
@@ -134,6 +141,8 @@ def create_interval_rides(plannedroute_id, start, end, rep_type, price, train, f
     return rides
 
 
+# if get request: step two of the form is returned
+# if post request: the rides are created with the given information and stored to the db.
 def store_ride():
     if request.method == 'POST':
         plannedroute_id = request.form['plannedroute_id']
@@ -160,13 +169,14 @@ def store_ride():
 
         # check, if train is available at this time
         Range = namedtuple('Range', ['start', 'end'])
-        all_rides_with_same_train = Ride.query.filter_by(train_id=request.form['train']).all() # get all rides with same train
+        all_rides_with_same_train = Ride.query.filter_by(
+            train_id=request.form['train']).all()  # get all rides with same train
         for ride in all_rides_with_same_train:
             duration = ride.plannedroute.duration
             start = ride.time
             end = start + timedelta(minutes=duration)
             r1 = Range(start=start, end=end)
-            for ride2 in rides: # for all rides that should be added to the db is checked, if we have an overlapping period of time
+            for ride2 in rides:  # for all rides that should be added to the db is checked, if we have an overlapping period of time
                 duration2 = PlannedRoute.query.filter_by(id=plannedroute_id).first().duration
                 start2 = ride2.time
                 end2 = start2 + timedelta(minutes=duration2)
@@ -176,10 +186,11 @@ def store_ride():
                 delta = (earliest_end - latest_start).days + 1
                 overlap = max(0, delta)
                 if overlap != 0:
-                    flash("Fahrtdurchführung(en) wurde(n) nicht hinzugefügt. Zug ist zu einem oder mehreren Daten nicht verfügbar")
+                    flash(
+                        "Fahrtdurchführung(en) wurde(n) nicht hinzugefügt. Zug ist zu einem oder mehreren Daten nicht verfügbar")
                     return redirect('/admin')
 
-        for ride in rides:
+        for ride in rides:  # add all rides to db. If only a single ride, that list contains one ride.
             employees = [int(e) for e in request.form.getlist('emp')]
             employees = Employee.query.filter(Employee.id.in_(employees)).all()
             ride.executed_by.extend(employees)
@@ -190,17 +201,17 @@ def store_ride():
         return redirect('/admin')
 
     else:
-        employees = Employee.query
+        employees = Employee.query  # all employees can be selected for a ride
         plannedroute_id = request.args['plannedroute_id']
         pr = PlannedRoute.query.filter_by(id=plannedroute_id).first()
         isNormalspur = pr.isNormalspur
         total_fee = pr.fee_sum
-        if not isNormalspur:
+        if not isNormalspur:  # only trains, that have the right "Spurgröße" can be selected for the ride.
             trains = Train.query.filter_by(is_normalspur=False)
         else:
             trains = Train.query.all()
 
-        if request.args['interval'] == 'True':
+        if request.args['interval'] == 'True':  # return form step 2 for interval
             start = request.args['start']
             end = request.args['end']
             rep_type = request.args['rep_type']
@@ -208,13 +219,14 @@ def store_ride():
                                    end=end, rep_type=rep_type,
                                    employees=employees, trains=trains, interval=True, plannedroute_id=plannedroute_id,
                                    fee=total_fee)
-        else:
+        else:  # return form step 2 for single ride
             time = request.args['time']
             return render_template('admin/plan_single_ride_step2.html', title='Plan single ride', time=time,
                                    employees=employees, trains=trains, interval=False, plannedroute_id=plannedroute_id,
                                    fee=total_fee)
 
 
+# store the route (Fahrtstrecke) that was created in plan_route()
 def store_route():
     if request.method == 'POST':
         sections = [int(s) for s in request.form.getlist('sections')]
@@ -236,6 +248,7 @@ def store_route():
     return redirect('/admin')
 
 
+# check if sections selected are connected as well.
 def is_valid(start_station_id, end_station_id, sections):
     all_stations = []
     start_end_map = {}
