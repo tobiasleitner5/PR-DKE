@@ -156,9 +156,8 @@ def store_ride():
             ride.executed_by.extend(employees)
             db.session.add(ride)
             db.session.commit()
+            flash("Fahrtdurchführung {} wurde hinzugefügt.".format(ride.id))
             db.session.close()
-
-        flash("Fahrtdurchführung {} wurde hinzugefügt.".format(ride.id))
         return redirect('/admin')
 
     else:
@@ -168,7 +167,6 @@ def store_ride():
         section_info = pr.get_sections_info()
         isNormalspur = section_info['isNormalspur']
         total_fee = section_info['fee']
-        duration = section_info['time']  # TODO filter train falls in Verwendung --> einfach alle Rides abfragen und Uhrzeit checken
         if not isNormalspur:
             trains = Train.query.filter_by(is_normalspur=False)
         else:

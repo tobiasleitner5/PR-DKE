@@ -1,7 +1,7 @@
 import json
 from urllib.request import urlopen
 
-
+# read input from Strecken-Informationssystem
 def get_routes_data():
     response = urlopen('http://localhost:5003/routes/get')  # Endpoint for routes
     data = json.loads(response.read())
