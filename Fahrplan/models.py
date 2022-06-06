@@ -228,32 +228,30 @@ class PlannedRoute(db.Model):
     __tablename__ = 'plannedroutes'
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     name = db.Column(db.String(100))
+    duration = db.Column(db.Float)
+    isNormalspur = db.Column(db.Boolean)
+    fee_sum = db.Column(db.Float)
     start_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
     end_station_id = db.Column(db.Integer, ForeignKey('stations.id'))
     sections = db.relationship('Section', secondary=plannedroutes_sections, backref='planned_routes')
 
     def __init__(self, name, sections, start_station_id, end_station_id):
-        self.name = name
-        self.start_station_id = start_station_id
-        self.end_station_id = end_station_id
-        self.sections.extend(sections)
-
-    def get_sections_info(self):
         isNormalspur = True
         time = 0.0
         fee = 0
-        for s in self.sections:
+        for s in sections:
             time = time + float(s.distance) / float(s.maxSpeed)
             fee = fee + s.fee
             if str(s.is_schmalspur) == 'True':
                 isNormalspur = False
 
-        data = {
-            'isNormalspur': isNormalspur,
-            'time': time,
-            'fee': fee
-        }
-        return data
+        self.name = name
+        self.duration = time*60
+        self.isNormalspur = isNormalspur
+        self.fee_sum = fee
+        self.start_station_id = start_station_id
+        self.end_station_id = end_station_id
+        self.sections.extend(sections)
 
     def __repr__(self):
         return self.name

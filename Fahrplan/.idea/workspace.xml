@@ -1,12 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="af90e1bd-3ec0-4b2c-aa4d-5d5223cf6381" name="Changes" comment="check sections and stations">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+    <list default="true" id="af90e1bd-3ec0-4b2c-aa4d-5d5223cf6381" name="Changes" comment="resolve problem">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/read_input.py" beforeDir="false" afterPath="$PROJECT_DIR$/read_input.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/reset.py" beforeDir="false" afterPath="$PROJECT_DIR$/reset.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/models.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +59,7 @@
       <recent name="C:\Users\tobias.leitner\Documents\Repositories\Fahrplan\static\css" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.mockdata">
+  <component name="RunManager" selected="Python.main">
     <configuration name="main" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="Fahrplan" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -75,7 +73,7 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/main.py" />
-      <option name="PARAMETERS" value="--reset True" />
+      <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
       <option name="MODULE_MODE" value="false" />
@@ -223,7 +221,14 @@
       <option name="project" value="LOCAL" />
       <updated>1654281316861</updated>
     </task>
-    <option name="localTasksCounter" value="15" />
+    <task id="LOCAL-00015" summary="resolve problem">
+      <created>1654506083406</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1654506083406</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -252,6 +257,7 @@
     <MESSAGE value="documentation and codestyle" />
     <MESSAGE value="changed data model" />
     <MESSAGE value="check sections and stations" />
-    <option name="LAST_COMMIT_MESSAGE" value="check sections and stations" />
+    <MESSAGE value="resolve problem" />
+    <option name="LAST_COMMIT_MESSAGE" value="resolve problem" />
   </component>
 </project>

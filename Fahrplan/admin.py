@@ -3,6 +3,7 @@ from flask_admin.contrib.sqla import ModelView
 from flask_login import current_user
 from flask import render_template, request, redirect, url_for, flash
 from datetime import datetime, timedelta
+from collections import namedtuple
 
 from models import Route, PlannedRoute, Train, Ride, Employee, Section, db, Station
 
@@ -42,7 +43,9 @@ class PlanRouteView(AllAdminBaseView):
 
 class RideView(AllAdminModelView):
     can_create = False
-    column_labels = dict(plannedroute='Fahrtstrecke', time='Datum und Uhrzeit', price='Preis', interval='Intervall', trains='Zug', executed_by='Mitarbeiter')
+    column_labels = dict(plannedroute='Fahrtstrecke', time='Datum und Uhrzeit', price='Preis', interval='Intervall',
+                         trains='Zug', executed_by='Mitarbeiter')
+
     def get_edit_form(self):
         form_class = super(RideView, self).get_edit_form()
         del form_class.interval
@@ -60,6 +63,7 @@ class HomeAdminView(AdminIndexView):
 
 class EmployeeView(AllAdminModelView):
     column_labels = dict(name='Name', mail='Mail', password='Passwort', is_admin='Admin')
+
     def get_edit_form(self):
         form_class = super(EmployeeView, self).get_edit_form()
         del form_class.rides
@@ -76,7 +80,8 @@ def plan_single_ride(plannedroute_id):
         return render_template('admin/plan_single_ride_step1.html', plannedroute_id=plannedroute_id)
     else:
         time = request.form['time']
-        return redirect(url_for('store_ride_blueprint.store_ride', time=time, interval='False', plannedroute_id=plannedroute_id))
+        return redirect(
+            url_for('store_ride_blueprint.store_ride', time=time, interval='False', plannedroute_id=plannedroute_id))
 
 
 def plan_interval_ride(plannedroute_id):
@@ -86,8 +91,9 @@ def plan_interval_ride(plannedroute_id):
         start = request.form['start']
         end = request.form['end']
         rep_type = request.form['rep_type']
-        return redirect(url_for('store_ride_blueprint.store_ride', start=start, end=end, rep_type=rep_type, interval='True',
-                                plannedroute_id=plannedroute_id))
+        return redirect(
+            url_for('store_ride_blueprint.store_ride', start=start, end=end, rep_type=rep_type, interval='True',
+                    plannedroute_id=plannedroute_id))
 
 
 def plan_route(route_id):
@@ -107,6 +113,7 @@ def plan_route(route_id):
         return render_template('admin/plan_route.html', title='Plane Fahrtstrecke für Route {}'.format(route.name),
                                sections=sections, routes_id=route_id, stations=stations)
 
+
 def create_interval_rides(plannedroute_id, start, end, rep_type, price, train, fee):
     seats = Train.query.filter_by(id=train).first().seats
     fee_per_seat = float(fee) / seats + price
@@ -114,8 +121,6 @@ def create_interval_rides(plannedroute_id, start, end, rep_type, price, train, f
     delta = timedelta(weeks=1)
     if rep_type == 'd':
         delta = timedelta(days=1)
-
-    print(plannedroute_id)
 
     while (start < end):
         ride = Ride(plannedroute_id,
@@ -131,18 +136,20 @@ def create_interval_rides(plannedroute_id, start, end, rep_type, price, train, f
 
 def store_ride():
     if request.method == 'POST':
+        plannedroute_id = request.form['plannedroute_id']
         rides = []
         if request.form['interval'] == 'False':
             seats = Train.query.filter_by(id=request.form['train']).first().seats
-            fee_per_seat = float(request.form['fee']) / seats + float(request.form['price'])
-            ride = Ride(request.form['plannedroute_id'],
+            fee_per_seat = float(request.form['fee']) / seats + float(
+                request.form['price'])  # fee per seat plus extra price
+            ride = Ride(plannedroute_id,
                         datetime.strptime(request.form['time'], '%Y-%m-%dT%H:%M'),
                         fee_per_seat,
                         False,
                         request.form['train'])
             rides.append(ride)
         else:
-            rides = create_interval_rides(request.form['plannedroute_id'],
+            rides = create_interval_rides(plannedroute_id,
                                           datetime.strptime(request.form['start'], '%Y-%m-%dT%H:%M'),
                                           datetime.strptime(request.form['end'], '%Y-%m-%d'),
                                           request.form['rep_type'],
@@ -150,6 +157,28 @@ def store_ride():
                                           request.form['train'],
                                           request.form['fee']
                                           )
+
+        # check, if train is available at this time
+        Range = namedtuple('Range', ['start', 'end'])
+        all_rides_with_same_train = Ride.query.filter_by(train_id=request.form['train']).all() # get all rides with same train
+        for ride in all_rides_with_same_train:
+            duration = ride.plannedroute.duration
+            start = ride.time
+            end = start + timedelta(minutes=duration)
+            r1 = Range(start=start, end=end)
+            for ride2 in rides: # for all rides that should be added to the db is checked, if we have an overlapping period of time
+                duration2 = PlannedRoute.query.filter_by(id=plannedroute_id).first().duration
+                start2 = ride2.time
+                end2 = start2 + timedelta(minutes=duration2)
+                r2 = Range(start=start2, end=end2)
+                latest_start = max(r1.start, r2.start)
+                earliest_end = min(r1.end, r2.end)
+                delta = (earliest_end - latest_start).days + 1
+                overlap = max(0, delta)
+                if overlap != 0:
+                    flash("Fahrtdurchführung(en) wurde(n) nicht hinzugefügt. Zug ist zu einem oder mehreren Daten nicht verfügbar")
+                    return redirect('/admin')
+
         for ride in rides:
             employees = [int(e) for e in request.form.getlist('emp')]
             employees = Employee.query.filter(Employee.id.in_(employees)).all()
@@ -164,9 +193,8 @@ def store_ride():
         employees = Employee.query
         plannedroute_id = request.args['plannedroute_id']
         pr = PlannedRoute.query.filter_by(id=plannedroute_id).first()
-        section_info = pr.get_sections_info()
-        isNormalspur = section_info['isNormalspur']
-        total_fee = section_info['fee']
+        isNormalspur = pr.isNormalspur
+        total_fee = pr.fee_sum
         if not isNormalspur:
             trains = Train.query.filter_by(is_normalspur=False)
         else:
@@ -193,6 +221,7 @@ def store_route():
         sections = Section.query.filter(Section.id.in_(sections)).all()
         start_id = int(request.form['start'])
         end_id = int(request.form['end'])
+        # check if sections are connected
         if not is_valid(start_id, end_id, sections):
             flash('Invalide Auswahl...')
             return redirect('/planrouteview')
@@ -203,15 +232,16 @@ def store_route():
         pr = PlannedRoute(name, sections, start_id, end_id)
         db.session.add(pr)
         db.session.commit()
-    flash("Fahrtstrecke {} wurde hinzugefügt.".format(name))
+        flash("Fahrtstrecke {} wurde hinzugefügt.".format(name))
     return redirect('/admin')
 
+
 def is_valid(start_station_id, end_station_id, sections):
-    all_stations=[]
-    start_end_map={}
+    all_stations = []
+    start_end_map = {}
     for s in sections:
         all_stations.extend([s.start_station_id, s.end_station_id])
-        start_end_map[s.start_station_id]=s.end_station_id
+        start_end_map[s.start_station_id] = s.end_station_id
 
     if (start_station_id in all_stations) and (end_station_id in all_stations):
         pass
@@ -219,10 +249,10 @@ def is_valid(start_station_id, end_station_id, sections):
         return False
 
     try:
-        first=start_station_id
+        first = start_station_id
         for x in range(start_end_map.__len__()):
-            second=start_end_map[first]
-            first=second
+            second = start_end_map[first]
+            first = second
     except KeyError as e:
         return False
 
