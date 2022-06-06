@@ -1,7 +1,8 @@
 from flask import Flask, json, flash
 import requests, itertools
+from urllib.request import urlopen
 
-dummydata = True
+dummydata = False
 
 def get_rides():
     if dummydata:
@@ -9,8 +10,9 @@ def get_rides():
         data = json.load(js)
         return data
     else:
-        data = requests.get(url="http://localhost:5002/plan/get/rides")
-        return data.json
+        response = urlopen('http://localhost:5002/plan/get/rides')
+        data = json.loads(response.read())
+        return data
 
 def get_planned_routes():
     if dummydata:
@@ -18,8 +20,9 @@ def get_planned_routes():
         data = json.load(js)
         return data
     else:
-        data = requests.get(url="http://localhost:5002/plan/get/planned_routes")
-        return data.json
+        response = urlopen('http://localhost:5002/plan/get/planned_routes')
+        data = json.loads(response.read())
+        return data
 
 def get_routes():
     if dummydata:
@@ -27,8 +30,9 @@ def get_routes():
         data = json.load(js)
         return data
     else:
-        data = requests.get(url="http://localhost:5003/routes/get")
-        return data.json
+        response = urlopen('http://localhost:5003/routes/get')
+        data = json.loads(response.read())
+        return data
     
 def get_sections():
     if dummydata:
@@ -36,8 +40,9 @@ def get_sections():
         data = json.load(js)
         return data
     else:
-        data = requests.get(url="http://localhost:5003/sections/get")
-        return data.json
+        response = urlopen('http://localhost:5003/sections/get')
+        data = json.loads(response.read())
+        return data
 
 def get_trains():
     if dummydata:
@@ -45,8 +50,9 @@ def get_trains():
         data = json.load(js)
         return data
     else:
-        data = requests.get(url="http://localhost:5003/trains")
-        return data.json
+        response = urlopen('http://localhost:5003/trains')
+        data = json.loads(response.read())
+        return data
 
 def get_stations():
     if dummydata:
@@ -54,17 +60,9 @@ def get_stations():
         data = json.load(js)
         return data
     else:
-        data = requests.get(url="http://localhost:5003/stations/get")
-        return data.json
-
-def get_routes():
-    if dummydata:
-        js = open("./dummydata/routes.json")
-        data = json.load(js)
+        response = urlopen('http://localhost:5003/stations/get')
+        data = json.loads(response.read())
         return data
-    else:
-        data = requests.get(url="http://localhost:5003/routes/get")
-        return data.json
 
 def get_warnings():
     if dummydata:
@@ -72,9 +70,9 @@ def get_warnings():
         data = json.load(js)
         return data
     else:
-        data = requests.get(url="http://localhost:5003/warnings/get")
-        return data.json
-
+        response = urlopen('http://localhost:5003/warnings/get')
+        data = json.loads(response.read())
+        return data
 
 ###################################################################################
 
