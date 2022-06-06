@@ -26,6 +26,7 @@ def plan():
     return render_template('general/show_rides.html', rides=rides, title='Dienstplan {}'.format(current_user.name))
 
 
+# login form
 def login():
     form = LoginForm()
     if form.validate_on_submit():
@@ -47,6 +48,7 @@ def logout():
     return redirect('/login')
 
 
+# interfaces for Ticket-Informationssystem
 def get_rides():
     return {'data': [ride.to_dict() for ride in Ride.query]}
 

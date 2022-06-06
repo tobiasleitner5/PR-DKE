@@ -91,7 +91,11 @@ für die Planung einer Intervall-Fahrtdurchführung und der zweite Link ist für
    das zweite [Formular](./templates/admin/plan_interval_ride_step2.html) zurückgegeben, in welchem die `Mitarbeiter`,
     der `Zug` und der `Preis`* angegeben werden. Die Daten werden wieder genau gleich verarbeitet wie bei der Planung
     einer einzelnen Fahrtdurchführung; jedoch werden zuerst mithilfe der Informationen (start und end) die konkreten
-    Zeiten für die jeweiligen Fahrtdurchführungen ermittelt. 
+    Zeiten für die jeweiligen Fahrtdurchführungen ermittelt.
+
+Wichtiges Detail in der Implementierung: Um zu überprüfen, ob der ausgewählte Zug verwendet werden kann, wird eine Abfrage 
+über alle Fahrtdurchführungen, die diesen jeweiligen Zug verwenden, durchgeführt. Anschließend wird geprüft, ob die Zeitfenster
+zwischen Start und Ende überlappend sind. Kommt es zu Überschneidungen, dann wird keine Fahrtdurchführung in die DB gespeichert.
 
 *Anmerkung zum Preis: Der Preis wird relativ zum kostendeckenden Preis angegeben. Wird im Formular der Wert 0 ausgewählt, 
 dann bedeutet dies, dass genau der kostendeckende Preis in der Datenbank gespeichert wird. Wenn beispielsweise 2 

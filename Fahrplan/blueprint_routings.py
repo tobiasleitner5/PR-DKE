@@ -2,6 +2,8 @@ from flask import Blueprint
 from general import index, login, logout, plan, get_rides, get_planned_routes
 from admin import plan_single_ride, plan_route, plan_interval_ride, store_ride, store_route
 
+###### BLUEPRINT MAPPINGS ######
+
 plan_route_blueprint = Blueprint('plan_route_blueprint', __name__)
 plan_route_blueprint.route('/admin/plan/route/<route_id>', methods=['GET'])(plan_route)
 
