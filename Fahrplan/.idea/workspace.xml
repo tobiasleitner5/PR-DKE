@@ -1,13 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="af90e1bd-3ec0-4b2c-aa4d-5d5223cf6381" name="Changes" comment="check if train is available">
+    <list default="true" id="af90e1bd-3ec0-4b2c-aa4d-5d5223cf6381" name="Changes" comment="doc">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/blueprint_routings.py" beforeDir="false" afterPath="$PROJECT_DIR$/blueprint_routings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/general.py" beforeDir="false" afterPath="$PROJECT_DIR$/general.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -238,7 +234,14 @@
       <option name="project" value="LOCAL" />
       <updated>1654511283043</updated>
     </task>
-    <option name="localTasksCounter" value="17" />
+    <task id="LOCAL-00017" summary="doc">
+      <created>1654515222035</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1654515222035</updated>
+    </task>
+    <option name="localTasksCounter" value="18" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -269,6 +272,7 @@
     <MESSAGE value="check sections and stations" />
     <MESSAGE value="resolve problem" />
     <MESSAGE value="check if train is available" />
-    <option name="LAST_COMMIT_MESSAGE" value="check if train is available" />
+    <MESSAGE value="doc" />
+    <option name="LAST_COMMIT_MESSAGE" value="doc" />
   </component>
 </project>

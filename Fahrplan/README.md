@@ -96,6 +96,8 @@ für die Planung einer Intervall-Fahrtdurchführung und der zweite Link ist für
 Wichtiges Detail in der Implementierung: Um zu überprüfen, ob der ausgewählte Zug verwendet werden kann, wird eine Abfrage 
 über alle Fahrtdurchführungen, die diesen jeweiligen Zug verwenden, durchgeführt. Anschließend wird geprüft, ob die Zeitfenster
 zwischen Start und Ende überlappend sind. Kommt es zu Überschneidungen, dann wird keine Fahrtdurchführung in die DB gespeichert.
+Eine Überprüfung, ob der Zug aufgrund der Spurweite verwendet werden kann, ist nicht notwendig, da prinzipiell nur Züge zur
+Auswahl stehen, die die Anforderung erfüllen. Es wird hier im Vorhinein eine Vorselektion durchgeführt.
 
 *Anmerkung zum Preis: Der Preis wird relativ zum kostendeckenden Preis angegeben. Wird im Formular der Wert 0 ausgewählt, 
 dann bedeutet dies, dass genau der kostendeckende Preis in der Datenbank gespeichert wird. Wenn beispielsweise 2 
