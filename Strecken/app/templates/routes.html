@@ -1,57 +1,56 @@
 {% extends "base.html" %}{% block title %}Routes{% endblock %}
 
 {% block content %}
-    <br>
-    <h1>Routes</h1>
-
-    <table class="route-table">
-             <thead>
-              <tr>
-                <td style="font-weight:bold">Name</td>
-<td style="font-weight:bold">Warnings</td>
-             </tr>
-             </thead>
-    </table>
-
-    {% for route in routes %}
-        <table class="route-table">
-            <tbody>
-                <tr>
-                    <td style="font-weight:bold">{{ route.name }} </td>
-                    {% if not route.warnings_link %}
-                    <td>-</td>
-                    {% else %}
-                    {% for warning in route.warnings_link %}
-                           <td>
-                    {{ warning.name }}:
-                               <br>
-                     {{ warning.description }}
-                        </td>
-
-                    {% endfor %}
-
-                    {% endif %}
-                </tr>
-                <tr>
-
-                </tr>
+<br>
+<h1>Routes</h1>
 
 
+{% for route in routes %}
+<table class="route-table">
+    <tbody>
+    <tr>
+        <td style="font-weight:bold">{{ route.name }}</td>
+        <td> Warnings: </td>
+        {% if not route.warnings_link %}
+        <td>-</td>
+        {% else %}
+        {% for warning in route.warnings_link %}
+        <td>
+            {{ warning.name }}:
+            <br>
+            {{ warning.description }}
+        </td>
 
-            </tbody>
-        </table>
-        <table class="route-table" >
-            <tbody>
-            {% for sections in route.sections %}
-                <tr>
-                    <td>{{ sections }}</td>
-                </tr>
-            {% endfor %}
-            </tbody>
+        {% endfor %}
 
-        </table>
-        {% if user.is_admin %}
-            <a class="add-button" id="new_sections" href="{{ url_for('addSection', name=route.name) }}"><img src="static/add.svg" height="20" /></a>
         {% endif %}
+        {% if user.is_admin %}
+        <td>
+        <a class="add-button" id="new_warning" href="{{ url_for('addWarningRoute', name=route.name) }}"><img
+                src="static/add.svg" height="20"/></a>
+        </td>
+        {% endif %}
+    </tr>
+    <tr>
+
+    </tr>
+
+
+    </tbody>
+</table>
+<table class="route-table">
+    <tbody>
+    {% for sections in route.sections %}
+    <tr>
+        <td>{{ sections }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+
+</table>
+{% if user.is_admin %}
+<a class="add-button" id="new_sections" href="{{ url_for('addSection', name=route.name) }}"><img src="static/add.svg"
+                                                                                                 height="20"/></a>
+{% endif %}
 {% endfor %}
 {% endblock %}

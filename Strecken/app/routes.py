@@ -5,7 +5,7 @@ from flask_login import current_user, login_user
 
 from app.models import User, Sections, Routes, Warnings
 from app import app
-from app.forms import LoginForm, EmptyForm, AddSection
+from app.forms import LoginForm, AddSection, AddWarning
 from flask_login import logout_user
 from flask_login import login_required
 from flask import request
@@ -84,6 +84,46 @@ def addSection(name):
         db.session.commit()
         return redirect(url_for('routes'))
     return render_template('add_sections.html', title='Add Sections', user=current_user, form=form, route=route)
+
+
+@app.route('/add_warning_route/<name>', methods=['GET', 'POST'])
+def addWarningRoute(name):
+    route = Routes.query.filter_by(name=name).first_or_404()
+    all_warnings = db.session.query(Warnings)
+    warnings_list = [(i.id, i.name) for i in all_warnings]
+    warnings_list_route = [(i.id, i.name) for i in route.warnings_link]
+    setAllW = set(warnings_list)
+    setRW = set(warnings_list_route)
+    newList = list(setAllW.difference(setRW))
+    form = AddWarning()
+    form.warning.choices = newList
+    if form.validate_on_submit():
+        for s1 in all_warnings:
+            if s1.id == form.warning.data: new_warning = s1
+        route.warnings_link.append(new_warning)
+        db.session.commit()
+        return redirect(url_for('routes'))
+    return render_template('add_warning_route.html', title='Add Warnings', user=current_user, form=form, route=route)
+
+
+@app.route('/add_warning_section/<name>', methods=['GET', 'POST'])
+def addWarningSection(name):
+    section = Sections.query.filter_by(name=name).first_or_404()
+    all_warnings = db.session.query(Warnings)
+    warnings_list = [(i.id, i.name) for i in all_warnings]
+    warnings_list_route = [(i.id, i.name) for i in section.warnings_link]
+    setAllW = set(warnings_list)
+    setRW = set(warnings_list_route)
+    newList = list(setAllW.difference(setRW))
+    form = AddWarning()
+    form.warning.choices = newList
+    if form.validate_on_submit():
+        for s1 in all_warnings:
+            if s1.id == form.warning.data: new_warning = s1
+        section.warnings_link.append(new_warning)
+        db.session.commit()
+        return redirect(url_for('routes'))
+    return render_template('add_warning_section.html', title='Add Warnings', user=current_user, form=form, section=section)
 
 
 @app.before_request

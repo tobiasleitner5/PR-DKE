@@ -38,3 +38,9 @@ class EmptyForm(FlaskForm):
 class AddSection(FlaskForm):
     section = SelectField('Section', coerce=int)
     submit = SubmitField('Submit')
+
+
+class AddWarning(FlaskForm):
+    warning = SelectField('Warning', coerce=int)
+    submit = SubmitField('Submit')
+
