@@ -27,7 +27,6 @@ text-decoration: none;
 .route-table {
     border-collapse: collapse;
     margin: 15px 0px;
-    font-size: 0.9em;
     box-shadow: 0 0 5px rgba(0, 0, 0, 0.15);
 }
 

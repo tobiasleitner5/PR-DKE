@@ -45,11 +45,14 @@
                     <td>Warnungen: -</td>
                 {% else %}
                 <td>Warnungen:  </td>
-                <td>
+
                     {% for warning in section.warnings_link %}
-                        {{ warning.name }}
+                    <td>
+                        {{ warning.name }}:
+                        {{ warning.description }}
+                    </td>
                     {% endfor %}
-                </td>
+
                 {% endif %}
             </tr>
             </tbody>

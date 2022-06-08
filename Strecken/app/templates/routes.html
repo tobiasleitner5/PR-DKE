@@ -8,7 +8,7 @@
              <thead>
               <tr>
                 <td style="font-weight:bold">Name</td>
-                <td style="font-weight:bold">Warnings</td>
+<td style="font-weight:bold">Warnings</td>
              </tr>
              </thead>
     </table>
@@ -21,13 +21,23 @@
                     {% if not route.warnings_link %}
                     <td>-</td>
                     {% else %}
-                    <td>
                     {% for warning in route.warnings_link %}
-                    {{ warning.name }}
+                           <td>
+                    {{ warning.name }}:
+                               <br>
+                     {{ warning.description }}
+                        </td>
+
                     {% endfor %}
-                    </td>
+
                     {% endif %}
                 </tr>
+                <tr>
+
+                </tr>
+
+
+
             </tbody>
         </table>
         <table class="route-table" >
