@@ -86,63 +86,11 @@ def addSection(name):
     return render_template('add_sections.html', title='Add Sections', user=current_user, form=form, route=route)
 
 
-@app.route('/user/<username>')
-@login_required
-def user(username):
-    user = User.query.filter_by(username=username).first_or_404()
-    posts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'}
-    ]
-    form = EmptyForm()
-    return render_template('user.html', user=user, posts=posts, form=form)
-
-
 @app.before_request
 def before_request():
     if current_user.is_authenticated:
         current_user.last_seen = datetime.utcnow()
         db.session.commit()
-
-
-@app.route('/follow/<username>', methods=['POST'])
-@login_required
-def follow(username):
-    form = EmptyForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=username).first()
-        if user is None:
-            flash('User {} not found.'.format(username))
-            return redirect(url_for('index'))
-        if user == current_user:
-            flash('You cannot follow yourself!')
-            return redirect(url_for('user', username=username))
-        current_user.follow(user)
-        db.session.commit()
-        flash('You are following {}!'.format(username))
-        return redirect(url_for('user', username=username))
-    else:
-        return redirect(url_for('index'))
-
-
-@app.route('/unfollow/<username>', methods=['POST'])
-@login_required
-def unfollow(username):
-    form = EmptyForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=username).first()
-        if user is None:
-            flash('User {} not found.'.format(username))
-            return redirect(url_for('index'))
-        if user == current_user:
-            flash('You cannot unfollow yourself!')
-            return redirect(url_for('user', username=username))
-        current_user.unfollow(user)
-        db.session.commit()
-        flash('You are not following {}.'.format(username))
-        return redirect(url_for('user', username=username))
-    else:
-        return redirect(url_for('index'))
 
 
 @app.route('/stations')
@@ -177,23 +125,16 @@ def get_stations():
 @app.route('/sections/get')
 def get_sections():
     return {'sections': [section.to_dict() for section in Sections.query]}
-    #sections = db.session.query(Sections)
-    #return render_template('get_sections.html', title='Routes', user=current_user, sections=sections)
 
 
 @app.route('/routes/get')
 def get_rotues():
     return {'routes': [route.to_dict() for route in Routes.query]}
-    #routes = db.session.query(Routes)
-    #return render_template('get_routes.html', title='Routes', user=current_user, routes=routes)
 
 
 @app.route('/warnings/get')
 def get_warnings_sections():
     return {'warnings': [warning.to_dict() for warning in Warnings.query]}
-    #warnings = db.session.query(Warnings)
-    #return render_template('sections_warnings.html', title='Warnings', user=current_user, warnings=warnings)
-
 
 
 @app.route('/trains', methods=['GET'])

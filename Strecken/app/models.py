@@ -1,5 +1,5 @@
 from flask import url_for
-from flask_login import UserMixin
+from flask_login import UserMixin, current_user
 from sqlalchemy import ForeignKey, Boolean
 from sqlalchemy.orm import relationship
 from werkzeug.utils import redirect
@@ -15,11 +15,6 @@ from flask_admin.menu import MenuLink
 # flask db migrate -m "first migrate"
 # flask db upgrade
 # pbkdf2:sha256:260000$AVcGgBYvr3vX5zUz$38f7b51af557748d3ebe4e947acd1d5967567257199fa390317348019cc63f6b
-
-followers = db.Table('followers',
-    db.Column('follower_id', db.Integer, db.ForeignKey('user.id')),
-    db.Column('followed_id', db.Integer, db.ForeignKey('user.id'))
-)
 
 
 class User(UserMixin, db.Model):
@@ -141,13 +136,13 @@ class Warnings(db.Model):
 
 #**********************************************************
 
+
 class MyModelView(ModelView):
     def is_accessible(self):
-        #return current_user.is_admin
-        return True
+        return current_user.is_admin
 
-    #form_excluded_columns = ('sections', 'routes', 'section1', 'section2', 'password_hash')
-    form_excluded_columns = ('routes', 'section1', 'section2', 'password_hash')
+    form_excluded_columns = ('sections', 'routes', 'section1', 'section2', 'password_hash')
+    #form_excluded_columns = ('routes', 'section1', 'section2', 'password_hash')
 
 
 class MyAdminIndexView(AdminIndexView):
