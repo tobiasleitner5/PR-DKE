@@ -22,7 +22,6 @@ def index():
     routes = db.session.query(Routes)
     route_sec = db.session.query(Routes.sections)
     return render_template('routes.html', title='Routes', user=current_user, routes=routes, route_sec=route_sec)
-    #return render_template('index.html', title='Home', user=current_user)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -46,7 +45,7 @@ def login():
 @app.route('/logout')
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('login'))
 
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -64,6 +63,7 @@ def register():
     return render_template('register.html', title='Register', form=form, user=current_user)
 
 
+#Doku
 @app.route('/add_section/<name>', methods=['GET', 'POST'])
 def addSection(name):
     route = Routes.query.filter_by(name=name).first_or_404()
@@ -86,6 +86,7 @@ def addSection(name):
     return render_template('add_sections.html', title='Add Sections', user=current_user, form=form, route=route)
 
 
+#Doku
 @app.route('/add_warning_route/<name>', methods=['GET', 'POST'])
 def addWarningRoute(name):
     route = Routes.query.filter_by(name=name).first_or_404()
@@ -106,6 +107,7 @@ def addWarningRoute(name):
     return render_template('add_warning_route.html', title='Add Warnings', user=current_user, form=form, route=route)
 
 
+#Doku
 @app.route('/add_warning_section/<name>', methods=['GET', 'POST'])
 def addWarningSection(name):
     section = Sections.query.filter_by(name=name).first_or_404()

@@ -141,7 +141,7 @@ class MyModelView(ModelView):
     def is_accessible(self):
         return current_user.is_admin
 
-    form_excluded_columns = ('sections', 'routes', 'section1', 'section2', 'password_hash')
+    form_excluded_columns = ('sections', 'routes', 'section1', 'section2', 'password_hash', 'warnings_link')
     #form_excluded_columns = ('routes', 'section1', 'section2', 'password_hash')
 
 

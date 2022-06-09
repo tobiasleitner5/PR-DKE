@@ -42,17 +42,27 @@
                 </tr>
             <tr>
                 {% if not section.warnings_link %}
-                    <td>Warnungen: -</td>
+                    <td>Warnungen: </td>
+                                            {% if user.is_admin %}
+        <td>
+        <a class="add-button" id="new_warning1" href="{{ url_for('addWarningSection', name=section.name) }}"><img
+                src="static/add.svg" height="20"/></a>
+        </td>
+        {% endif %}
                 {% else %}
                 <td>Warnungen:  </td>
-
                     {% for warning in section.warnings_link %}
                     <td>
                         {{ warning.name }}:
                         {{ warning.description }}
                     </td>
                     {% endfor %}
-
+                            {% if user.is_admin %}
+        <td>
+        <a class="add-button" id="new_warning" href="{{ url_for('addWarningSection', name=section.name) }}"><img
+                src="static/add.svg" height="20"/></a>
+        </td>
+        {% endif %}
                 {% endif %}
             </tr>
             </tbody>
