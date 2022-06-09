@@ -10,7 +10,7 @@
     <tbody>
     <tr>
         <td style="font-weight:bold">{{ route.name }}</td>
-        <td> Warnings: </td>
+        <td> Warnings:</td>
         {% if not route.warnings_link %}
         <td>-</td>
         {% else %}
@@ -26,8 +26,8 @@
         {% endif %}
         {% if user.is_admin %}
         <td>
-        <a class="add-button" id="new_warning" href="{{ url_for('addWarningRoute', name=route.name) }}"><img
-                src="static/add.svg" height="20"/></a>
+            <a class="add-button" id="new_warning" href="{{ url_for('addWarningRoute', name=route.name) }}"><img
+                    src="static/add.svg" height="20"/></a>
         </td>
         {% endif %}
     </tr>

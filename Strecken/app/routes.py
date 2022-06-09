@@ -63,30 +63,37 @@ def register():
     return render_template('register.html', title='Register', form=form, user=current_user)
 
 
-#Doku
+# Documentation: This method is used to add sections to a route. First of all the end station of the last section of the
+# route is retrieved. Then all sections are retrieved from the database. If the last station is not null, sections with
+# the same start station as the last end station are put into a list. The select box is then filled with
+# the list of these sections. This makes sure that all sections are connected. If the user clicks submit,
+# the new section is added to the route.
 @app.route('/add_section/<name>', methods=['GET', 'POST'])
 def addSection(name):
     route = Routes.query.filter_by(name=name).first_or_404()
     lastStation = 0
     for s in route.sections:
-        lastStation=s.end_station_id
+        lastStation = s.end_station_id
     all_sections = db.session.query(Sections)
     sections_list = [(i.id, i.name) for i in all_sections]
-    if(not not lastStation):
+    if (not not lastStation):
         sections = db.session.query(Sections).filter(Sections.start_station_id == lastStation).all()
         sections_list = [(i.id, i.name) for i in sections]
     form = AddSection()
     form.section.choices = sections_list
     if form.validate_on_submit():
         for s1 in all_sections:
-            if(s1.id == form.section.data): new_section = s1
+            if (s1.id == form.section.data): new_section = s1
         route.sections.append(new_section)
         db.session.commit()
         return redirect(url_for('routes'))
     return render_template('add_sections.html', title='Add Sections', user=current_user, form=form, route=route)
 
 
-#Doku
+# Documentation: This method is used to add warnings to a route. First of all a list with all warnings is created,
+# then all warnings of the route are retrieved. These two lists are compared by turning the lists into sets and
+# using the .difference method of sets, this way only warnings who have not been added to a route yet can be selected.
+# The selection box is then filled with these warnings. If the user clicks on submit the warning is added to the route.
 @app.route('/add_warning_route/<name>', methods=['GET', 'POST'])
 def addWarningRoute(name):
     route = Routes.query.filter_by(name=name).first_or_404()
@@ -107,7 +114,7 @@ def addWarningRoute(name):
     return render_template('add_warning_route.html', title='Add Warnings', user=current_user, form=form, route=route)
 
 
-#Doku
+# Documentation: This method is used to add warnings to a section, the same logic as in addWarningsRoute is used.
 @app.route('/add_warning_section/<name>', methods=['GET', 'POST'])
 def addWarningSection(name):
     section = Sections.query.filter_by(name=name).first_or_404()
@@ -125,7 +132,8 @@ def addWarningSection(name):
         section.warnings_link.append(new_warning)
         db.session.commit()
         return redirect(url_for('routes'))
-    return render_template('add_warning_section.html', title='Add Warnings', user=current_user, form=form, section=section)
+    return render_template('add_warning_section.html', title='Add Warnings', user=current_user, form=form,
+                           section=section)
 
 
 @app.before_request
@@ -184,4 +192,3 @@ def getTrains():
     json_file = open('./trains.json')
     data = json.load(json_file)
     return data
-

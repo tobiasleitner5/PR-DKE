@@ -11,6 +11,7 @@ from flask_admin import Admin, AdminIndexView, expose
 from flask_admin.contrib.sqla import ModelView
 from flask_admin.menu import MenuLink
 
+
 # flask db init
 # flask db migrate -m "first migrate"
 # flask db upgrade
@@ -58,19 +59,19 @@ class Stations(db.Model):
 
 
 sections_warnings = db.Table('sections_warnings',
-    db.Column('section_id', db.Integer, db.ForeignKey('sections.id')),
-    db.Column('warning_id', db.Integer, db.ForeignKey('warnings.id'))
-)
+                             db.Column('section_id', db.Integer, db.ForeignKey('sections.id')),
+                             db.Column('warning_id', db.Integer, db.ForeignKey('warnings.id'))
+                             )
 
 routes_warnings = db.Table('routes_warnings',
-    db.Column('route_id', db.Integer, db.ForeignKey('routes.id')),
-    db.Column('warning_id', db.Integer, db.ForeignKey('warnings.id'))
-)
+                           db.Column('route_id', db.Integer, db.ForeignKey('routes.id')),
+                           db.Column('warning_id', db.Integer, db.ForeignKey('warnings.id'))
+                           )
 
 routes_sections = db.Table('routes_sections',
-    db.Column('route_id', db.Integer, db.ForeignKey('routes.id')),
-    db.Column('section_id', db.Integer, db.ForeignKey('sections.id'))
-)
+                           db.Column('route_id', db.Integer, db.ForeignKey('routes.id')),
+                           db.Column('section_id', db.Integer, db.ForeignKey('sections.id'))
+                           )
 
 
 class Sections(db.Model):
@@ -85,7 +86,6 @@ class Sections(db.Model):
     warnings_link = db.relationship('Warnings', secondary=sections_warnings, backref='sections')
 
     def to_dict(self):
-
         return {
             'id': self.id,
             'name': self.name,
@@ -134,7 +134,7 @@ class Warnings(db.Model):
         }
 
 
-#**********************************************************
+# **********************************************************
 
 
 class MyModelView(ModelView):
@@ -142,7 +142,7 @@ class MyModelView(ModelView):
         return current_user.is_admin
 
     form_excluded_columns = ('sections', 'routes', 'section1', 'section2', 'password_hash', 'warnings_link')
-    #form_excluded_columns = ('routes', 'section1', 'section2', 'password_hash')
+    # form_excluded_columns = ('routes', 'section1', 'section2', 'password_hash')
 
 
 class MyAdminIndexView(AdminIndexView):
@@ -155,9 +155,9 @@ class MyAdminIndexView(AdminIndexView):
 
 
 admin = Admin(app,
-    index_view=MyAdminIndexView(),
+              index_view=MyAdminIndexView(),
               name="Entitiy Management"
-)
+              )
 
 
 class MainIndexLink(MenuLink):

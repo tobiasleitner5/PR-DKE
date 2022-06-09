@@ -1,71 +1,71 @@
 {% extends "base.html" %}{% block title %}Sections{% endblock %}
 
 {% block content %}
-    <br>
-    <h1>Sections</h1>
-    <table class="custom-table">
-             <thead>
-              <tr>
-                <td style="font-weight:bold">Name</td>
-                <td style="font-weight:bold">Distance</td>
-                <td style="font-weight:bold">Max Speed</td>
-                <td style="font-weight:bold">Fee</td>
-                <td style="font-weight:bold">Trackwidth</td>
-                <td style="font-weight:bold">Start-Station</td>
-                <td style="font-weight:bold">End-Station</td>
-             </tr>
-             </thead>
-    </table>
-    {% for section in sections %}
-        <table class="custom-table">
-            <tbody>
-                <tr>
-                    <td>{{ section.name }} </td>
-                    <td>{{ section.distance }}km</td>
-                    <td>{{ section.maxSpeed }}km/h</td>
-                    <td>{{ section.fee }}€</td>
-                    {% if section.is_schmalspur %}
-                    <td>Schmalspur</td>
-                    {% else %}
-                    <td>Normalspur</td>
-                    {% endif %}
-                    {% for station in stations %}
-                    {% if station.id == section.start_station_id %}
-                    <td>{{ station.name }}</td>
-                    {% endif %}
-                    {% endfor %}
-                    {% for station in stations %}
-                    {% if station.id == section.end_station_id %}
-                    <td>{{ station.name }}</td>
-                    {% endif %}
-                    {% endfor %}
-                </tr>
-            <tr>
-                {% if not section.warnings_link %}
-                    <td>Warnungen: </td>
-                                            {% if user.is_admin %}
+<br>
+<h1>Sections</h1>
+<table class="custom-table">
+    <thead>
+    <tr>
+        <td style="font-weight:bold">Name</td>
+        <td style="font-weight:bold">Distance</td>
+        <td style="font-weight:bold">Max Speed</td>
+        <td style="font-weight:bold">Fee</td>
+        <td style="font-weight:bold">Trackwidth</td>
+        <td style="font-weight:bold">Start-Station</td>
+        <td style="font-weight:bold">End-Station</td>
+    </tr>
+    </thead>
+</table>
+{% for section in sections %}
+<table class="custom-table">
+    <tbody>
+    <tr>
+        <td>{{ section.name }}</td>
+        <td>{{ section.distance }}km</td>
+        <td>{{ section.maxSpeed }}km/h</td>
+        <td>{{ section.fee }}€</td>
+        {% if section.is_schmalspur %}
+        <td>Schmalspur</td>
+        {% else %}
+        <td>Normalspur</td>
+        {% endif %}
+        {% for station in stations %}
+        {% if station.id == section.start_station_id %}
+        <td>{{ station.name }}</td>
+        {% endif %}
+        {% endfor %}
+        {% for station in stations %}
+        {% if station.id == section.end_station_id %}
+        <td>{{ station.name }}</td>
+        {% endif %}
+        {% endfor %}
+    </tr>
+    <tr>
+        {% if not section.warnings_link %}
+        <td>Warnungen:</td>
+        {% if user.is_admin %}
         <td>
-        <a class="add-button" id="new_warning1" href="{{ url_for('addWarningSection', name=section.name) }}"><img
-                src="static/add.svg" height="20"/></a>
+            <a class="add-button" id="new_warning1" href="{{ url_for('addWarningSection', name=section.name) }}"><img
+                    src="static/add.svg" height="20"/></a>
         </td>
         {% endif %}
-                {% else %}
-                <td>Warnungen:  </td>
-                    {% for warning in section.warnings_link %}
-                    <td>
-                        {{ warning.name }}:
-                        {{ warning.description }}
-                    </td>
-                    {% endfor %}
-                            {% if user.is_admin %}
+        {% else %}
+        <td>Warnungen:</td>
+        {% for warning in section.warnings_link %}
         <td>
-        <a class="add-button" id="new_warning" href="{{ url_for('addWarningSection', name=section.name) }}"><img
-                src="static/add.svg" height="20"/></a>
+            {{ warning.name }}:
+            {{ warning.description }}
+        </td>
+        {% endfor %}
+        {% if user.is_admin %}
+        <td>
+            <a class="add-button" id="new_warning" href="{{ url_for('addWarningSection', name=section.name) }}"><img
+                    src="static/add.svg" height="20"/></a>
         </td>
         {% endif %}
-                {% endif %}
-            </tr>
-            </tbody>
-        </table>
+        {% endif %}
+    </tr>
+    </tbody>
+</table>
 {% endfor %}
 {% endblock %}

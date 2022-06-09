@@ -1,24 +1,24 @@
 {% extends "base.html" %}{% block title %}Stations{% endblock %}
 
 {% block content %}
-    <br>
-    <h1>Stations</h1>
-    <table class="route-table">
-             <thead>
-              <tr>
-                <td style="font-weight:bold">Name</td>
-                <td style="font-weight:bold">Adress</td>
-             </tr>
-             </thead>
-    </table>
-    {% for station in stations %}
-        <table class="route-table">
-            <tbody>
-                <tr>
-                    <td>{{ station.name }} </td>
-                    <td>{{ station.address }}</td>
-                </tr>
-            </tbody>
-        </table>
+<br>
+<h1>Stations</h1>
+<table class="route-table">
+    <thead>
+    <tr>
+        <td style="font-weight:bold">Name</td>
+        <td style="font-weight:bold">Adress</td>
+    </tr>
+    </thead>
+</table>
+{% for station in stations %}
+<table class="route-table">
+    <tbody>
+    <tr>
+        <td>{{ station.name }}</td>
+        <td>{{ station.address }}</td>
+    </tr>
+    </tbody>
+</table>
 {% endfor %}
 {% endblock %}
