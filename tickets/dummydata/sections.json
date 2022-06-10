@@ -1,7 +1,9 @@
 {
   "sections": [
     {
-      "route": 1,
+      "routes": [
+        1
+      ],
       "id": 1,
       "name": "Wels-Linz",
       "distance": 70,
@@ -11,7 +13,9 @@
       "endStation": 2
     },
     {
-      "route": 1,
+      "routes": [
+        1
+      ],
       "id": 2,
       "name": "Linz-Wien",
       "distance": 150,
@@ -21,7 +25,9 @@
       "endStation": 3
     },
     {
-      "route": 2,
+      "routes": [
+        2
+      ],
       "id":3,
       "name":"Pürgg-Tauplitz",
       "distance":70,
@@ -31,7 +37,9 @@
       "endStation": 5
   },
    {
-    "route": 2,
+    "routes": [
+        2
+     ],
     "id":4,
     "name":"Bad Mitterndorf - Bad Aussee",
     "distance":150,

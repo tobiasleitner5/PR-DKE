@@ -2,63 +2,79 @@
   "data": [
     {
       "id": 1,
-      "plannedroutes_id": 3,
+      "plannedroute_id": 3,
       "interval": true,
       "price": 0.495,
-      "time": "Mon, 30 May 2022 16:42:00 GMT",
+      "time": "Mon, 30 Jun 2022 16:42:00 GMT",
       "train_id": 2
     },
     {
       "id": 2,
-      "plannedroutes_id": 1,
+      "plannedroute_id": 1,
       "interval": true,
-      "price": 0.495,
-      "time": "Tue, 31 May 2022 16:42:00 GMT",
+      "price": 20,
+      "time": "Tue, 09 Jun 2022 11:30:00 GMT",
       "train_id": 2
     },
     {
       "id": 3,
-      "plannedroutes_id": 1,
+      "plannedroute_id": 1,
+      "interval": true,
+      "price": 20,
+      "time": "Mon, 10 Jun 2022 16:42:00 GMT",
+      "train_id": 2
+    },
+    {
+      "id": 4,
+      "plannedroute_id": 1,
+      "interval": true,
+      "price": 20,
+      "time": "Wed, 14 Jun 2022 18:00:00 GMT",
+      "train_id": 2
+    },
+    {
+      "id": 5,
+      "plannedroute_id": 1,
       "interval": true,
       "price": 0.495,
       "time": "Wed, 01 Jun 2022 16:42:00 GMT",
       "train_id": 2
     },
     {
-      "id": 4,
-      "plannedroutes_id": 2,
+      "id": 6,
+      "plannedroute_id": 2,
       "interval": true,
       "price": 0.495,
       "time": "Thu, 08 Jun 2022 16:42:00 GMT",
       "train_id": 2
     },
     {
-      "id": 5,
-      "plannedroutes_id": 4,
+      "id": 7,
+      "plannedroute_id": 4,
       "interval": true,
       "price": 0.495,
       "time": "Fri, 03 Jun 2022 16:42:00 GMT",
       "train_id": 2
     },
     {
-      "id": 6,
-      "plannedroutes_id": 3,
+      "id": 8,
+      "plannedroute_id": 3,
       "interval": true,
       "price": 0.495,
       "time": "Sat, 04 Jun 2022 16:42:00 GMT",
       "train_id": 2
     },
     {
-      "id": 7,
-      "plannedroutes_id": 3,
+      "id": 9,
+      "plannedroute_id": 3,
       "interval": false,
       "price": 0.495,
       "time": "Mon, 30 May 2022 16:43:00 GMT",
       "train_id": 2
     },
     {
-      "id": 8,
-      "plannedroutes_id": 3,
+      "id": 10,
+      "plannedroute_id": 3,
       "interval": false,
       "price": 2.51,
       "time": "Mon, 30 May 2022 16:44:00 GMT",

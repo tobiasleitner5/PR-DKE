@@ -2,7 +2,7 @@ from flask import Flask, json, flash
 import requests, itertools
 from urllib.request import urlopen
 
-dummydata = False
+dummydata = True
 
 def get_rides():
     if dummydata:

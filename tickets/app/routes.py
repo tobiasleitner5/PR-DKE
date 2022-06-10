@@ -22,33 +22,38 @@ def index():
         end = int(api.getStationsByName(form.destination.data)["id"])
         date = form.date.data
         time = form.time.data
-        date_time = datetime.combine(date, time)
         succ = False
         res = []
         promotions = Promotion.query.all()
         for r in api.get_rides()["data"]:
             planned_route = api.get_planned_route_by_id(r["plannedroute_id"])
-            lStations = []
-            lStations.append(int(planned_route["startStation"]))
-            lStations.append(int(planned_route["endStation"]))
-            if lStations.__contains__(start) and lStations.__contains__(end) and lStations.index(
-                         start) < lStations.index(end) and start != end:
-                    succ = True
-                    ride_time = datetime.strptime(r["time"], "%a, %d %b %Y %H:%M:%S GMT")
-                    if ride_time >= date_time:
-                        res.append(r)
+            ride_time = datetime.strptime(r["time"], "%a, %d %b %Y %H:%M:%S GMT")
+            lSections = []
+            full_ride = False
+            append = False
+            for s in planned_route["sections"]:
+                section = api.get_section_by_id(s)
+                if section["startStation"] == start or append:
+                    full_ride = True
+                    append = True
+                    lSections.append(s)
+                if section["endStation"] == end:
+                    append = False
+                    lSections.append(s)
+            if full_ride and not append and ride_time.date() == date and ride_time.time() >= time:
+                res.append(r)
+                succ = True
         if not succ:
             flash("Keine Fahrtdurchführung gefunden!")
-        return render_template("index.html", title='Home Page', result=True, form=form, results=res, promotions=promotions, pricedict=get_best_promo(), warnings=get_dict_warnings())
+        return render_template("index.html", title='Home Page', result=True, form=form, results=res, promotions=promotions, pricedict=get_best_promo(), warnings=get_dict_warnings(list(set(lSections))))
     return render_template("index.html", title='Home Page', results=False, form=form)
 
-def get_dict_warnings():
+def get_dict_warnings(list_sections):
     warnings_dict = {}
     warnings = api.get_warnings()
     for r in api.get_rides()["data"]:
         warnings_dict[r["id"]] = []
         list_routes = list(api.get_route_of_ride(r["plannedroute_id"]))
-        list_sections = api.get_planned_route_by_id(r["plannedroute_id"])["sections"]
         for w in warnings["warnings"]:
             if any(item in w["routes"] for item in list_routes):
                 warnings_dict[r["id"]].append(w["name"])
