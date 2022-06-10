@@ -3,7 +3,8 @@ import read_input
 
 def reset():
     # add admin user
-    db.session.add(Employee('Admin', 'admin@oebb.at', 123456789, True))
+    db.session.add(Employee('Admin', 'admin@oebb.at', 1234, True))
+    db.session.add(Employee('Jonas', 'jonas@oebb.at', 1234, False))
 
     # add all input data
     sections = dict(read_input.get_sections_data())['sections']

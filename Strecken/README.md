@@ -12,7 +12,6 @@
 3. Virtual environment erstellen. Linux: `python3 -m venv .venv`
 4. Virtual environment aktivieren: Linux: `source .venv/bin/activate`
 5. Installation der externen Pakete: Linux: `pip3 install -r requirements.txt`
-6. Start über Ausführen von _flask run --host=0.0.0.0 --port=5003_ im Terminal
 
 ### Start
 #### Erster Start - Datenbank erstellen
@@ -20,7 +19,7 @@ Beim ersten Start muss die Datenbank mittels flask-migrate erstellt werden. Es m
 1. flask db init
 2. flask db migrate -m "database creation"
 3. flask db upgrade
-4. Script ausführen, um erste Daten zu generieren
+4. Es wurde nun eine Datenbank namens app.db erstellt, diese muss gelöscht werden und die Datenbank
 
 #### Weitere Starts
 Nach dem ersten Start kann das Programm im Terminal über _flask run --host=0.0.0.0 --port=5003_ gestartet werden.

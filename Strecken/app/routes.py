@@ -69,7 +69,7 @@ def register():
 # the list of these sections. This makes sure that all sections are connected. If the user clicks submit,
 # the new section is added to the route.
 @app.route('/add_section/<name>', methods=['GET', 'POST'])
-def addSection(name):
+def add_section(name):
     route = Routes.query.filter_by(name=name).first_or_404()
     lastStation = 0
     for s in route.sections:
@@ -90,12 +90,22 @@ def addSection(name):
     return render_template('add_sections.html', title='Add Sections', user=current_user, form=form, route=route)
 
 
+@app.route('/delete_section/<name>', methods=['GET', 'POST'])
+def delete_section(name):
+    route = Routes.query.filter_by(name=name).first_or_404()
+    for s in route.sections:
+        section = s
+    route.sections.remove(section)
+    db.session.commit()
+    return redirect(url_for('routes'))
+
+
 # Documentation: This method is used to add warnings to a route. First of all a list with all warnings is created,
 # then all warnings of the route are retrieved. These two lists are compared by turning the lists into sets and
 # using the .difference method of sets, this way only warnings who have not been added to a route yet can be selected.
 # The selection box is then filled with these warnings. If the user clicks on submit the warning is added to the route.
 @app.route('/add_warning_route/<name>', methods=['GET', 'POST'])
-def addWarningRoute(name):
+def add_warning_route(name):
     route = Routes.query.filter_by(name=name).first_or_404()
     all_warnings = db.session.query(Warnings)
     warnings_list = [(i.id, i.name) for i in all_warnings]
@@ -116,7 +126,7 @@ def addWarningRoute(name):
 
 # Documentation: This method is used to add warnings to a section, the same logic as in addWarningsRoute is used.
 @app.route('/add_warning_section/<name>', methods=['GET', 'POST'])
-def addWarningSection(name):
+def add_warning_section(name):
     section = Sections.query.filter_by(name=name).first_or_404()
     all_warnings = db.session.query(Warnings)
     warnings_list = [(i.id, i.name) for i in all_warnings]
@@ -131,7 +141,7 @@ def addWarningSection(name):
             if s1.id == form.warning.data: new_warning = s1
         section.warnings_link.append(new_warning)
         db.session.commit()
-        return redirect(url_for('routes'))
+        return redirect(url_for('sections'))
     return render_template('add_warning_section.html', title='Add Warnings', user=current_user, form=form,
                            section=section)
 
@@ -178,7 +188,7 @@ def get_sections():
 
 
 @app.route('/routes/get')
-def get_rotues():
+def get_routes():
     return {'routes': [route.to_dict() for route in Routes.query]}
 
 
@@ -188,7 +198,7 @@ def get_warnings_sections():
 
 
 @app.route('/trains', methods=['GET'])
-def getTrains():
+def get_trains():
     json_file = open('./trains.json')
     data = json.load(json_file)
     return data

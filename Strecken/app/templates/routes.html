@@ -26,7 +26,7 @@
         {% endif %}
         {% if user.is_admin %}
         <td>
-            <a class="add-button" id="new_warning" href="{{ url_for('addWarningRoute', name=route.name) }}"><img
+            <a class="add-button" id="new_warning" href="{{ url_for('add_warning_route', name=route.name) }}"><img
                     src="static/add.svg" height="20"/></a>
         </td>
         {% endif %}
@@ -49,8 +49,12 @@
 
 </table>
 {% if user.is_admin %}
-<a class="add-button" id="new_sections" href="{{ url_for('addSection', name=route.name) }}"><img src="static/add.svg"
+<a class="add-button" id="new_sections" href="{{ url_for('add_section', name=route.name) }}"><img src="static/add.svg"
                                                                                                  height="20"/></a>
+{% if route.sections %}
+<a class="add-button" id="delete_section" href="{{ url_for('delete_section', name=route.name) }}"><img src="static/delete.svg"
+                                                                                            height="20"/></a>
+{% endif %}
 {% endif %}
 {% endfor %}
 {% endblock %}

@@ -45,7 +45,7 @@
         <td>Warnungen:</td>
         {% if user.is_admin %}
         <td>
-            <a class="add-button" id="new_warning1" href="{{ url_for('addWarningSection', name=section.name) }}"><img
+            <a class="add-button" id="new_warning1" href="{{ url_for('add_warning_section', name=section.name) }}"><img
                     src="static/add.svg" height="20"/></a>
         </td>
         {% endif %}
@@ -59,7 +59,7 @@
         {% endfor %}
         {% if user.is_admin %}
         <td>
-            <a class="add-button" id="new_warning" href="{{ url_for('addWarningSection', name=section.name) }}"><img
+            <a class="add-button" id="new_warning" href="{{ url_for('add_warning_section', name=section.name) }}"><img
                     src="static/add.svg" height="20"/></a>
         </td>
         {% endif %}

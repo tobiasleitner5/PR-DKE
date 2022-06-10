@@ -6,7 +6,7 @@ from flask_login import LoginManager
 
 # source venv/bin/activate
 # export FLASK_ENV=development
-# git diff --name-only --cached
+# git diff --name-only --cached - mit q enter exiten
 
 
 app = Flask(__name__)

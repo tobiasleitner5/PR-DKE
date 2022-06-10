@@ -28,6 +28,12 @@ class User(UserMixin, db.Model):
     def __repr__(self):
         return '<User {}>'.format(self.username)
 
+    def __init__(self, username, email, password_hash, is_admin):
+        self.username = username
+        self.email = email
+        self.password_hash = password_hash
+        self.is_admin = is_admin
+
     def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
@@ -49,6 +55,10 @@ class Stations(db.Model):
 
     def __repr__(self):
         return self.name
+
+    def __init__(self, name, address):
+        self.name = name
+        self.address = address
 
     def to_dict(self):
         return {
