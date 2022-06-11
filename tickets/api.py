@@ -2,7 +2,7 @@ from flask import Flask, json, flash
 import requests, itertools
 from urllib.request import urlopen
 
-dummydata = True
+dummydata = False
 
 def get_rides():
     if dummydata:
@@ -94,6 +94,12 @@ def get_route_name_by_id(route_id):
     for r in routes["routes"]:
         if int(r["id"]) == int(route_id):
             return r["name"]
+
+def get_routeid_by_sections(list_sections):
+    routes = get_routes()
+    for r in routes["routes"]:
+        if all(elem in r["sections"] for elem in list_sections):
+            return r
 
 def getStations():
     stations = get_stations()

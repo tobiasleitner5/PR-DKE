@@ -33,7 +33,7 @@
                 <td>{{ form.departure.data }}</td>
                 <td><i class="fas fa-arrow-right"></i></td>
                 <td>{{ form.destination.data }}</td>
-                {% if not warnings.get(r.id) == [] %}
+                {% if not warnings.get(r.id) == None %}
                     <td>Warnings:
                     {% for w in warnings.get(r.id) %}
                         <br>{{ (w) }}
