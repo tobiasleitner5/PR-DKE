@@ -27,13 +27,14 @@
     {% if result %}
         <br><h3>Ticket wählen</h3><hr>
         <table class="default">
+            <tr class="default">
             {% for r in results %}
             <tr class="default">
                 <td>{{ r.time }}</td>
                 <td>{{ form.departure.data }}</td>
                 <td><i class="fas fa-arrow-right"></i></td>
                 <td>{{ form.destination.data }}</td>
-                {% if not warnings.get(r.id) == None %}
+                {% if not warnings.get(r.id) == [] and not warnings.get(r.id) == [] %}
                     <td>Warnings:
                     {% for w in warnings.get(r.id) %}
                         <br>{{ (w) }}
