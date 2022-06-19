@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from flask_fontawesome import FontAwesome
 from sqlalchemy import event
 
+# standard configurations for Flask application
 app = Flask(__name__)
 app.config.from_object(Config)
 db = SQLAlchemy(app)

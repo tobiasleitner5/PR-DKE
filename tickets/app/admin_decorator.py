@@ -3,6 +3,7 @@ from app.models import User
 from flask_login import current_user
 from flask import flash, redirect, url_for
 
+# decorater for implementing the different access levels for admin and user
 def requires_access(access_level):
     def decorator(f):
         @wraps(f)

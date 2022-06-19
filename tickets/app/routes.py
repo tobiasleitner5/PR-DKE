@@ -10,6 +10,7 @@ from werkzeug.urls import url_parse
 import api
 from datetime import datetime, date
 
+# main index view to search for tickets/ show results
 @app.route('/', methods=['GET', 'POST'])
 @app.route('/index', methods=['GET', 'POST'])
 @login_required
@@ -18,6 +19,7 @@ def index():
         return redirect(url_for('promotion'))
     form = TicketForm()
     if form.validate_on_submit():
+        # if the Search for Ticket Form is submitted, the system searches for possible trips
         start = int(api.getStationsByName(form.departure.data)["id"])
         end = int(api.getStationsByName(form.destination.data)["id"])
         date = form.date.data
@@ -54,6 +56,7 @@ def index():
         return render_template("index.html", title='Home Page', result=True, form=form, results=res, promotions=promotions, pricedict=get_best_promo(), warnings=warnings_dict)
     return render_template("index.html", title='Home Page', results=False, form=form)
 
+# get list of all possible warnings for a ride (included warnings of sections and route)
 def get_warnings_section(list_sections, route):
     list = []
     warnings = api.get_warnings()
@@ -62,6 +65,7 @@ def get_warnings_section(list_sections, route):
             list.append(w["name"])
     return list
 
+# get a dictionary with the best promotion matched to the ride id
 def get_best_promo():
     best_promo_dict = {}
     for r in api.get_rides()["data"]:
@@ -70,6 +74,7 @@ def get_best_promo():
         best_promo_dict[r["id"]] = best_promo
     return best_promo_dict
 
+# sub function of get_best_promo() -> checks if time slot is suitable
 def get_best_promo_by_route(list_routes, ride_time_str):
     promotions = Promotion.query.all()
     best_promo = 0
@@ -82,6 +87,7 @@ def get_best_promo_by_route(list_routes, ride_time_str):
                 best_promo = p.sale
     return best_promo
 
+# setting the login page including checking if the entered data is valid
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if current_user.is_authenticated:
@@ -99,11 +105,13 @@ def login():
         return redirect(next_page)
     return render_template('login.html', title='Sign In', form=form)
 
+# logs the User out
 @app.route('/logout')
 def logout():
     logout_user()
     return redirect(url_for('index'))
 
+# setting the registration page including adding a new user to the database
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if current_user.is_authenticated:
@@ -118,6 +126,7 @@ def register():
         return redirect(url_for('login'))
     return render_template('register.html', title='Register', form=form)
 
+# loads the profile form of a specific user and allows editing personal data
 @app.route('/user/<username>', methods=['GET', 'POST'])
 @login_required
 def user(username):
@@ -146,6 +155,7 @@ def user(username):
         form.email.data = current_user.email
     return render_template('user.html', user=user, title='Profile', form=form)
 
+# loads the ticket page where an overview of all bought tickets is given
 @app.route('/tickets', methods=['GET', 'POST'])
 @requires_access('user')
 @login_required
@@ -162,6 +172,7 @@ def tickets():
     book_seat(ticketid)
     return render_template('tickets.html', title='My Tickets', tickets=tickets)
 
+# function for booking a seat by given ticket id
 def book_seat(ticketid):
     ticket = Ticket.query.filter_by(id=ticketid).first()
     if ticket is not None and ticket.status == 'active':
@@ -180,6 +191,7 @@ def book_seat(ticketid):
     elif ticket is not None:
         flash("Das Ticket ist nicht mehr verfügbar, da storniert oder verbraucht!")
 
+# function for cancelling a ticket by given ticket id
 @app.route('/cancelticket/<ticketid>', methods=['GET', 'POST'])
 @requires_access('user')
 @login_required
@@ -199,6 +211,7 @@ def cancelticket(ticketid):
         return redirect(url_for('tickets'))
     return render_template('cancelview.html', title='My Tickets', form=form, question="Möchten Sie das Ticket stornieren?")
 
+# function for canceling a promotion by given promotion id (access level admin)
 @app.route('/cancelpromo/<promotionid>', methods=['GET', 'POST'])
 @requires_access('admin')
 @login_required
@@ -214,6 +227,7 @@ def cancelpromo(promotionid):
         return redirect(url_for('overview'))
     return render_template('cancelview.html', title='My Promotion', form=form, question="Möchten Sie die Aktion löschen?")
 
+# function for buying a ticket by given ride id, departure and destination
 @app.route('/buyticket/<rideid>/<departure>/<destination>', methods=['GET', 'POST'])
 @requires_access('user')
 @login_required
@@ -234,6 +248,7 @@ def buyticket(rideid,departure,destination):
         return redirect(url_for('tickets'))
     return render_template('buyticket.html', title='Buy Ticket', form=form)
 
+# loads the promotion page for setting promotions (access level admin)
 @app.route('/promotion', methods=['GET', 'POST'])
 @requires_access('admin')
 @login_required
@@ -254,6 +269,7 @@ def promotion():
         return redirect(url_for('overview'))
     return render_template('promotion.html', title='Set Promotion', form=form)
 
+# loads the overview form to see all promotions (access level admin)
 @app.route('/overview', methods=['GET', 'POST'])
 @requires_access('admin')
 @login_required
@@ -261,6 +277,8 @@ def overview():
     promotions = Promotion.query.all()
     return render_template('overview.html', title='Overview Promotion', promotions=promotions)
 
-@app.route('/get/users')
-def users():
-    return {'data': [user.to_json() for user in User.query]}
+
+# used for testing purpose to get all users
+#@app.route('/get/users')
+#def users():
+#    return {'data': [user.to_json() for user in User.query]}

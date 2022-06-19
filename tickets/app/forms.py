@@ -8,12 +8,14 @@ from app.models import User
 from datetime import datetime
 import api
 
+# sets the fields of the Login Form used for User Log-in
 class LoginForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     password = PasswordField('Password', validators=[DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Sign In')
 
+# sets the fields of the Registration Form used for User Registration
 class RegistrationForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
@@ -31,6 +33,7 @@ class RegistrationForm(FlaskForm):
         if user is not None:
             raise ValidationError('Please use a different email address.')
 
+# sets the fields of the Edit Profile Form that allows the User to edit his personal data (username, password etc.)
 class EditProfileForm(FlaskForm):
     username = StringField('Username', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired()])
@@ -57,6 +60,7 @@ class EditProfileForm(FlaskForm):
             if user is not None:
                 raise ValidationError('Please use a different email.')
 
+# sets the fields of the Ticket Form that allows to search for specific rides
 class TicketForm(FlaskForm):
     departure = SelectField('Von', choices=api.getStations(), validators=[DataRequired()])
     destination = SelectField('Nach', choices=api.getStations(), validators=[DataRequired()])
@@ -64,6 +68,7 @@ class TicketForm(FlaskForm):
     time = TimeField('Wann', format='%H:%M', default=datetime.today, validators=[DataRequired()])
     submit = SubmitField('Suchen')
 
+# sets the fields of the Login Form used for User Log-in
 class PromotionForm(FlaskForm):
     start_date = DateField('Von', format='%Y-%m-%d', default=datetime.today, validators=[DataRequired('please select startdate')])
     end_date = DateField('Bis', format='%Y-%m-%d', default=datetime.today, validators=[DataRequired('please select enddate')])
@@ -84,6 +89,7 @@ class PromotionForm(FlaskForm):
         elif self.start_date.data > end_date.data:
             raise ValidationError('Das Enddatum ist vor dem Startdatum.')
 
+# sets the fields of the Empty Form used for different contexts
 class EmptyForm(FlaskForm):
     cancel = SubmitField('Abbrechen')
     submit = SubmitField('Submit')

@@ -5,14 +5,15 @@ import api
 from flask import flash
 from hashlib import md5
 
+# sets the fields of the User table in the database
 class User(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    #access as either user or admin
+    # access as either user or admin
     access = db.Column(db.Enum('user', 'admin'), nullable=False, server_default='user')
-    #for relationship one-to-many: get all tickets from a user
+    # for relationship one-to-many: get all tickets from a user
     tickets = db.relationship('Ticket', backref='owner', lazy='dynamic')
 
     def __repr__(self):
@@ -46,6 +47,7 @@ class User(UserMixin, db.Model):
             'access': self.access
         }
 
+# sets the fields of the Ticket table in the database
 class Ticket(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
@@ -67,7 +69,7 @@ class Ticket(db.Model):
     def set_seat(self, seat):
         self.seat = seat
         
-
+# sets the fields of the Promotion table in the database
 class Promotion(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     start_date = db.Column(db.Date)
