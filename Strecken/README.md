@@ -22,7 +22,7 @@ Beim ersten Start muss die Datenbank mittels flask-migrate erstellt werden. Es m
 
 Es wurde nun eine Datenbank namens app.db erstellt.
 
-Jetzt muss entweder über die Python-Konsole ein Admin-User in der leeren Datenbank erstellt werden oder eine bereits befüllte Datenbank muss gedownloaded werden (Siehe nächstes Kapitel _Vorgefertigte Datenbank_).
+Jetzt muss entweder über die Python-Konsole ein Admin-User in der leeren Datenbank erstellt werden oder eine bereits befüllte Datenbank muss gedownloaded werden (siehe nächstes Kapitel _Vorgefertigte Datenbank_).
 
 Soll ein neuer Admin-User erstellt werden müssen folgende Zeilen in die **Python-Konsole** eingegeben werden:
 - from app import db 
@@ -31,11 +31,11 @@ Soll ein neuer Admin-User erstellt werden müssen folgende Zeilen in die **Pytho
 - db.session.commit()
 
 Einloggen kann man sich dann mit dem Benutzernamen _Admin_ und dem Passwort _cat_.
-Es können auch weitere Mitarbeiter-User durch den Button _Click to Register!_ auf der Login Page erstellt werden.
+Es können Mitarbeiter-User durch den Button _Click to Register!_ auf der Login Page erstellt werden.
 
 ##Vorgefertigte Datenbank
 Unter nachfolgendem Link ist eine Datenbank hinterlegt, in welcher sich bereits Daten zu sämtlichen Entitäten befinden.
-Die Datenbank muss downgelaoded werden und die leere Datenbank des Projektes muss durch die neue Datenbank aus dem Drive ersetzt werden. Das Passwort der Benutzer lautet _cat_.
+Die Datenbank muss downgelaoded werden und die leere Datenbank des Projektes muss durch die neue Datenbank aus dem Drive ersetzt werden. Der Admin-User hat die Zugangsdaten _Jonas_ und _cat_, der Mitarbeiter-User hat die Zugangsdaten _Tobias_ und _cat_.
 https://drive.google.com/drive/folders/1hCwZw1pgbxABATbyUOLY0CZ4IAXhYzbc?usp=sharing
 
 ##Start
@@ -43,19 +43,23 @@ Nach Erledigung der vorher angeführten Schritte kann die Applikation im Termina
 
 ## Implementierungsdetails
 Das Strecken-IS wurde mittels des Flask-Frameworks und SQLite als Datenbank implementiert. Es gibt 2 Arten von Nutzern: Mitarbeiter
-und Admins, auf die Unterschiede wird in folgenden Absätzen eingegangen. Die Website besteht grundsätzlich aus 3 Pages: Routes, Sections und Stations. Auf diesen Seiten werden die Daten aus der Datenbank angezeigt. Weiters gibt es einen Button zum ausloggen.
+und Admins, auf die Unterschiede wird in folgenden Absätzen eingegangen. Die Website besteht grundsätzlich aus 3 Pages: Routes, Sections und Stations. Auf diesen Seiten werden die Daten aus der Datenbank angezeigt. Weiters gibt es einen Button zum ausloggen und eine Login Page.
 
 ### Admin
-Der Admin-User kann nicht nur Daten betrachten, sondern diese auch bearbeiten. Für das Erstellen, Bearbeiten und Löschen von Entitäten wurde Flask-Admin verwendet. Das Hinzufügen und Löschen von Abschnitten zu Strecken erfolgt jedoch nicht in Flask-Admin, da bei dieser Funktionalität eine spezielle Logik nötig ist (nur zusammenhängende Abschnitte).
+Der Admin-User kann nicht nur Daten betrachten, sondern diese auch bearbeiten. Für das Erstellen, Bearbeiten und Löschen von Entitäten wurde Flask-Admin verwendet. Das Hinzufügen und Löschen von Abschnitten zu Strecken erfolgt jedoch nicht in Flask-Admin, da bei dieser Funktionalität eine spezielle Logik nötig ist (nur zusammenhängende Abschnitte). Auch Warnings können direkt in den Pages hinzugefügt und gelöscht werden.
+
 Für Admins gibt es im Menü einen Extra Tab _Admin_, nach Klick auf diesen wird man zur Admin-View weitergeleitet. In dieser können Entitäten bearbeitet werden. Man kann über das Klicken auf den _back to routes_ Link in der rechten oberen Ecke zu der Hauptansicht zurückkehren. In der Admin-View gibt es Tabs zu den Entitäten Strecken, Abschnitte, Stationen, Users und Warnings. Durch das Klicken auf einen der Tabs werden die bereits erstellten Entitäten angezeigt. Durch das Klicken auf _Create_ kann eine neue Entität erstellt werden. Durch das Klicken auf das Bleistift-Symbol können Daten bearbeitet werden und durch das Klicken auf das Abfallkübel-Symbol kann eine Entität gelöscht werden. Bei den Usern wurde das Passwort Feld aus Sicherheitsgründen ausgeblendet, da der Admin die Passwörter der Mitarbeiter nicht sehen soll. Weiters wurde bei den Strecken das Feld zum Hinzufügen von Abschnitten ausgeblendet.
-Das Hinzufügen und Löschen von Abschnitten erfolgt auf der Routes-Page über das Klicken der + und - Symbole. Beim Klicken des + Symbols wird man zu einer Seite mit Drop-Down-Menü weitergeleitet, wo man den gewünschten Abschnitt hinzufügen kann. Das Drop-Down wird mit Abschnitten befüllt, welche zu dem letzten bereits vorhandenen Abschnitt passen (Endbahnhof = Startbahnhof). Ist noch kein Abschnitt bei einer Strecke vorhanden, existieren keine Restriktionen und das Drop-Down enthält alle Abschnitte.
+
+Das Hinzufügen und Löschen von Abschnitten erfolgt auf der Routes-Page über das Klicken der + und - Symbole. Beim Klicken des + Symbols wird man zu einer Seite mit Drop-Down-Menü weitergeleitet, wo man den gewünschten Abschnitt hinzufügen kann. Das Drop-Down wird mit Abschnitten befüllt, welche zu dem letzten bereits vorhandenen Abschnitt passen (Endbahnhof = Startbahnhof). Ist noch kein Abschnitt bei einer Strecke vorhanden, existieren keine Restriktionen und das Drop-Down enthält alle Abschnitte. Beim Klicken auf das - Symbol wird der zuletzt hinzugefügte Abschnitt gelöscht, dies stellt sicher, dass der Constraint der zusammenhängenden Abschnitte gewährleistet wird.
+
+Das Hinzufügen von Warnings erfolgt durch Klicken auf das + Symbol bei den Strecken und Abschnitten. Einzelne Warnings können durch das Klicken auf das - Symbol gelöscht werden. Die Funktionalität wurde so implementiert, dass nur Warnings hinzugefügt werden können, welche noch nicht zu einer Strecke oder einem Abschnitt hinzugefügt worden sind. 
+
 Will man einen neuen Mitarbeiter erstellen funktioniert das über das Klicken auf _click to register_ auf der Login-Page. Hier kann sich
 ein neuer Mitarbeiter registrieren. Soll der neue Mitarbeiter Admin sein, kann ein Admin diesen auf der User-Page in der Admin-View über
 Klick auf _Is Admin_ zum Admin machen.
-Warnings können durch das Klicken auf das + Symbol auf der Strecken- und Abschnitts-Page hinzugefügt werden und durch das Klicken auf das - Symbol gelöscht werden. Die Funktionalität wurde so implementiert, dass nur bereits nicht hinzugefügte Warnings zu einer Strecke oder einem Abschnitt hinzugefügt werden können. 
 
 ### Mitarbeiter
-Mitarbeiter-User sollen keine Daten verändern, sondern nur Daten betrachten können. Deshalb ist der Admin-Tab bei Mitarbeitern ausgeblendet.
+Mitarbeiter-User können keine Daten verändern, sondern nur Daten betrachten. Deshalb ist der Admin-Tab bei Mitarbeitern ausgeblendet.
 Weiters kann er keine Abschnitte zu Strecken hinzufügen bzw. diese löschen und keine Warnings zu Strecken und Abschnitten hinzufügen bzw. diese löschen. Alle anderen
 Pages sind gleich.
 
