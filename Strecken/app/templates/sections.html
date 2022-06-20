@@ -55,6 +55,8 @@
         <td>
             {{ warning.name }}:
             {{ warning.description }}
+            <a class="delete-button" id="delete_warning" href="{{ url_for('delete_warning_section', section_name=section.name, warning=warning.name) }}"><img
+                    src="static/delete.svg" height="20"/></a>
         </td>
         {% endfor %}
         {% if user.is_admin %}

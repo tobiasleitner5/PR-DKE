@@ -89,7 +89,8 @@ def add_section(name):
         return redirect(url_for('routes'))
     return render_template('add_sections.html', title='Add Sections', user=current_user, form=form, route=route)
 
-
+#Documentation: This method is used to remove sections from a route. The last section of the route is always removed,
+#this way the constraint with connected sections is always ensured.
 @app.route('/delete_section/<name>', methods=['GET', 'POST'])
 def delete_section(name):
     route = Routes.query.filter_by(name=name).first_or_404()
@@ -144,6 +145,28 @@ def add_warning_section(name):
         return redirect(url_for('sections'))
     return render_template('add_warning_section.html', title='Add Warnings', user=current_user, form=form,
                            section=section)
+
+
+#Documentation: This method is used to remove warnings from a route.
+@app.route('/delete_warning_route/<route_name>/<warning>', methods=['GET', 'POST'])
+def delete_warning_route(route_name, warning):
+    route = Routes.query.filter_by(name=route_name).first_or_404()
+    for w in route.warnings_link:
+        if w.name == warning:
+            route.warnings_link.remove(w)
+    db.session.commit()
+    return redirect(url_for('routes'))
+
+
+#Documentation: Same method as delete_warning_route, just for sections
+@app.route('/delete_warning_section/<section_name>/<warning>', methods=['GET', 'POST'])
+def delete_warning_section(section_name, warning):
+    section = Sections.query.filter_by(name=section_name).first_or_404()
+    for w in section.warnings_link:
+        if w.name == warning:
+            section.warnings_link.remove(w)
+    db.session.commit()
+    return redirect(url_for('sections'))
 
 
 @app.before_request
