@@ -3,7 +3,7 @@ import requests, itertools
 from urllib.request import urlopen
 
 # sets either the use of dummydata (True) or the use of data received by the other applications (False)
-dummydata = False
+dummydata = True
 
 # api to retrieve json data of rides
 def get_rides():

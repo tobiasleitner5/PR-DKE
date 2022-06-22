@@ -1,12 +1,1 @@
-{
-   "routes":[
-      {
-         "id":1,
-         "name":"Westbahn"
-      },
-      {
-         "id":2,
-         "name":"Salzkammergutbahn 1"
-      }
-   ]
-}
+{"routes":[{"id":1,"name":"Westbahn","sections":[1,2,9]},{"id":2,"name":"Ostbahn","sections":[4,5]},{"id":3,"name":"Teststrecke","sections":[7,8]},{"id":4,"name":"test","sections":[]}]}

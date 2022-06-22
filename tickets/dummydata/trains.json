@@ -1,16 +1,1 @@
-{
-   "trains":[
-      {
-         "id":1,
-         "name":"ICE1",
-         "maxWidth": 2.5,
-         "seats": 2
-      },
-      {
-         "id":2,
-         "name":"ICE2",
-         "maxWidth": 3,
-         "seats": 2
-      }
-   ]
-}
+{"trains":[{"id":1,"isNormalspur":true,"maxWidth":2.5,"name":"ICE1","seats":400},{"id":2,"isNormalspur":false,"maxWidth":3,"name":"ICE2","seats":400}]}

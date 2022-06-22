@@ -17,7 +17,7 @@
 ### Start
 #### Erster Start - Datenbank erstellen/Admin einfügen
 Beim ersten Start muss die Datenbank mittels flask-migrate erstellt werden. Es müssen folgende Befehle im Terminal ausgeführt werden (sollte eine Datenbank bereits existieren ist es sinnvoll sie bei erstmaliger Ausführung zu löschen):
-1. flask db init
+1. flask db init (falls dabei der `Fehler ConnectionRefusedError: [Errno 61]`auftritt ist für die Erstellung der DB die Variable `dummydata` in api.py auf True zu setzen)
 2. flask db migrate -m "database creation"
 3. flask db upgrade
 4. Es wurde nun eine Datenbank namens app.db erstellt
@@ -31,12 +31,16 @@ Beim ersten Start muss die Datenbank mittels flask-migrate erstellt werden. Es m
 >>> db.session.add(u)
 >>> db.session.commit()
 
+Info:
+- Um die Daten über die Schnittstellen zu konsumieren, muss die Variable `dummydata` in api.py auf False gesetzt sein. 
+- Um Dummydaten zu konsumieren, muss die Variable `dummydata` in api.py auf True gesetzt sein
+
 #### Start der Applikation
 Das Programm kann im Terminal mit dem Befehl `flask run` gestartet werden, wobei standardmäßig der Port 5000 verwendet wird.
 Sollte standardmäßig nicht der Port 5000 verwendet werden, kann die Applikation auch mit folgendem Befehl `flask run --host=0.0.0.0 --port=5000` ausgeführt werden.
 
 ### Admin
-Der Admin kann nach dem Login über die Seitenleiste zwischen drei verschiedenen Ansichten wechseln.
+Der Admin kann nach dem Login (User & Password = 'admin') über die Seitenleiste zwischen drei verschiedenen Ansichten wechseln.
 Im ersten Reiter 'Aktionen' hat der Admin die Möglichkeit Aktionen festzulegen. Dabei kann er entweder Aktionen für alle Strecken oder nur für eine bestimmte Strecke festlegen.
 Im zweiten Reiter 'Übersicht' können alle ausgegebenen Aktionen eingesehen bzw. auch gelöscht werden.
 Im dritten Reiter können die persönlichen Daten des eigenen Profils bearbeitet werden.

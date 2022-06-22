@@ -1,46 +1,37 @@
 {
   "data": [
     {
+      "endStation": 4,
       "id": 1,
-      "startStation": 1,
-      "endStation": 3,
-      "name": "Wels-Wien",
-      "sections": [
-        1,
-        2
-      ]
-    },
-    {
-      "id": 2,
-      "startStation": 1,
-      "endStation": 2,
-      "name": "Wels-Linz",
-      "sections": [
-        1,
-        4
-      ]
-    },
-    {
-      "id": 3,
-      "startStation": 1,
-      "endStation": 7,
-      "name": "Wels-Bad Aussee",
+      "name": "Wien-Salzburg",
       "sections": [
         1,
         2,
-        3,
-        4
-      ]
+        9
+      ],
+      "startStation": 1,
+      "start_station_id": 1
     },
     {
-      "id": 4,
-      "startStation": 4,
-      "endStation": 7,
-      "name": "Pürgg-Bad Aussee",
+      "endStation": 5,
+      "id": 2,
+      "name": "Salzburg-Innsbruck",
       "sections": [
-        3,
-        4
-      ]
+        4,
+        5
+      ],
+      "startStation": 4,
+      "start_station_id": 4
+    },
+    {
+      "endStation": 7,
+      "id": 3,
+      "name": "Passau-Ried",
+      "sections": [
+        7
+      ],
+      "startStation": 8,
+      "start_station_id": 8
     }
   ]
 }

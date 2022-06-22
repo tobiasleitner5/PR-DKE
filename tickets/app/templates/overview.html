@@ -4,11 +4,18 @@
 {% block content %}
 <h1>Übersicht Aktionen</h2>
 <table class="default">
+    <tr>
+        <th>Startdatum</th>
+        <th>Enddatum</th>
+        <th>Nachlass</th>
+        <th></th>
+        <th></th>
+    </tr>
     {% for promo in promotions %}
     <tr class="default">
-        <td>{{ promo.start_date }} bis</td>
+        <td>{{ promo.start_date }}</td>
         <td>{{ promo.end_date }}</td>
-        <td>{{ promo.sale }}</td>
+        <td>{{ promo.sale }} %</td>
         {% if promo.all_routes %}
         <td>Alle Routen</td>
         {% else %}
