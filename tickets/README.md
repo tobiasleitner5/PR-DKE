@@ -17,9 +17,9 @@
 ### Start
 #### Erster Start - Datenbank erstellen/Admin einfügen
 Beim ersten Start muss die Datenbank mittels flask-migrate erstellt werden. Es müssen folgende Befehle im Terminal ausgeführt werden (sollte eine Datenbank bereits existieren ist es sinnvoll sie bei erstmaliger Ausführung zu löschen):
-1. flask db init (falls dabei der `Fehler ConnectionRefusedError: [Errno 61]`auftritt ist für die Erstellung der DB die Variable `dummydata` in api.py auf True zu setzen)
-2. flask db migrate -m "database creation"
-3. flask db upgrade
+1. flask db init (falls dabei der _Fehler ConnectionRefusedError: [Errno 61]_ auftritt ist für die Erstellung der DB die Variable `dummydata` in [api.py](./api.py) auf True zu setzen)
+2. `flask db migrate -m "database creation"`
+3. `flask db upgrade`
 4. Es wurde nun eine Datenbank namens app.db erstellt
 5. Manuelles Einfügen des Administrator-Benutzers in die Datenbank (dazu kann mit dem Befehl `python3` in der Command Line die Python Console aufgerufen werden)
 -> Folgende Befehle sind in der Python Console einzugeben, um den Admin der Datenbank hinzuzufügen:
@@ -32,8 +32,8 @@ Beim ersten Start muss die Datenbank mittels flask-migrate erstellt werden. Es m
 - db.session.commit()
 
 Info:
-- Um die Daten über die Schnittstellen zu konsumieren, muss die Variable `dummydata` in api.py auf False gesetzt sein. 
-- Um Dummydaten zu konsumieren, muss die Variable `dummydata` in api.py auf True gesetzt sein
+- Um die Daten über die Schnittstellen zu konsumieren, muss die Variable `dummydata` in [api.py](./api.py) auf False gesetzt sein. 
+- Um Dummydaten zu konsumieren, muss die Variable `dummydata` in [api.py](./api.py) auf True gesetzt sein
 
 #### Start der Applikation
 Das Programm kann im Terminal mit dem Befehl `flask run` gestartet werden, wobei standardmäßig der Port 5000 verwendet wird.
@@ -53,4 +53,4 @@ Im dritten Reiter können die persönlichen Daten des eigenen Profils bearbeitet
 
 #### Schnittstellen
 Die Applikation konsumiert Daten sowohl vom Streckeninformationssystem als auch vom Fahrplaninformationssystem. Da die Applikation zum Verwalten der Flotten nicht umgesetzt wurde, werden entsprechende Daten über eine Schnittstelle im Streckensystem zur Verfügung gestellt.
-Alternativ kann die Applikation mit Dummydaten gestartet werden. Hierzu muss (vor dem Start) im File api.py die Variable `dummydata` auf True gesetzt werden.
+Alternativ kann die Applikation mit Dummydaten gestartet werden. Hierzu muss (vor dem Start) im File [api.py](./api.py) die Variable `dummydata` auf True gesetzt werden.
