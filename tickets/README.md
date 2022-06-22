@@ -23,13 +23,13 @@ Beim ersten Start muss die Datenbank mittels flask-migrate erstellt werden. Es m
 4. Es wurde nun eine Datenbank namens app.db erstellt
 5. Manuelles Einfügen des Administrator-Benutzers in die Datenbank (dazu kann mit dem Befehl `python3` in der Command Line die Python Console aufgerufen werden)
 -> Folgende Befehle sind in der Python Console einzugeben, um den Admin der Datenbank hinzuzufügen:
->>> from app import db
->>> from app.models import User
->>> u = User(username='admin', email='admin@example.com')
->>> u.set_password('admin')
->>> u.set_access('admin')
->>> db.session.add(u)
->>> db.session.commit()
+- from app import db
+- from app.models import User
+- u = User(username='admin', email='admin@example.com')
+- u.set_password('admin')
+- u.set_access('admin')
+- db.session.add(u)
+- db.session.commit()
 
 Info:
 - Um die Daten über die Schnittstellen zu konsumieren, muss die Variable `dummydata` in api.py auf False gesetzt sein. 
