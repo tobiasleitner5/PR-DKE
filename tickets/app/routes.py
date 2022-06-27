@@ -28,6 +28,7 @@ def index():
         res = []
         promotions = Promotion.query.all()
         warnings_dict = {}
+        # get all rides and search for suitable ones based on the criteria of the submitted form
         for r in api.get_rides()["data"]:
             planned_route = api.get_planned_route_by_id(r["plannedroute_id"])
             ride_time = datetime.strptime(r["time"], "%a, %d %b %Y %H:%M:%S GMT")
@@ -35,6 +36,7 @@ def index():
             append = False
             lSections = []
             route = api.get_routeid_by_sections(planned_route["sections"])
+            # the following code orders sections from a ride so that it is possible to search for stations included in a route
             ordered_sections = [item for item in route["sections"] if item in planned_route["sections"]]
             for s in ordered_sections:
                 section = api.get_section_by_id(s)
@@ -45,11 +47,13 @@ def index():
                 if section["endStation"] == end:
                     append = False
                     lSections.append(s)
+            # checks for time compatibility
             if full_ride and not append and ride_time.date() == date and ride_time.time() >= time:
                 lSections = list(set(lSections))
                 r["price"] = r["price"] * (len(lSections)/len(ordered_sections))
                 res.append(r)
                 succ = True
+                # gets a dict with all warnings associated with a ride
                 warnings_dict[r["id"]] = get_warnings_section(lSections, route)
         if not succ:
             flash("Keine Fahrtdurchführung gefunden!")

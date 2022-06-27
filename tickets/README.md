@@ -32,8 +32,8 @@ Beim ersten Start muss die Datenbank mittels flask-migrate erstellt werden. Es m
 - db.session.commit()
 
 Info:
-- Um die Daten über die Schnittstellen zu konsumieren, muss die Variable `dummydata` in [api.py](./api.py) auf False gesetzt sein. 
-- Um Dummydaten zu konsumieren, muss die Variable `dummydata` in [api.py](./api.py) auf True gesetzt sein
+- Um die Daten über die Schnittstellen zu konsumieren, muss die Variable `dummydata` in [api.py](./api.py) auf False gesetzt sein. Die Schnittstellenkommunikation passiert dynamisch.
+- Um Dummydaten zu konsumieren, muss die Variable `dummydata` in [api.py](./api.py) auf True gesetzt sein. 
 
 #### Start der Applikation
 Das Programm kann im Terminal mit dem Befehl `flask run` gestartet werden, wobei standardmäßig der Port 5000 verwendet wird.
@@ -53,4 +53,5 @@ Im dritten Reiter können die persönlichen Daten des eigenen Profils bearbeitet
 
 #### Schnittstellen
 Die Applikation konsumiert Daten sowohl vom Streckeninformationssystem als auch vom Fahrplaninformationssystem. Da die Applikation zum Verwalten der Flotten nicht umgesetzt wurde, werden entsprechende Daten über eine Schnittstelle im Streckensystem zur Verfügung gestellt.
+Die Schnittstellenkommunikation passiert dynamisch, weshalb alle Systeme gleichzeitig laufen müssen.
 Alternativ kann die Applikation mit Dummydaten gestartet werden. Hierzu muss (vor dem Start) im File [api.py](./api.py) die Variable `dummydata` auf True gesetzt werden.
